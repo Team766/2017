@@ -5,7 +5,9 @@ import lib.Actor;
 import lib.LogFactory;
 import lib.Scheduler;
 
+import com.team766.lib.Messages.CheesyDrive;
 import com.team766.lib.Messages.MotorCommand;
+import com.team766.robot.Constants;
 import com.team766.robot.HardwareProvider;
 import com.team766.robot.Robot;
 
@@ -16,25 +18,43 @@ public class OperatorControl extends Actor {
 	JoystickReader jBox = HardwareProvider.getInstance().getBoxJoystick();
 	
 	private double previousLeft, previousRight;
-	
+		
 	public void init() {
 		acceptableMessages = new Class[]{};
 		previousLeft = 0;
 		previousRight = 0;
 	}
 	
+	/*
+	 *	Joystick values for RawAxis(1) are flipped
+	 *	Forward is -, backwards is +
+	 */
 	public void run() {
 		while(Robot.getState() == Robot.GameState.Teleop){
 			
-			if(previousLeft != jLeft.getRawAxis(1))
-				sendMessage(new MotorCommand(jLeft.getRawAxis(1), MotorCommand.Motor.leftDrive));
-			if(previousRight != jRight.getRawAxis(1))
-				sendMessage(new MotorCommand(jRight.getRawAxis(1), MotorCommand.Motor.rightDrive));
+			if(Constants.TANK_DRIVE){
+				if(previousLeft != jLeft.getRawAxis(1))
+					sendMessage(new MotorCommand(-jLeft.getRawAxis(1), MotorCommand.Motor.leftDrive));
+				if(previousRight != jRight.getRawAxis(1))
+					sendMessage(new MotorCommand(-jRight.getRawAxis(1), MotorCommand.Motor.rightDrive));
+			}else{
+				if(previousLeft != jLeft.getRawAxis(Constants.accelAxis) || 
+						previousRight != jRight.getRawAxis(Constants.steerAxis)){
+					sendMessage(new MotorCommand(-jLeft.getRawAxis(Constants.accelAxis) - jRight.getRawAxis(Constants.steerAxis), MotorCommand.Motor.leftDrive));
+					sendMessage(new MotorCommand(-jLeft.getRawAxis(Constants.accelAxis) + jRight.getRawAxis(Constants.steerAxis), MotorCommand.Motor.rightDrive));
+				}
+
+//				if(previousLeft != jLeft.getRawAxis(Constants.accelAxis) || 
+//					previousRight != jRight.getRawAxis(Constants.steerAxis))
+//					sendMessage(new CheesyDrive(jLeft.getRawButton(Constants.driverQuickTurn), jLeft.getRawAxis(Constants.accelAxis), jRight.getRawAxis(Constants.steerAxis)));
+			}
+				
+				
+				
+//			LogFactory.getInstance("General").printPeriodic("JoystickValues: " + jLeft.getRawAxis(1) + " R:" + jRight.getRawAxis(1), "Joysticks", 200);
 			
 			previousLeft = jLeft.getRawAxis(1);
 			previousRight = jRight.getRawAxis(1);
-			
-			//sendMessage(new CheesyDrive(jLeft.getRawButton(Constants.driverQuickTurn), jLeft.getRawAxis(Constants.accelAxis), jRight.getRawAxis(Constants.steerAxis)));
 			
 			itsPerSec++;
 			sleep();

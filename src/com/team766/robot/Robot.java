@@ -90,6 +90,8 @@ public class Robot implements MyRobot {
     public void disabledInit() {
     	LogFactory.getInstance("General").print("Robot Disabled");
     	
+    	Scheduler.getInstance().remove(OperatorControl.class);
+    	
     	if(autonDone && teleopDone){
 			LogFactory.closeFiles();
 		}
