@@ -5,6 +5,7 @@ import interfaces.GyroReader;
 import interfaces.SpeedController;
 import interfaces.SubActor;
 import lib.Actor;
+import lib.LogFactory;
 import lib.Message;
 import lib.PIDController;
 
