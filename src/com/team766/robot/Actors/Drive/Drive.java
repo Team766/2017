@@ -102,7 +102,7 @@ public class Drive extends Actor{
 				commandFinished = true;
 				currentCommand = null;
 			}else{
-				currentCommand.update(new double[]{avgLinearRate(), leftRate(), rightRate(), avgDist(), leftDist(), rightDist()});
+				currentCommand.update();
 			}
 		}
 	}

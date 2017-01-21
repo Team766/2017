@@ -6,6 +6,7 @@ import lib.LogFactory;
 import lib.Scheduler;
 import trajectory.AutoPaths;
 
+import com.team766.lib.CommandBase;
 import com.team766.robot.Actors.OperatorControl;
 import com.team766.robot.Actors.Auton.AutonSelector;
 import com.team766.robot.Actors.Drive.Drive;
@@ -41,6 +42,7 @@ public class Robot implements MyRobot {
     }
 	
 	public void robotInit() {
+		CommandBase.init();
 		LogFactory.createInstance("General");
 		
 		Scheduler.getInstance().add(new Drive());
