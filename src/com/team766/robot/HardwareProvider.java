@@ -4,6 +4,7 @@ import interfaces.EncoderReader;
 import interfaces.GyroReader;
 import interfaces.JoystickReader;
 import interfaces.RobotProvider;
+import interfaces.SolenoidController;
 import interfaces.SpeedController;
 
 import com.team766.lib.ConfigFile;
@@ -51,6 +52,13 @@ public class HardwareProvider {
 
 	public GyroReader getGyro(){
 		return RobotProvider.instance.getGyro(ConfigFile.getGyro());
+	}
+	
+	public SolenoidController getGearPlacerOpener(){
+		return RobotProvider.instance.getSolenoid(ConfigFile.getGearPlacerOpener());
+	}
+	public SolenoidController getGearPlacer(){
+		return RobotProvider.instance.getSolenoid(ConfigFile.getGearPlacer());
 	}
 
 	// Operator Devices

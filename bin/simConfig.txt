@@ -11,3 +11,8 @@ rightJoystick,1
 boxJoystick,2
 shooterMotor,4
 shooterEncoder,5,7
+climberEncoder,0,1
+climberMotor,2
+hopperMotor,2
+gearPlacerOpener,3
+gearPlacer,4

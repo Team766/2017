@@ -4,6 +4,7 @@ import lib.Actor;
 import lib.LogFactory;
 
 import com.team766.lib.Messages.DriveStatusUpdate;
+import com.team766.lib.Messages.MotorCommand;
 import com.team766.robot.Constants;
 
 public class AutonSelector extends Actor{
@@ -26,6 +27,8 @@ public class AutonSelector extends Actor{
 			case "None":
 				System.out.println("Auton: None");
 				LogFactory.getInstance("General").print("Auton: None");
+				sendMessage(new MotorCommand(1.0, MotorCommand.Motor.leftDrive));
+				sendMessage(new MotorCommand(1.0, MotorCommand.Motor.rightDrive));
 				break;
 			default:
 				System.out.println("Auton: Failed to select auton");

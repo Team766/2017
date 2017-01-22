@@ -5,9 +5,11 @@ import interfaces.GyroReader;
 import interfaces.SpeedController;
 import interfaces.SubActor;
 import lib.Actor;
+import lib.LogFactory;
 import lib.Message;
 import lib.PIDController;
 
+import com.team766.lib.Messages.CheesyDrive;
 import com.team766.lib.Messages.DriveStatusUpdate;
 import com.team766.lib.Messages.MotorCommand;
 import com.team766.robot.Constants;
@@ -49,7 +51,7 @@ public class Drive extends Actor{
 	SubActor currentCommand;
 	
 	public void init() {
-		acceptableMessages = new Class[]{MotorCommand.class};
+		acceptableMessages = new Class[]{MotorCommand.class, CheesyDrive.class};
 		commandFinished = false;
 		
 		lastPosTime = System.currentTimeMillis() / 1000.0;
@@ -77,11 +79,15 @@ public class Drive extends Actor{
 								
 				if(currentMessage instanceof MotorCommand)
 					currentCommand = new MotorSubCommand(currentMessage);
+				else if(currentMessage instanceof CheesyDrive)
+					currentCommand = new CheesyDriveCommand(currentMessage);
 							
 				//Reset Control loops
 				resetControlLoops();
 			}
-								
+						
+			//LogFactory.getInstance("General").printPeriodic("Gyro: " + getAngle(), "Gyro", 200);
+			
 			step();
 			
 			//Send Status Update	#StayUpToDate	#Current	#inTheKnow
@@ -139,6 +145,10 @@ public class Drive extends Actor{
 		//return (leftEncoder.getRate() + rightEncoder.getRate())/2.0;
 	}
 	
+	protected double getAngularRate(){
+		return gyro.getRate();
+	}
+	
 	protected double leftRate(){
 		return leftVel;
 	}
@@ -169,7 +179,7 @@ public class Drive extends Actor{
 	}
 	
 	protected void setRight(double power){
-		rightMotor.set(power);
+		rightMotor.set(-power);
 	}
 	
 	protected void resetEncoders(){

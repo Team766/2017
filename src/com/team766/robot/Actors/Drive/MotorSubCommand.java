@@ -1,5 +1,6 @@
 package com.team766.robot.Actors.Drive;
 
+import lib.LogFactory;
 import lib.Message;
 
 import com.team766.lib.CommandBase;
@@ -8,9 +9,11 @@ import com.team766.lib.Messages.MotorCommand;
 public class MotorSubCommand extends CommandBase{
 
 	MotorCommand command;
-		
+	boolean done;
+	
 	public MotorSubCommand(Message command){
 		this.command = (MotorCommand)command;
+		done = false;
 	}
 	
 	public void update() {
@@ -25,11 +28,12 @@ public class MotorSubCommand extends CommandBase{
 				System.out.println("Motor not recognized!");
 				break;
 		}
+		done = true;
 	}
 	
 
 	public boolean isDone() {
-		return true;
+		return done;
 	}
 
 	public void stop() {
