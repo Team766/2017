@@ -21,7 +21,7 @@ public class Robot implements MyRobot {
 	private boolean autonDone = false;
 	private boolean teleopDone = false;
 	
-	private final long RUN_TIME = 10;
+	private final long RUN_TIME = 30;
 	private long lastSleepTime = 0;
 	
 	public enum GameState{
@@ -65,10 +65,10 @@ public class Robot implements MyRobot {
     }
 
     public void autonomousPeriodic() {
-    	if(System.currentTimeMillis() - prevTime >= 1000){
-//    		System.out.println(Scheduler.getInstance().getCountsPerSecond());
-    		prevTime = System.currentTimeMillis();
-    	}
+//    	if(System.currentTimeMillis() - prevTime >= 1000){
+////    		System.out.println(Scheduler.getInstance().getCountsPerSecond());
+//    		prevTime = System.currentTimeMillis();
+//    	}
     	sleep();
     }
     
@@ -107,7 +107,7 @@ public class Robot implements MyRobot {
     }
 	
 	public void startCompetition(){
-		System.out.println("Wrong one...close enough?");
+		System.out.println("Wrong one...close enough? lmao");
 	}
 	
 	private void emptyInboxes(){

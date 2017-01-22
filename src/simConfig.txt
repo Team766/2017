@@ -2,12 +2,9 @@ leftMotor,10
 rightMotor,11
 leftEncoder,10,17
 rightEncoder,11,15
-driveShifter,0
 gyro,12
 axisCamera,10.7.66.11
 usbCamera,cam0
 leftJoystick,0
 rightJoystick,1
 boxJoystick,2
-shooterMotor,4
-shooterEncoder,5,7
