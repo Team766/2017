@@ -27,6 +27,11 @@ public class ConfigFile {
 		return ConfigFileReader.getInstance().getPorts("rightEncoder");
 	}
 	
+	public static int[] getClimberEncoder(){
+		return ConfigFileReader.getInstance().getPorts("climberEncoder");
+	}
+	
+	
 	public static int getGyro(){
 		return ConfigFileReader.getInstance().getPort("gyro");
 	}
@@ -41,5 +46,13 @@ public class ConfigFile {
 	
 	public static int getBoxJoystick(){
 		return ConfigFileReader.getInstance().getPort("boxJoystick");
+	}
+	
+	public static int getClimberMotor(){
+		return ConfigFileReader.getInstance().getPort("climberMotor");
+	}
+	
+	public static int getHopperMotor(){
+		return ConfigFileReader.getInstance().getPort("hopperMotor");
 	}
 }

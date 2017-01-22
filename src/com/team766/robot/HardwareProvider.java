@@ -25,6 +25,14 @@ public class HardwareProvider {
 	public SpeedController getRightDrive(){
 		return RobotProvider.instance.getMotor(ConfigFile.getRightMotor());
 	}
+	
+	public SpeedController getClimber(){
+		return RobotProvider.instance.getMotor(ConfigFile.getClimberMotor());
+	}
+	
+	public SpeedController getHopper(){
+		return RobotProvider.instance.getMotor(ConfigFile.getHopperMotor());
+	}
 
 	public EncoderReader getLeftEncoder(){
 		return RobotProvider.instance.getEncoder(ConfigFile.getLeftEncoder()[0], ConfigFile.getLeftEncoder()[1]);
@@ -32,6 +40,14 @@ public class HardwareProvider {
 	public EncoderReader getRightEncoder(){
 		return RobotProvider.instance.getEncoder(ConfigFile.getRightEncoder()[0], ConfigFile.getRightEncoder()[1]);
 	}
+	
+	public EncoderReader getClimberEncoder(){
+		return RobotProvider.instance.getEncoder(ConfigFile.getClimberEncoder()[0], ConfigFile.getClimberEncoder()[1]);
+	}
+	
+	
+	
+	
 
 	public GyroReader getGyro(){
 		return RobotProvider.instance.getGyro(ConfigFile.getGyro());
