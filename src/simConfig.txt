@@ -8,3 +8,5 @@ usbCamera,cam0
 leftJoystick,0
 rightJoystick,1
 boxJoystick,2
+gearPlacerOpener,3
+gearPlacer,4

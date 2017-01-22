@@ -5,7 +5,7 @@ import interfaces.ConfigFileReader;
 /**
  * Class for accessing the port or index for each hardware device
  * 
- * @author Brett Levenson
+ * @author bret Levonsen
  *
  */
 
@@ -41,5 +41,13 @@ public class ConfigFile {
 	
 	public static int getBoxJoystick(){
 		return ConfigFileReader.getInstance().getPort("boxJoystick");
+	}
+	
+	public static int getGearPlacerOpener(){
+		return ConfigFileReader.getInstance().getPort("gearPlacerOpener");
+	}
+	
+	public static int getGearPlacer(){
+		return ConfigFileReader.getInstance().getPort("gearPlacer");
 	}
 }
