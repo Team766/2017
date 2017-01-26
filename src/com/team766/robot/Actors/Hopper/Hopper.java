@@ -1,6 +1,6 @@
 package com.team766.robot.Actors.Hopper;
 
-
+import interfaces.DigitalInputReader;
 import interfaces.SpeedController;
 import interfaces.SubActor;
 import lib.Actor;
@@ -11,8 +11,10 @@ public class Hopper extends Actor{
 	Message currentMessage;
 	SubActor currentCommand;
 	
-	
 	SpeedController hopperMotor;
+	DigitalInputReader hopperSensor;
+	
+	
 	@Override
 	public void run() {
 		
@@ -65,6 +67,10 @@ public class Hopper extends Actor{
 	
 	public void setHopperMotor(double value){
 		hopperMotor.set(value);
+	}
+	
+	public boolean getHopperSensor(){
+		return hopperSensor.get();
 	}
 
 }

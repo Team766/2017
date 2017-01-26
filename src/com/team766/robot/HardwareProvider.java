@@ -6,6 +6,7 @@ import interfaces.JoystickReader;
 import interfaces.RobotProvider;
 import interfaces.SolenoidController;
 import interfaces.SpeedController;
+import interfaces.DigitalInputReader;
 
 import com.team766.lib.ConfigFile;
 
@@ -59,6 +60,10 @@ public class HardwareProvider {
 	}
 	public SolenoidController getGearPlacer(){
 		return RobotProvider.instance.getSolenoid(ConfigFile.getGearPlacer());
+	}
+	
+	public DigitalInputReader getHopperSensor(){
+		return RobotProvider.instance.getDigitalInput(ConfigFile.getHopperSensor());
 	}
 
 	// Operator Devices

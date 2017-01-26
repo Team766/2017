@@ -63,4 +63,8 @@ public class ConfigFile {
 	public static int getGearPlacer(){
 		return ConfigFileReader.getInstance().getPort("gearPlacer");
 	}
+	
+	public static int getHopperSensor(){
+		return ConfigFileReader.getInstance().getPort("hopperSensor");
+	}
 }

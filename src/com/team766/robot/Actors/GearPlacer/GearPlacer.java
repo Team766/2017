@@ -1,6 +1,10 @@
 package com.team766.robot.Actors.GearPlacer;
 
+import com.team766.lib.Messages.CheesyDrive;
+import com.team766.lib.Messages.MotorCommand;
+import com.team766.lib.Messages.UpdateGearCollector;
 import com.team766.robot.HardwareProvider;
+import com.team766.robot.Actors.Drive.MotorSubCommand;
 
 import interfaces.SolenoidController;
 import interfaces.SubActor;
@@ -18,7 +22,7 @@ public class GearPlacer extends Actor{
 	SubActor currentCommand;
 	
 	public void init() {
-		acceptableMessages = new Class[]{};
+		acceptableMessages = new Class[]{UpdateGearCollector.class};
 	}
 	
 	public void run() {
@@ -32,6 +36,13 @@ public class GearPlacer extends Actor{
 				currentMessage = readMessage();
 				if(currentMessage == null)
 					break;
+				
+				if(currentMessage instanceof UpdateGearCollector){
+					UpdateGearCollector gearMessage = (UpdateGearCollector)currentMessage;
+					this.setTopOpener(gearMessage.getTop());
+					this.setPlacer(gearMessage.getBottom());
+				}
+					
 		
 			}
 			step();
