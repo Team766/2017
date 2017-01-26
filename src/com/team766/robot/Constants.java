@@ -26,6 +26,8 @@ public abstract class Constants extends RobotValues{
 	
 	//Buttons
 	public static final int driverQuickTurn = 1;
+	public static final int dropGear = 2;
+	public static final int collectGear = 3;
 	
 	//Axis
 	public static final int steerAxis = 0;

@@ -7,6 +7,7 @@ import lib.Scheduler;
 
 import com.team766.lib.Messages.CheesyDrive;
 import com.team766.lib.Messages.MotorCommand;
+import com.team766.lib.Messages.UpdateGearCollector;
 import com.team766.robot.Constants;
 import com.team766.robot.HardwareProvider;
 import com.team766.robot.Robot;
@@ -18,6 +19,7 @@ public class OperatorControl extends Actor {
 	JoystickReader jBox = HardwareProvider.getInstance().getBoxJoystick();
 	
 	private double previousLeft, previousRight;
+	private int dropButton, collectButton;
 		
 	public void init() {
 		acceptableMessages = new Class[]{};
@@ -48,6 +50,11 @@ public class OperatorControl extends Actor {
 //					previousRight != jRight.getRawAxis(Constants.steerAxis))
 //					sendMessage(new CheesyDrive(jLeft.getRawButton(Constants.driverQuickTurn), jLeft.getRawAxis(Constants.accelAxis), jRight.getRawAxis(Constants.steerAxis)));
 			}
+			
+			if(jLeft.getRawButton(Constants.dropGear) || jLeft.getRawButton(Constants.collectGear)){
+				sendMessage(new UpdateGearCollector(jLeft.getRawButton(Constants.collectGear), jLeft.getRawButton(Constants.dropGear)));
+			}
+			
 				
 				
 				
