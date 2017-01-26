@@ -1,11 +1,14 @@
 package com.team766.robot.Actors.Hopper;
 
+import com.team766.lib.Messages.HopperIntake;
 import interfaces.DigitalInputReader;
 import interfaces.SpeedController;
 import interfaces.SubActor;
 import lib.Actor;
 import lib.Message;
+
 public class Hopper extends Actor{
+	
 	private boolean commandFinished;
 	
 	Message currentMessage;
@@ -14,11 +17,11 @@ public class Hopper extends Actor{
 	SpeedController hopperMotor;
 	DigitalInputReader hopperSensor;
 	
+	public void init() {
+		acceptableMessages = new Class[]{HopperIntake.class};
+	}
 	
-	@Override
 	public void run() {
-		
-		
 		while(true){
 			if(newMessage()){
 				if(currentCommand != null)
@@ -29,26 +32,15 @@ public class Hopper extends Actor{
 				currentMessage = readMessage();
 				if(currentMessage == null)
 					break;
-				
 			}
 			step();
 		}
-		
 	}
 
-	@Override
-	public void init() {
-		acceptableMessages = new Class[]{};
-		
-	}
-
-	@Override
 	public String toString() {
-		
 		return "Actor: \tHopper";
 	}
 
-	@Override
 	public void step() {
 		if(currentCommand != null){
 			if(currentCommand.isDone()){
