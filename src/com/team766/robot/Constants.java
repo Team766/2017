@@ -16,7 +16,7 @@ public abstract class Constants extends RobotValues{
 	
 	public static final int ACTOR_COUNT = 1;
 	
-	public static final boolean TANK_DRIVE = true;
+	public static final boolean TANK_DRIVE = false;
 	
 	public static final double wheel_circumference = 0.2032 * Math.PI;
 	public static final double counts_per_rev = 360;
@@ -50,5 +50,5 @@ public abstract class Constants extends RobotValues{
 	public static final double k_linearD = 0.00;
 	public static final double k_linearThresh = 0.01;
 	
-	public static final double STARTING_HEADING = -180;
+	public static final double STARTING_HEADING = 0;
 }

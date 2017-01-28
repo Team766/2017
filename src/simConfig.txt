@@ -1,5 +1,6 @@
 leftMotor,10
 rightMotor,11
+centerMotor,9
 leftEncoder,10,17
 rightEncoder,11,15
 gyro,12

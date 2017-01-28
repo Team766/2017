@@ -27,6 +27,9 @@ public class HardwareProvider {
 	public SpeedController getRightDrive(){
 		return RobotProvider.instance.getMotor(ConfigFile.getRightMotor());
 	}
+	public SpeedController getCenterDrive(){
+		return RobotProvider.instance.getMotor(ConfigFile.getCenterMotor());
+	}
 	
 	public SpeedController getClimber(){
 		return RobotProvider.instance.getMotor(ConfigFile.getClimberMotor());

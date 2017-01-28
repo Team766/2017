@@ -11,6 +11,7 @@ import lib.PIDController;
 
 import com.team766.lib.Messages.CheesyDrive;
 import com.team766.lib.Messages.DriveStatusUpdate;
+import com.team766.lib.Messages.HDrive;
 import com.team766.lib.Messages.MotorCommand;
 import com.team766.robot.Constants;
 import com.team766.robot.HardwareProvider;
@@ -19,6 +20,7 @@ public class Drive extends Actor{
 
 	SpeedController leftMotor = HardwareProvider.getInstance().getLeftDrive();
 	SpeedController rightMotor = HardwareProvider.getInstance().getRightDrive();
+	SpeedController centerMotor = HardwareProvider.getInstance().getCenterDrive();
 	
 	EncoderReader leftEncoder = HardwareProvider.getInstance().getLeftEncoder();
 	EncoderReader rightEncoder = HardwareProvider.getInstance().getRightEncoder();
@@ -51,7 +53,7 @@ public class Drive extends Actor{
 	SubActor currentCommand;
 	
 	public void init() {
-		acceptableMessages = new Class[]{MotorCommand.class, CheesyDrive.class};
+		acceptableMessages = new Class[]{MotorCommand.class, CheesyDrive.class, HDrive.class};
 		commandFinished = false;
 		
 		lastPosTime = System.currentTimeMillis() / 1000.0;
@@ -81,6 +83,8 @@ public class Drive extends Actor{
 					currentCommand = new MotorSubCommand(currentMessage);
 				else if(currentMessage instanceof CheesyDrive)
 					currentCommand = new CheesyDriveCommand(currentMessage);
+				else if(currentMessage instanceof HDrive)
+					currentCommand = new HDriveCommand(currentMessage);
 							
 				//Reset Control loops
 				resetControlLoops();
@@ -179,7 +183,11 @@ public class Drive extends Actor{
 	}
 	
 	protected void setRight(double power){
-		rightMotor.set(-power);
+		rightMotor.set(power);
+	}
+	
+	protected void setCenter(double power){
+		centerMotor.set(power);
 	}
 	
 	protected void resetEncoders(){
