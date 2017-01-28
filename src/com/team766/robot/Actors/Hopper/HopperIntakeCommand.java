@@ -18,18 +18,13 @@ public class HopperIntakeCommand extends CommandBase{
 
 	public void update() {
 		sensor = Hopper.getHopperSensor();
-		if(!sensor){
-			//System.out.println("no sensor");
+		if(!sensor)
 			Hopper.setHopperMotor(1.0);
-		}
-		else{
-			//System.out.println("Has sensor");
+		else
 			done = true;
-		}
 	}
 
 	public void stop() {
-		//System.out.println("Stop");
 		Hopper.setHopperMotor(0.0);
 	}
 

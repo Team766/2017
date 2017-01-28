@@ -1,6 +1,11 @@
 package com.team766.robot.Actors.Climber;
 
+import com.team766.lib.Messages.UpdateClimber;
+import com.team766.lib.Messages.UpdateGearCollector;
 import com.team766.robot.HardwareProvider;
+
+
+
 
 import interfaces.EncoderReader;
 import interfaces.SpeedController;
@@ -10,6 +15,9 @@ import lib.Message;
 
 public class Climber extends Actor {
 	private boolean commandFinished;
+	
+	private double motorSpeed = 1;
+	private double maxMotorSpeed = 10;
 	
 	SpeedController climberMotor = HardwareProvider.getInstance().getClimber();
 	EncoderReader climberEncoder = HardwareProvider.getInstance().getClimberEncoder();
@@ -32,6 +40,15 @@ public class Climber extends Actor {
 				if(currentMessage == null)
 					break;
 				
+				if(currentMessage instanceof UpdateClimber){
+					UpdateClimber climberMessage = (UpdateClimber)currentMessage;
+					//this.setClimberMotor(climberMessage.getClimb());
+					if(climberMessage.getClimb() == true)
+						this.setClimberMotor(motorSpeed);
+					else
+						this.setClimberMotor(0.0);
+				}
+				
 			}
 			step();
 		}
@@ -39,7 +56,7 @@ public class Climber extends Actor {
 
 	@Override
 	public void init() {
-		acceptableMessages = new Class[]{};
+		acceptableMessages = new Class[]{UpdateClimber.class};
 	}
 
 	@Override
@@ -68,8 +85,8 @@ public class Climber extends Actor {
 		return climberEncoder.get();
 	}
 	
-	protected void setClimberMotor(double value){
-		climberMotor.set(value);
+	protected void setClimberMotor(double d){
+		climberMotor.set(d);
 	}
 	
 	

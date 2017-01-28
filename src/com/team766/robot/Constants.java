@@ -24,10 +24,13 @@ public abstract class Constants extends RobotValues{
 	public static final double maxAngularVelocity = 50;
 	public static final double maxLinearVelocity = 10;
 	
+	public static final double maxClimberMotor = 1;
+	
 	//Buttons
 	public static final int driverQuickTurn = 1;
 	public static final int dropGear = 2;
 	public static final int collectGear = 3;
+	public static final int climb = 4;
 	
 	//Axis
 	public static final int steerAxis = 0;
