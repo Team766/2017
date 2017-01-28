@@ -1,6 +1,7 @@
 package com.team766.robot;
 
 import interfaces.MyRobot;
+import lib.ConstantsFileReader;
 import lib.HTTPServer;
 import lib.LogFactory;
 import lib.Scheduler;
@@ -10,11 +11,12 @@ import com.team766.lib.CommandBase;
 import com.team766.robot.Actors.OperatorControl;
 import com.team766.robot.Actors.Auton.AutonSelector;
 import com.team766.robot.Actors.Drive.Drive;
+import com.team766.robot.Actors.GearPlacer.GearPlacer;
 
 /**
- * 2017 Robbit code
+ * 2017 Robot code
  * 
- * @author Bratt Levinson;
+ * @author Bratt Levenson;
  */
 public class Robot implements MyRobot {
 	private long prevTime;
@@ -46,6 +48,7 @@ public class Robot implements MyRobot {
 		LogFactory.createInstance("General");
 		
 		Scheduler.getInstance().add(new Drive());
+		Scheduler.getInstance().add(new GearPlacer());
 		
 		AutoPaths.loadPaths();
 		System.out.println("IM ALIVE!!");
@@ -91,6 +94,9 @@ public class Robot implements MyRobot {
     	LogFactory.getInstance("General").print("Robot Disabled");
     	
     	Scheduler.getInstance().remove(OperatorControl.class);
+    	
+    	//Update Constants
+    	ConstantsFileReader.getInstance().loadConstants();
     	
     	if(autonDone && teleopDone){
 			LogFactory.closeFiles();

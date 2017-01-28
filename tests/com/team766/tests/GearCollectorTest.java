@@ -1,23 +1,40 @@
 package com.team766.tests;
 
+import lib.Scheduler;
+
+import org.junit.Test;
+
+import tests.RobotTestCase;
+
 import com.team766.lib.ConfigFile;
 import com.team766.lib.Messages.UpdateGearCollector;
 
-import lib.Scheduler;
-import tests.RobotTestCase;
-
 public class GearCollectorTest extends RobotTestCase{
 
+	@Test
 	public void testGearSolenoids() throws Exception{
-		try {
-			Scheduler.getInstance().sendMessage(new UpdateGearCollector(false, false));
-		} catch (InterruptedException e) {
-			System.out.println("Failed to send UpdateGearCollector() in Test");
-			e.printStackTrace();
-		}
+		//False False
+		Scheduler.getInstance().sendMessage(new UpdateGearCollector(false, false));
+		
+		assertTrueTimed(() -> {return instance.getSolenoid(ConfigFile.getGearPlacerOpener()).get() == false;}, 2); 
+		assertTrueTimed(() -> {return instance.getSolenoid(ConfigFile.getGearPlacer()).get() == false;}, 2); 
+		
+		//True False
+		Scheduler.getInstance().sendMessage(new UpdateGearCollector(true, false));
 		
 		assertTrueTimed(() -> {return instance.getSolenoid(ConfigFile.getGearPlacerOpener()).get() == true;}, 2); 
-		assertTrueTimed(() -> {return instance.getSolenoid(ConfigFile.getGearPlacer()).get() == true;}, 2); 
-
+		assertTrueTimed(() -> {return instance.getSolenoid(ConfigFile.getGearPlacer()).get() == false;}, 2);
+		
+		//False True
+		Scheduler.getInstance().sendMessage(new UpdateGearCollector(false, true));
+		
+		assertTrueTimed(() -> {return instance.getSolenoid(ConfigFile.getGearPlacerOpener()).get() == false;}, 2); 
+		assertTrueTimed(() -> {return instance.getSolenoid(ConfigFile.getGearPlacer()).get() == true;}, 2);
+		
+		//True True
+		Scheduler.getInstance().sendMessage(new UpdateGearCollector(true, true));
+		
+		assertTrueTimed(() -> {return instance.getSolenoid(ConfigFile.getGearPlacerOpener()).get() == true;}, 2); 
+		assertTrueTimed(() -> {return instance.getSolenoid(ConfigFile.getGearPlacer()).get() == true;}, 2);
 	}
 }

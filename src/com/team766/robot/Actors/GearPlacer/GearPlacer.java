@@ -43,7 +43,6 @@ public class GearPlacer extends Actor{
 					this.setPlacer(gearMessage.getBottom());
 				}
 					
-		
 			}
 			step();
 		}

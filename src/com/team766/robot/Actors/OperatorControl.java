@@ -45,6 +45,7 @@ public class OperatorControl extends Actor {
 					sendMessage(new MotorCommand(-jLeft.getRawAxis(Constants.accelAxis) - jRight.getRawAxis(Constants.steerAxis), MotorCommand.Motor.leftDrive));
 					sendMessage(new MotorCommand(-jLeft.getRawAxis(Constants.accelAxis) + jRight.getRawAxis(Constants.steerAxis), MotorCommand.Motor.rightDrive));
 				}
+				
 
 //				if(previousLeft != jLeft.getRawAxis(Constants.accelAxis) || 
 //					previousRight != jRight.getRawAxis(Constants.steerAxis))
@@ -74,6 +75,10 @@ public class OperatorControl extends Actor {
 	
 	public String toString(){
 		return "Actor:\tOperator Control";
+	}
+	
+	private double dotProduct(double x1, double y1, double x2, double y2){
+		return (x1 * x2) + (y1 * y2);
 	}
 
 }
