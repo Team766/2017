@@ -2,6 +2,7 @@ package com.team766.robot.Actors.Hopper;
 
 import com.team766.lib.Messages.HopperIntake;
 import com.team766.lib.Messages.MotorCommand;
+import com.team766.robot.HardwareProvider;
 import com.team766.robot.Actors.Drive.MotorSubCommand;
 
 import interfaces.DigitalInputReader;
@@ -17,8 +18,8 @@ public class Hopper extends Actor{
 	Message currentMessage;
 	SubActor currentCommand;
 	
-	SpeedController hopperMotor;
-	DigitalInputReader hopperSensor;
+	SpeedController hopperMotor = HardwareProvider.getInstance().getHopper();
+	DigitalInputReader hopperSensor = HardwareProvider.getInstance().getHopperSensor();
 	
 	public void init() {
 		acceptableMessages = new Class[]{HopperIntake.class};
