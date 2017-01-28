@@ -12,9 +12,9 @@ import com.team766.robot.Actors.Auton.AutonSelector;
 import com.team766.robot.Actors.Drive.Drive;
 
 /**
- * 2017 Robot code
+ * 2017 Robbit code
  * 
- * @author Brett Levenson
+ * @author Bratt Levinson;
  */
 public class Robot implements MyRobot {
 	private long prevTime;
