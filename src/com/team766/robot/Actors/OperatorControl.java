@@ -8,6 +8,7 @@ import lib.Scheduler;
 import com.team766.lib.Messages.CheesyDrive;
 import com.team766.lib.Messages.HDrive;
 import com.team766.lib.Messages.MotorCommand;
+import com.team766.lib.Messages.UpdateClimber;
 import com.team766.lib.Messages.UpdateGearCollector;
 import com.team766.robot.Constants;
 import com.team766.robot.HardwareProvider;
@@ -21,12 +22,14 @@ public class OperatorControl extends Actor {
 	
 	private double previousLeft, previousRight, previousHeading;
 	private int dropButton, collectButton;
+	private boolean previousPress;
 		
 	public void init() {
 		acceptableMessages = new Class[]{};
 		previousLeft = 0;
 		previousRight = 0;
 		previousHeading = 0;
+		previousPress = false;
 	}
 	
 	/*
@@ -71,6 +74,12 @@ public class OperatorControl extends Actor {
 			if(jLeft.getRawButton(Constants.dropGear) || jLeft.getRawButton(Constants.collectGear)){
 				sendMessage(new UpdateGearCollector(jLeft.getRawButton(Constants.collectGear), jLeft.getRawButton(Constants.dropGear)));
 			}
+			
+			//button for climber
+			if(!previousPress && jLeft.getRawButton(Constants.climb)){
+				sendMessage(new UpdateClimber(jLeft.getRawButton(Constants.climb)));
+			}
+			previousPress = jLeft.getRawButton(Constants.climb);
 			
 				
 				

@@ -11,6 +11,7 @@ import tests.RobotTestCase;
 
 import com.team766.lib.ConfigFile;
 import com.team766.lib.Messages.HopperIntake;
+import com.team766.robot.Actors.Hopper.Hopper;
 
 public class HopperTest extends RobotTestCase{
 
