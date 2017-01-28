@@ -25,10 +25,10 @@ public class HopperIntakeCommand extends CommandBase{
 	}
 
 	public void stop() {
+		Hopper.setHopperMotor(0.0);
 	}
 
 	public boolean isDone() {
-		Hopper.setHopperMotor(0.0);
 		return done;
 	}
 

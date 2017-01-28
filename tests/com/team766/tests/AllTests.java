@@ -4,8 +4,11 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import com.team766.tests.GearCollectorTest;
+import com.team766.tests.HopperTest;
+
 @RunWith(Suite.class)
-@SuiteClasses({HopperTest.class})
+@SuiteClasses({HopperTest.class, GearCollectorTest.class})
 public class AllTests {
 
 }
