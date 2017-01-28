@@ -138,4 +138,8 @@ public class Robot implements MyRobot {
 		
 		lastSleepTime = System.currentTimeMillis();
 	}
+	
+	public String toString(){
+		return "2017 Robot";
+	}
 }
