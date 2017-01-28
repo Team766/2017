@@ -57,7 +57,7 @@ public class OperatorControl extends Actor {
 				if(previousLeft != jLeft.getRawAxis(0) ||
 					previousHeading != jRight.getRawAxis(2) ||
 					previousRight != jLeft.getRawAxis(1)){
-					sendMessage(new  HDrive(jLeft.getRawAxis(0), jLeft.getRawAxis(1), jRight.getRawAxis(2)));
+					sendMessage(new  HDrive(-jLeft.getRawAxis(0), -jLeft.getRawAxis(1), -jRight.getRawAxis(2)));
 				}
 				//H-Drive
 				
