@@ -12,6 +12,7 @@ import com.team766.robot.Actors.OperatorControl;
 import com.team766.robot.Actors.Auton.AutonSelector;
 import com.team766.robot.Actors.Drive.Drive;
 import com.team766.robot.Actors.GearPlacer.GearPlacer;
+import com.team766.robot.Actors.Hopper.Hopper;
 
 /**
  * 2017 Robot code
@@ -49,6 +50,7 @@ public class Robot implements MyRobot {
 		
 		Scheduler.getInstance().add(new Drive());
 		Scheduler.getInstance().add(new GearPlacer());
+		Scheduler.getInstance().add(new Hopper());
 		
 		AutoPaths.loadPaths();
 		System.out.println("IM ALIVE!!");
