@@ -1,6 +1,7 @@
 package com.team766.robot.Actors.Drive;
 
 import interfaces.EncoderReader;
+
 import interfaces.GyroReader;
 import interfaces.SpeedController;
 import interfaces.SubActor;
@@ -175,11 +176,17 @@ public class Drive extends Actor{
 	}
 	
 	protected void setLeft(double power){
-		leftMotor.set(power);
+		if(Math.abs(leftMotor.get()) < Constants.driveLeftDeadband)
+			leftMotor.set(0);
+		else
+			leftMotor.set(power);
 	}
 	
 	protected void setRight(double power){
-		rightMotor.set(-power);
+		if(Math.abs(rightMotor.get()) < Constants.driveRightDeadband)
+			rightMotor.set(0);
+		else
+			rightMotor.set(power);
 	}
 	
 	protected void resetEncoders(){
