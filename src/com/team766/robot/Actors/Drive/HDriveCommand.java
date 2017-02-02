@@ -6,7 +6,7 @@ import interfaces.SubActor;
 import com.team766.lib.CommandBase;
 import com.team766.lib.Messages.HDrive;
 
-public class HDriveCommand implements SubActor{
+public class HDriveCommand extends CommandBase{
 	HDrive command;
 	
 	public HDriveCommand(Message m){
@@ -16,9 +16,9 @@ public class HDriveCommand implements SubActor{
 	@Override
 	public void update() {
 		double heading = command.getHeading();
-		CommandBase.Drive.setLeft(round2D(getVert()) + heading);
-		CommandBase.Drive.setRight(round2D(getVert()) - heading);
-		CommandBase.Drive.setCenter(round2D(getHoriz()));		
+		Drive.setLeft(round2D(getVert()) + heading);
+		Drive.setRight(round2D(getVert()) - heading);
+		Drive.setCenter(round2D(getHoriz()));		
 	}
 
 	@Override
@@ -36,12 +36,12 @@ public class HDriveCommand implements SubActor{
 	
 	private double getHoriz(){
 		return dot(command.getJoyX(), command.getJoyY(), 
-				(Math.cos(CommandBase.Drive.getGyroAngleInRadians())), (-Math.sin(CommandBase.Drive.getGyroAngleInRadians())));
+				(Math.cos(Drive.getGyroAngleInRadians())), (-Math.sin(Drive.getGyroAngleInRadians())));
 	}
 	
 	private double getVert(){
 		return dot(command.getJoyX(), command.getJoyY(), 
-				(Math.sin(CommandBase.Drive.getGyroAngleInRadians())), (Math.cos(CommandBase.Drive.getGyroAngleInRadians())));
+				(Math.sin(Drive.getGyroAngleInRadians())), (Math.cos(Drive.getGyroAngleInRadians())));
 	}
 	
 	//Rounds to two decimal places

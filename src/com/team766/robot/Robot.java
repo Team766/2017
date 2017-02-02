@@ -5,15 +5,12 @@ import lib.ConstantsFileReader;
 import lib.HTTPServer;
 import lib.LogFactory;
 import lib.Scheduler;
-import trajectory.AutoPaths;
 
+import com.team766.lib.AutoPaths;
 import com.team766.lib.CommandBase;
 import com.team766.robot.Actors.OperatorControl;
 import com.team766.robot.Actors.Auton.AutonSelector;
-import com.team766.robot.Actors.Climber.Climber;
 import com.team766.robot.Actors.Drive.Drive;
-import com.team766.robot.Actors.GearPlacer.GearPlacer;
-import com.team766.robot.Actors.Hopper.Hopper;
 
 /**
  * 2017 Robot code
@@ -49,10 +46,10 @@ public class Robot implements MyRobot {
 		CommandBase.init();
 		LogFactory.createInstance("General");
 		
-		Scheduler.getInstance().add(new Drive());
-		Scheduler.getInstance().add(new GearPlacer());
-		Scheduler.getInstance().add(new Hopper());
-		Scheduler.getInstance().add(new Climber());
+		Scheduler.getInstance().add(CommandBase.Drive);
+		Scheduler.getInstance().add(CommandBase.GearPlacer);
+		Scheduler.getInstance().add(CommandBase.Hopper);
+		Scheduler.getInstance().add(CommandBase.Climber);
 		
 		AutoPaths.loadPaths();
 		System.out.println("IM ALIVE!!");
