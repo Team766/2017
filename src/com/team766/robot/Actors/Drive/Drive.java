@@ -10,6 +10,7 @@ import lib.Message;
 import lib.PIDController;
 
 import com.team766.lib.Messages.CheesyDrive;
+import com.team766.lib.Messages.DrivePath;
 import com.team766.lib.Messages.DriveDistance;
 import com.team766.lib.Messages.DriveStatusUpdate;
 import com.team766.lib.Messages.HDrive;
@@ -54,7 +55,7 @@ public class Drive extends Actor{
 	SubActor currentCommand;
 	
 	public void init() {
-		acceptableMessages = new Class[]{MotorCommand.class, CheesyDrive.class, HDrive.class};
+		acceptableMessages = new Class[]{MotorCommand.class, CheesyDrive.class, HDrive.class, DrivePath.class};
 		commandFinished = false;
 		
 		lastPosTime = System.currentTimeMillis() / 1000.0;
@@ -86,6 +87,8 @@ public class Drive extends Actor{
 					currentCommand = new CheesyDriveCommand(currentMessage);
 				else if(currentMessage instanceof HDrive)
 					currentCommand = new HDriveCommand(currentMessage);
+				else if(currentMessage instanceof DrivePath)
+					currentCommand = new DrivePathCommand(currentMessage);
 				else if(currentMessage instanceof DriveDistance)
 					currentCommand = new DriveDistanceCommand(currentMessage);
 							
@@ -127,7 +130,7 @@ public class Drive extends Actor{
 			leftVel = (leftDist() - lastLeftDist) / (System.currentTimeMillis()/1000.0 - lastVelTime);
 			rightVel = (rightDist() - lastRightDist) / (System.currentTimeMillis()/1000.0 - lastVelTime);
 			
-			//System.out.printf("%f\t%f\t%f\n", avgLinearRate(), rightVel, rightVel);
+//			System.out.printf("Rates: %f\t%f\t%f\n", avgLinearRate(), rightVel, rightVel);
 			
 			lastLeftDist = leftDist();
 			lastRightDist = rightDist();
