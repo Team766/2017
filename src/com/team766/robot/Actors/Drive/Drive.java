@@ -102,7 +102,7 @@ public class Drive extends Actor{
 			
 			//Send Status Update	#StayUpToDate	#Current	#inTheKnow
 			sendMessage(new DriveStatusUpdate(commandFinished, currentMessage, xPos, yPos, avgLinearRate()));
-	
+
 			updateVelocities();
 			updateLocation();
 			
@@ -202,7 +202,7 @@ public class Drive extends Actor{
 		if(Math.abs(power) < Constants.driveCenterDeadband)
 			centerMotor.set(0);
 		else
-			centerMotor.set(power);
+			centerMotor.set(-power);
 	}
 	
 	protected void resetEncoders(){
