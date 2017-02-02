@@ -11,6 +11,7 @@ import lib.PIDController;
 
 import com.team766.lib.Messages.CheesyDrive;
 import com.team766.lib.Messages.DrivePath;
+import com.team766.lib.Messages.DriveDistance;
 import com.team766.lib.Messages.DriveStatusUpdate;
 import com.team766.lib.Messages.HDrive;
 import com.team766.lib.Messages.MotorCommand;
@@ -88,6 +89,8 @@ public class Drive extends Actor{
 					currentCommand = new HDriveCommand(currentMessage);
 				else if(currentMessage instanceof DrivePath)
 					currentCommand = new DrivePathCommand(currentMessage);
+				else if(currentMessage instanceof DriveDistance)
+					currentCommand = new DriveDistanceCommand(currentMessage);
 							
 				//Reset Control loops
 				resetControlLoops();
@@ -182,21 +185,24 @@ public class Drive extends Actor{
 	}
 	
 	protected void setLeft(double power){
-		if(Math.abs(leftMotor.get()) < Constants.driveLeftDeadband)
+		if(Math.abs(power) < Constants.driveLeftDeadband)
 			leftMotor.set(0);
 		else
 			leftMotor.set(power);
 	}
 	
 	protected void setRight(double power){
-		if(Math.abs(rightMotor.get()) < Constants.driveRightDeadband)
+		if(Math.abs(power) < Constants.driveRightDeadband)
 			rightMotor.set(0);
 		else
 			rightMotor.set(power);
 	}
 	
 	protected void setCenter(double power){
-		centerMotor.set(power);		
+		if(Math.abs(power) < Constants.driveCenterDeadband)
+			centerMotor.set(0);
+		else
+			centerMotor.set(power);
 	}
 	
 	protected void resetEncoders(){

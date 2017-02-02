@@ -28,6 +28,10 @@ public abstract class Constants extends RobotValues{
 	
 	public static final double driveLeftDeadband = 0;
 	public static final double driveRightDeadband = 0;
+	public static final double driveCenterDeadband = 0;
+	
+	public static final double leftAxisDeadband = 0.05;
+	public static final double rightAxisDeadband = 0.05;
 	
 	//Buttons
 	public static final int driverQuickTurn = 1;
