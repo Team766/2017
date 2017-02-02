@@ -7,6 +7,7 @@ import com.team766.lib.CommandBase;
 import com.team766.lib.Messages.DrivePath;
 import com.team766.lib.Messages.DriveStatusUpdate;
 import com.team766.lib.Messages.MotorCommand;
+import com.team766.lib.Messages.MotorCommand.Motor;
 import com.team766.robot.Constants;
 
 public class AutonSelector extends Actor{
