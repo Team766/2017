@@ -7,8 +7,8 @@ public class DriveDistance implements Message{
 	private double angle;
 	
 	public DriveDistance(double distance, double angle){
-		this.distance = distance;
-		this.angle = angle;
+		this.distance = distance; //meters
+		this.angle = angle; //degrees
 	}
 	
 	public double getDistance(){
