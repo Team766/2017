@@ -12,7 +12,7 @@ public abstract class Constants extends RobotValues{
 		AutonMode = autonMode;
 	}
 	
-	public static final String[] AUTONS = new String[]{"None", "Peg"};
+	public static final String[] AUTONS = new String[]{"None", "DriveToPeg"};
 	
 	public static final int ACTOR_COUNT = 1;
 	

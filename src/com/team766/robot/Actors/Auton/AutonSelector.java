@@ -5,11 +5,13 @@ import lib.LogFactory;
 import lib.Scheduler;
 
 import com.team766.lib.CommandBase;
+import com.team766.lib.Messages.DriveDistance;
 import com.team766.lib.Messages.DrivePath;
 import com.team766.lib.Messages.DriveStatusUpdate;
 import com.team766.lib.Messages.MotorCommand;
 import com.team766.lib.Messages.MotorCommand.Motor;
 import com.team766.robot.Constants;
+import com.team766.robot.Actors.Drive.Drive;
 
 public class AutonSelector extends Actor{
 	
@@ -33,6 +35,12 @@ public class AutonSelector extends Actor{
 				System.out.println("Auton: None");
 				LogFactory.getInstance("General").print("Auton: None");
 				break;
+			case "DriveToPeg":
+				System.out.println("Auton: DriveToPeg");
+				LogFactory.getInstance("General").print("Auton: DriveToPeg");
+				sendMessage(new DriveDistance(2.0, 0.0));
+				//System.out.println("message sent");
+				break;	
 			default:
 				System.out.println("Auton: Failed to select auton");
 				LogFactory.getInstance("General").print("Auton: Failed to select auton");
