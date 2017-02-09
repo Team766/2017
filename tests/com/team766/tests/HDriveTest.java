@@ -34,7 +34,9 @@ public class HDriveTest extends RobotTestCase{
 		//Robot drives forwards
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getLeftMotor()).get() == 0;}, 2);
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getRightMotor()).get() == 0;}, 2);
-		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getCenterMotor()).get() < 0.5;}, 2);
+		//System.out.println("Herrooo");
+		//System.out.println(instance.getMotor(ConfigFile.getCenterMotor()).get());
+		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getCenterMotor()).get() > 0.5;}, 2);
 	}
 	
 	@Test
@@ -55,19 +57,19 @@ public class HDriveTest extends RobotTestCase{
 		//Heading 0
 		((Gyro)(instance.getGyro(ConfigFile.getHopperSensor()))).setAngle(0.0);
 		
-		//Strafe sideways while turning
+		//Strafes sideways while turning
 		Scheduler.getInstance().sendMessage(new HDrive(1, 0, 1));
 		
 		//Robot drives forwards
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getLeftMotor()).get() > 0;}, 2);
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getRightMotor()).get() < 0;}, 2);
-		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getCenterMotor()).get() > 0.5;}, 2);
+		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getCenterMotor()).get() == 0;}, 2);
 		
 		((Gyro)(instance.getGyro(ConfigFile.getHopperSensor()))).setAngle(90.0);
 		//Facing 90 deg, drive motors now moving it sideways
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getLeftMotor()).get() > 0;}, 2);
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getRightMotor()).get() == 0;}, 2);
-		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getCenterMotor()).get() == 0;}, 2);
+		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getCenterMotor()).get() < 0.5;}, 2);
 		
 	}
 }
