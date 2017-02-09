@@ -55,7 +55,7 @@ public class Drive extends Actor{
 	SubActor currentCommand;
 	
 	public void init() {
-		acceptableMessages = new Class[]{MotorCommand.class, CheesyDrive.class, HDrive.class, DrivePath.class};
+		acceptableMessages = new Class[]{MotorCommand.class, CheesyDrive.class, HDrive.class, DrivePath.class, DriveDistance.class};
 		commandFinished = false;
 		
 		lastPosTime = System.currentTimeMillis() / 1000.0;
@@ -102,7 +102,7 @@ public class Drive extends Actor{
 			
 			//Send Status Update	#StayUpToDate	#Current	#inTheKnow
 			sendMessage(new DriveStatusUpdate(commandFinished, currentMessage, xPos, yPos, avgLinearRate()));
-	
+
 			updateVelocities();
 			updateLocation();
 			
@@ -202,7 +202,7 @@ public class Drive extends Actor{
 		if(Math.abs(power) < Constants.driveCenterDeadband)
 			centerMotor.set(0);
 		else
-			centerMotor.set(power);
+			centerMotor.set(-power);
 	}
 	
 	protected void resetEncoders(){

@@ -2,6 +2,7 @@ package com.team766.robot.Actors.Auton;
 
 import lib.Actor;
 import lib.LogFactory;
+import lib.Scheduler;
 
 import com.team766.lib.CommandBase;
 import com.team766.lib.Messages.DrivePath;
@@ -23,6 +24,7 @@ public class AutonSelector extends Actor{
 		System.out.println("Init!");
 		acceptableMessages = new Class[]{DriveStatusUpdate.class};
 	}
+
 	
 	@Override
 	public void run() {
