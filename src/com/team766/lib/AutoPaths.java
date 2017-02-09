@@ -11,10 +11,12 @@ public class AutoPaths {
 	// Make sure these match up!
 	public static final int WALL_LANE_ID = 2;
 	public final static String[] kPathNames = {"StraightAheadPath",
-												"SquarePath"
+												"SquarePath",
+												"ToPegPath"
 												};
 	public final static String[] kPathDescriptions = { "Straight ahead", 
-														"Drive square path"};
+														"Drive square path",
+														"Drives path to place peg"};
 	static Hashtable<String, Path> paths_ = new Hashtable<String, Path>();
 
 	public static void loadPaths() {
