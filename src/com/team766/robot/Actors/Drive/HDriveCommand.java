@@ -9,6 +9,8 @@ import com.team766.lib.Messages.HDrive;
 public class HDriveCommand extends CommandBase{
 	HDrive command;
 	
+	public double left, right, center, norm;
+	
 	public HDriveCommand(Message m){
 		command = (HDrive)m;
 	}
@@ -16,9 +18,24 @@ public class HDriveCommand extends CommandBase{
 	@Override
 	public void update() {
 		double heading = command.getHeading();
+		left = getVert() + heading;
+		right = getVert() - heading;	
+		center = (6.3/5.3) * getHoriz();
+		/*
 		Drive.setLeft(round2D(getVert()) + heading);
 		Drive.setRight(round2D(getVert()) - heading);
 		Drive.setCenter(round2D(getHoriz()));		
+		*/
+		
+		norm = Math.max(Math.max(1.0, Math.abs(left)), Math.max(Math.abs(right), Math.abs(center)));
+		left /= norm;
+		right /= norm;
+		center /= norm;
+		
+		Drive.setLeft(left);
+		Drive.setRight(right);
+		Drive.setCenter(center);
+		
 	}
 
 	@Override
