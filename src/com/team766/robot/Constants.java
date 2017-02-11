@@ -46,12 +46,12 @@ public abstract class Constants extends RobotValues{
 	//Drive PID
 	public static final double MAX_STOPPING_VEL = 0.5;	//	UNITS:	m/s
 	
-	public static final double k_angularP =	0.04;//1/maxAngularVelocity;	//.012
+	public static final double k_angularP =	0.02;//1/maxAngularVelocity;	//.012
 	public static final double k_angularI = 0.0000;
 	public static final double k_angularD = 0.3;
 	public static final double k_angularThresh = 1;
 	
-	public static final double k_driveAngularP = 0.01;
+	public static final double k_driveAngularP = 0.001;
 	public static final double k_driveAngularI = 0.0008;
 	public static final double k_driveAngularD = 0.0;
 	

@@ -43,8 +43,11 @@ public class Drive extends Actor{
 	private double currHeading;
 	
 	private double lastVelTime;
+	private double lastAngVelTime;
 	private double rightVel;
 	private double leftVel;
+	private double angVel;
+	private double lastAngle;
 	private double lastRightDist;
 	private double lastLeftDist;
 	
@@ -66,6 +69,10 @@ public class Drive extends Actor{
 		rightVel = 0;
 		lastLeftDist = leftDist();
 		lastRightDist = rightDist();
+		lastAngle = 0;
+		
+		lastAngVelTime = System.currentTimeMillis() / 1000.0;
+		
 	}
 	
 	public void run() {
@@ -104,6 +111,7 @@ public class Drive extends Actor{
 			sendMessage(new DriveStatusUpdate(commandFinished, currentMessage, xPos, yPos, avgLinearRate()));
 
 			updateVelocities();
+			updateAngularRate();
 			updateLocation();
 			
 			itsPerSec++;
@@ -138,6 +146,17 @@ public class Drive extends Actor{
 		}
 	}
 	
+	private void updateAngularRate(){
+		if(System.currentTimeMillis()/1000.0 - lastAngVelTime > 0.1){
+			
+			angVel = (getAngle() - lastAngle) / (System.currentTimeMillis()/1000.0 - lastAngVelTime);
+//			System.out.printf("angular rates: %f\t%f\n", getAngularRate(), angVel);
+			
+			lastAngle = getAngle();
+			lastAngVelTime = System.currentTimeMillis()/1000.0;
+		}
+	}
+	
 	private void updateLocation(){
 		if(System.currentTimeMillis()/1000.0 - lastPosTime > 0.25){
 			currHeading = Math.toRadians(gyro.getAngle());
@@ -156,7 +175,8 @@ public class Drive extends Actor{
 	}
 	
 	protected double getAngularRate(){
-		return gyro.getRate();
+		//return gyro.getRate();
+		return angVel;
 	}
 	
 	protected double leftRate(){
