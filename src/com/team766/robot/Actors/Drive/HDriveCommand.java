@@ -32,8 +32,8 @@ public class HDriveCommand extends CommandBase{
 		right /= norm;
 		center /= norm;
 //		System.out.printf("l, r, c: %f %f %f\n", left, right, center);
-		Drive.setLeft(left);
-		Drive.setRight(right);
+		Drive.setLeft(round2D(left));
+		Drive.setRight(round2D(right));
 		Drive.setCenter(center);
 		
 	}
