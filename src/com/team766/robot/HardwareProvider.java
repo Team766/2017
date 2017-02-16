@@ -21,11 +21,17 @@ public class HardwareProvider {
 	}
 	
 	// HAL
-	public SpeedController getLeftDrive(){
-		return RobotProvider.instance.getMotor(ConfigFile.getLeftMotor());
+	public SpeedController getLeftDriveA(){
+		return RobotProvider.instance.getMotor(ConfigFile.getLeftMotor()[0]);
 	}
-	public SpeedController getRightDrive(){
-		return RobotProvider.instance.getMotor(ConfigFile.getRightMotor());
+	public SpeedController getLeftDriveB(){
+		return RobotProvider.instance.getMotor(ConfigFile.getLeftMotor()[1]);
+	}
+	public SpeedController getRightDriveA(){
+		return RobotProvider.instance.getMotor(ConfigFile.getRightMotor()[0]);
+	}
+	public SpeedController getRightDriveB(){
+		return RobotProvider.instance.getMotor(ConfigFile.getRightMotor()[1]);
 	}
 	public SpeedController getCenterDrive(){
 		return RobotProvider.instance.getMotor(ConfigFile.getCenterMotor());

@@ -20,8 +20,10 @@ import com.team766.robot.HardwareProvider;
 
 public class Drive extends Actor{
 
-	SpeedController leftMotor = HardwareProvider.getInstance().getLeftDrive();
-	SpeedController rightMotor = HardwareProvider.getInstance().getRightDrive();
+	SpeedController leftMotorA = HardwareProvider.getInstance().getLeftDriveA();
+	SpeedController leftMotorB = HardwareProvider.getInstance().getLeftDriveB();
+	SpeedController rightMotorA = HardwareProvider.getInstance().getRightDriveA();
+	SpeedController rightMotorB = HardwareProvider.getInstance().getRightDriveB();	
 	SpeedController centerMotor = HardwareProvider.getInstance().getCenterDrive();
 	
 	EncoderReader leftEncoder = HardwareProvider.getInstance().getLeftEncoder();
@@ -205,17 +207,23 @@ public class Drive extends Actor{
 	}
 	
 	protected void setLeft(double power){
-		if(Math.abs(power) < Constants.driveLeftDeadband)
-			leftMotor.set(0);
-		else
-			leftMotor.set(power);
+		if(Math.abs(power) < Constants.driveLeftDeadband){
+			leftMotorA.set(0);
+			leftMotorB.set(0);
+		}else{
+			leftMotorA.set(power);
+			leftMotorB.set(power);
+		}
 	}
 	
 	protected void setRight(double power){
-		if(Math.abs(power) < Constants.driveRightDeadband)
-			rightMotor.set(0);
-		else
-			rightMotor.set(power);
+		if(Math.abs(power) < Constants.driveRightDeadband){
+			rightMotorA.set(0);
+			rightMotorB.set(0);
+		}else{
+			rightMotorA.set(power);
+			rightMotorB.set(power);
+		}
 	}
 	
 	protected void setCenter(double power){

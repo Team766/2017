@@ -21,8 +21,8 @@ public class HDriveTest extends RobotTestCase{
 		Scheduler.getInstance().sendMessage(new HDrive(0, 1, 0));
 		
 		//Robot drives forwards
-		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getLeftMotor()).get() > 0;}, 2);
-		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getRightMotor()).get() > 0;}, 2);
+		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getLeftMotor()[0]).get() > 0;}, 2);
+		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getRightMotor()[0]).get() > 0;}, 2);
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getCenterMotor()).get() == 0;}, 2);
 		
 		//Heading 90
@@ -33,9 +33,9 @@ public class HDriveTest extends RobotTestCase{
 		
 		//Robot drives forwards
 		//Use the line below to test what getCenterMotor's number actually is.
-		System.out.println("This left " + instance.getMotor(ConfigFile.getLeftMotor()).get());
-		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getLeftMotor()).get() == 0;}, 2);
-		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getRightMotor()).get() == 0;}, 2);
+		System.out.println("This left " + instance.getMotor(ConfigFile.getLeftMotor()[0]).get());
+		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getLeftMotor()[0]).get() == 0;}, 2);
+		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getRightMotor()[0]).get() == 0;}, 2);
 		//Use the line below to test what getCenterMotor's number actually is.
 		System.out.println("This center " + instance.getMotor(ConfigFile.getCenterMotor()).get());
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getCenterMotor()).get() > 0;}, 2);
@@ -50,8 +50,8 @@ public class HDriveTest extends RobotTestCase{
 		Scheduler.getInstance().sendMessage(new HDrive(0, 0, 1));
 		
 		//Robot drives forwards
-		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getLeftMotor()).get() > 0.5;}, 2);
-		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getRightMotor()).get() < -0.5;}, 2);
+		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getLeftMotor()[0]).get() > 0.5;}, 2);
+		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getRightMotor()[0]).get() < -0.5;}, 2);
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getCenterMotor()).get() == 0;}, 2);
 		
 		//#########################################################################################//
@@ -63,14 +63,14 @@ public class HDriveTest extends RobotTestCase{
 		Scheduler.getInstance().sendMessage(new HDrive(1, 0, 1));
 		
 		//Robot drives forwards
-		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getLeftMotor()).get() > 0;}, 2);
-		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getRightMotor()).get() < 0;}, 2);
+		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getLeftMotor()[0]).get() > 0;}, 2);
+		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getRightMotor()[0]).get() < 0;}, 2);
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getCenterMotor()).get() < 0.5;}, 2);
 		
 		((Gyro)(instance.getGyro(ConfigFile.getGyro()))).setAngle(90.0);
 		//Facing 90 deg, drive motors now moving it sideways
-		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getLeftMotor()).get() > 0;}, 2);
-		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getRightMotor()).get() == 0;}, 2);
+		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getLeftMotor()[0]).get() > 0;}, 2);
+		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getRightMotor()[0]).get() == 0;}, 2);
 		// Line below is print out getRightMotor's value for testing purposes
 		System.out.println("This be " + instance.getMotor(ConfigFile.getCenterMotor()).get());
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getCenterMotor()).get() < 0;}, 2);
