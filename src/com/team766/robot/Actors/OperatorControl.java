@@ -10,6 +10,7 @@ import com.team766.lib.Messages.HDrive;
 import com.team766.lib.Messages.MotorCommand;
 import com.team766.lib.Messages.UpdateClimber;
 import com.team766.lib.Messages.UpdateGearCollector;
+import com.team766.robot.Buttons;
 import com.team766.robot.Constants;
 import com.team766.robot.HardwareProvider;
 import com.team766.robot.Robot;
@@ -85,15 +86,15 @@ public class OperatorControl extends Actor {
 				previousHeading = rightAxis[2];
 			}
 			
-			if(jLeft.getRawButton(Constants.dropGear) || jLeft.getRawButton(Constants.collectGear)){
-				sendMessage(new UpdateGearCollector(jLeft.getRawButton(Constants.collectGear), jLeft.getRawButton(Constants.dropGear)));
+			if(jLeft.getRawButton(Buttons.scoreGears) || jLeft.getRawButton(Buttons.loadGears)){
+				sendMessage(new UpdateGearCollector(jLeft.getRawButton(Buttons.loadGears), jLeft.getRawButton(Buttons.scoreGears)));
 			}
 			
 			//button for climber
-			if(!previousPress && jLeft.getRawButton(Constants.climb)){
-				sendMessage(new UpdateClimber(jLeft.getRawButton(Constants.climb)));
+			if(!previousPress && jLeft.getRawButton(Buttons.climbUp)){
+				sendMessage(new UpdateClimber(jLeft.getRawButton(Buttons.climbUp)));
 			}
-			previousPress = jLeft.getRawButton(Constants.climb);
+			previousPress = jLeft.getRawButton(Buttons.climbUp);
 			
 				
 				
