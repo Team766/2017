@@ -18,7 +18,8 @@ public class AutoPaths {
 	public final static String[] kPathDescriptions = { "Straight ahead", 
 														"Drive square path",
 														"Drives path to place peg",
-														"Drives to front of boiler to score"};
+														"Drives to front of boiler to score"
+														};
 	static Hashtable<String, Path> paths_ = new Hashtable<String, Path>();
 
 	public static void loadPaths() {

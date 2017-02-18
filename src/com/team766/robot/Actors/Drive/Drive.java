@@ -197,15 +197,15 @@ public class Drive extends Actor{
 	}
 	
 	protected double leftDist(){
-		return leftEncoder.getRaw() / Constants.counts_per_rev * Constants.wheel_circumference;
+		return ConstantsFileReader.getInstance().get("LeftEncoderDirection") * leftEncoder.getRaw() / Constants.counts_per_rev * Constants.wheel_circumference;
 	}
 	
 	protected double rightDist(){
-		return rightEncoder.getRaw() / Constants.counts_per_rev * Constants.wheel_circumference;
+		return ConstantsFileReader.getInstance().get("RightEncoderDirection") * rightEncoder.getRaw() / Constants.counts_per_rev * Constants.wheel_circumference;
 	}
 	
 	protected double centerDist(){
-		return centerEncoder.getRaw() / Constants.center_counts_per_rev * Constants.follower_wheel_circumference;
+		return ConstantsFileReader.getInstance().get("CenterEncoderDirection") * centerEncoder.getRaw() / Constants.center_counts_per_rev * Constants.follower_wheel_circumference;
 	}
 	
 	protected void setDrive(double power){

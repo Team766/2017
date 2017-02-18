@@ -34,7 +34,7 @@ public class DrivePathCommand extends CommandBase {
 		LogFactory.getInstance("General").print("Drive: DrivePathCommand");
 		command = (DrivePath) m;
 		path = command.getPath();
-		
+	
 		start();
 	}
 
@@ -95,7 +95,7 @@ public class DrivePathCommand extends CommandBase {
 	}
 
 	public boolean onTarget() {
-		return followerLeft.isFinishedTrajectory() && Math.abs(angleDiff) < 5;
+		return followerLeft.isFinishedTrajectory();
 	}
 
 	public void loadProfile(Trajectory leftProfile, Trajectory rightProfile,
