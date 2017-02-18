@@ -1,2 +1,5 @@
 kTest, 1
 AutonMode, 1
+LeftMotorDirection, 1
+RightMotorDirection, 1
+CenterMotorDirection, 1

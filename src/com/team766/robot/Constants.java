@@ -21,6 +21,10 @@ public abstract class Constants extends RobotValues{
 	public static final double wheel_circumference = 0.2032 * Math.PI;
 	public static final double counts_per_rev = 360;
 	
+	public static final double follower_wheel_circumference = 0.27083 * Math.PI; //3.25 in
+	public static final double center_counts_per_rev = 360;
+	
+	
 	public static final double maxAngularVelocity = 50;
 	public static final double maxLinearVelocity = 10;
 	
