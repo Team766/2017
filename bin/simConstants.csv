@@ -1,2 +1,9 @@
 kTest, 1
 AutonMode, 1
+DriveScheme, 0
+LeftMotorDirection, 1
+RightMotorDirection, 1
+CenterMotorDirection, 1
+LeftEncoderDirection, 1
+RightEncoderDirection, 1
+CenterEncoderDirection, 1
