@@ -18,9 +18,15 @@ public class HDriveCommand extends CommandBase{
 	@Override
 	public void update() {
 		double heading = command.getHeading();
-		left = getVert() + heading;
-		right = getVert() - heading;	
-		center = (6.3/5.3) * getHoriz();
+		if(command.isFieldCentric()){
+			left = getVert() + heading;
+			right = getVert() - heading;	
+			center = (6.3/5.3) * getHoriz();
+		}else{
+			left = command.getJoyY() + heading;
+			right = command.getJoyY() - heading;	
+			center = (6.3/5.3) * command.getJoyX();
+		}
 		/*
 		Drive.setLeft(round2D(getVert()) + heading);
 		Drive.setRight(round2D(getVert()) - heading);

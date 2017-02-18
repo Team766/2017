@@ -109,7 +109,7 @@ public class Drive extends Actor{
 						
 			//LogFactory.getInstance("General").printPeriodic("Gyro: " + getAngle(), "Gyro", 200);
 			
-			LogFactory.getInstance("General").printPeriodic("Left: " + leftDist() + " Right: " + rightDist() + " Center: " + centerDist(), "Encoders", 200);
+//			LogFactory.getInstance("General").printPeriodic("Left: " + leftDist() + " Right: " + rightDist() + " Center: " + centerDist(), "Encoders", 200);
 			step();
 			
 			//Send Status Update	#StayUpToDate	#Current	#inTheKnow

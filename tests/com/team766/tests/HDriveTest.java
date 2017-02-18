@@ -18,7 +18,7 @@ public class HDriveTest extends RobotTestCase{
 		((Gyro)(instance.getGyro(ConfigFile.getGyro()))).setAngle(0.0);
 		
 		//Joystick Forward
-		Scheduler.getInstance().sendMessage(new HDrive(0, 1, 0));
+		Scheduler.getInstance().sendMessage(new HDrive(0, 1, 0, true));
 		
 		//Robot drives forwards
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getLeftMotor()[0]).get() > 0;}, 2);
@@ -29,7 +29,7 @@ public class HDriveTest extends RobotTestCase{
 		((Gyro)(instance.getGyro(ConfigFile.getGyro()))).setAngle(90.0);
 		
 		//Joystick Forward
-		Scheduler.getInstance().sendMessage(new HDrive(0, 1, 0));
+		Scheduler.getInstance().sendMessage(new HDrive(0, 1, 0, true));
 		
 		//Robot drives forwards
 		//Use the line below to test what getCenterMotor's number actually is.
@@ -45,7 +45,7 @@ public class HDriveTest extends RobotTestCase{
 		((Gyro)(instance.getGyro(ConfigFile.getGyro()))).setAngle(0.0);
 		
 		//Turn in a circle
-		Scheduler.getInstance().sendMessage(new HDrive(0, 0, 1));
+		Scheduler.getInstance().sendMessage(new HDrive(0, 0, 1, true));
 		
 		//Robot drives forwards
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getLeftMotor()[0]).get() > 0.5;}, 2);
@@ -58,7 +58,7 @@ public class HDriveTest extends RobotTestCase{
 		((Gyro)(instance.getGyro(ConfigFile.getGyro()))).setAngle(0.0);
 		
 		//Strafe sideways while turning
-		Scheduler.getInstance().sendMessage(new HDrive(1, 0, 1));
+		Scheduler.getInstance().sendMessage(new HDrive(1, 0, 1, true));
 		
 		//Robot drives forwards
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getLeftMotor()[0]).get() > 0;}, 2);
