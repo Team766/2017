@@ -51,6 +51,9 @@ public class HardwareProvider {
 	public EncoderReader getRightEncoder(){
 		return RobotProvider.instance.getEncoder(ConfigFile.getRightEncoder()[0], ConfigFile.getRightEncoder()[1]);
 	}
+	public EncoderReader getCenterEncoder(){
+		return RobotProvider.instance.getEncoder(ConfigFile.getCenterEncoder()[0], ConfigFile.getCenterEncoder()[1]);
+	}
 	
 	public EncoderReader getClimberEncoder(){
 		return RobotProvider.instance.getEncoder(ConfigFile.getClimberEncoder()[0], ConfigFile.getClimberEncoder()[1]);

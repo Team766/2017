@@ -31,12 +31,6 @@ public class ArchitectureTest extends RobotTestCase{
 		reader.close();
 		
 		//Check loaded number correctly
-		System.out.println(" This is the value: " + value);
-		System.out.println(" This is the constantName: " + ConstantsFileReader.getInstance().get(constantName));
-		System.out.println(" File Reader Tester   " + ConstantsFileReader.fileName);
-		System.out.println(" Bigger File Reader Tester: " + this.getClass().getClassLoader().getResource(ConstantsFileReader.fileName).getPath());
-		System.out.println(" Superior File Reader Tester: " + this.getClass().getClassLoader().getResource(ConstantsFileReader.fileName));
-		System.out.println("Token 0/1 " + tokens[0] + "/" + tokens[1]);
 		assertTrueTimed(() -> {return ConstantsFileReader.getInstance().get(constantName) == value;}, 2);
 
 		//Change value and save to file

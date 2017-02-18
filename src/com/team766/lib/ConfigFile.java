@@ -31,6 +31,10 @@ public class ConfigFile {
 		return ConfigFileReader.getInstance().getPorts("rightEncoder");
 	}
 	
+	public static int[] getCenterEncoder(){
+		return ConfigFileReader.getInstance().getPorts("centerEncoder");
+	}
+	
 	public static int[] getClimberEncoder(){
 		return ConfigFileReader.getInstance().getPorts("climberEncoder");
 	}

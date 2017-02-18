@@ -72,7 +72,7 @@ public class OperatorControl extends Actor {
 				if(previousLeft != leftAxis[0] ||
 					previousHeading != rightAxis[2] ||
 					previousRight != leftAxis[1]){
-					sendMessage(new  HDrive(leftAxis[0], leftAxis[1], rightAxis[2]));
+					sendMessage(new  HDrive(leftAxis[0], leftAxis[1], rightAxis[2], false));
 				}
 				//H-Drive
 				
