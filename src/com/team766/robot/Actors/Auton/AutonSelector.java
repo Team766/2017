@@ -39,7 +39,12 @@ public class AutonSelector extends Actor{
 			case "DriveToPeg":
 				System.out.println("Auton: DriveToPeg");
 				LogFactory.getInstance("General").print("Auton: DriveToPeg");
-				sendMessage(new DriveDistance(7.14, 0));  //value only for testing
+				sendMessage(new DrivePath("ToPegPath"));
+				break;	
+			case "BoilerPath":
+				System.out.println("Auton: BoilerPath");
+				LogFactory.getInstance("General").print("Auton: BoilerPath");
+				sendMessage(new DrivePath("BoilerPath"));
 				break;	
 			default:
 				System.out.println("Auton: Failed to select auton");
