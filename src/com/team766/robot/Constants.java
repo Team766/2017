@@ -12,16 +12,16 @@ public abstract class Constants extends RobotValues{
 		AutonMode = autonMode;
 	}
 	
-	public static final String[] AUTONS = new String[]{"None", "DriveToPeg", "BoilerPath"};
+	public static final String[] AUTONS = new String[]{"None", "DriveToPeg", "BoilerPath", "StraightToPegPath"};
 	
 	public static final int ACTOR_COUNT = 1;
 	
 	public static final boolean TANK_DRIVE = false;
 	
-	public static final double wheel_circumference = 2/3 * Math.PI; //feet
+	public static final double wheel_circumference = 2.0/3.0 * Math.PI; //feet
 	public static final double counts_per_rev = 360;
 	
-	public static final double maxAngularVelocity = 50;
+	public static final double maxAngularVelocity = 50.0;
 	public static final double maxLinearVelocity = 32.81; //ft/sec
 	
 	public static final double maxClimberMotor = 1;

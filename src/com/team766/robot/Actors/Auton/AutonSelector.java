@@ -46,6 +46,11 @@ public class AutonSelector extends Actor{
 				LogFactory.getInstance("General").print("Auton: BoilerPath");
 				sendMessage(new DrivePath("BoilerPath"));
 				break;	
+			case "StraightToPegPath":
+				System.out.println("Auton: StraightToPegPath");
+				LogFactory.getInstance("General").print("Auton: StraightToPegPath");
+				sendMessage(new DrivePath("StraightToPegPath"));
+				break;
 			default:
 				System.out.println("Auton: Failed to select auton");
 				LogFactory.getInstance("General").print("Auton: Failed to select auton");
