@@ -48,10 +48,10 @@ public class OperatorControl extends Actor {
 			leftAxis[2] = (Math.abs(jLeft.getRawAxis(2)) > Constants.leftAxisDeadband)? -jLeft.getRawAxis(2) : 0;
 			leftAxis[3] = (Math.abs(jLeft.getRawAxis(3)) > Constants.leftAxisDeadband)? -jLeft.getRawAxis(3) : 0;
 			
-			rightAxis[0] = (Math.abs(jRight.getRawAxis(0)) > Constants.leftAxisDeadband)? -jRight.getRawAxis(0) : 0;
-			rightAxis[1] = (Math.abs(jRight.getRawAxis(1)) > Constants.leftAxisDeadband)? -jRight.getRawAxis(1) : 0;
-			rightAxis[2] = (Math.abs(jRight.getRawAxis(2)) > Constants.leftAxisDeadband)? jRight.getRawAxis(2) : 0;
-			rightAxis[3] = (Math.abs(jRight.getRawAxis(3)) > Constants.leftAxisDeadband)? -jRight.getRawAxis(3) : 0;
+			rightAxis[0] = (Math.abs(jRight.getRawAxis(0)) > Constants.rightAxisDeadband)? -jRight.getRawAxis(0) : 0;
+			rightAxis[1] = (Math.abs(jRight.getRawAxis(1)) > Constants.rightAxisDeadband)? -jRight.getRawAxis(1) : 0;
+			rightAxis[2] = (Math.abs(jRight.getRawAxis(2)) > Constants.rightAxisDeadband)? jRight.getRawAxis(2) : 0;
+			rightAxis[3] = (Math.abs(jRight.getRawAxis(3)) > Constants.rightAxisDeadband)? -jRight.getRawAxis(3) : 0;
 			
 			
 			if(Constants.TANK_DRIVE){

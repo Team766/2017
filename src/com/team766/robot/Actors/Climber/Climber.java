@@ -1,12 +1,9 @@
 package com.team766.robot.Actors.Climber;
 
+import com.team766.lib.Messages.Stop;
 import com.team766.lib.Messages.UpdateClimber;
 import com.team766.lib.Messages.UpdateGearCollector;
 import com.team766.robot.HardwareProvider;
-
-
-
-
 import interfaces.EncoderReader;
 import interfaces.SpeedController;
 import interfaces.SubActor;
@@ -48,6 +45,8 @@ public class Climber extends Actor {
 					else
 						this.setClimberMotor(0.0);
 				}
+				if(currentMessage instanceof Stop)
+					currentCommand.stop();
 				
 			}
 			step();

@@ -12,7 +12,7 @@ public abstract class Constants extends RobotValues{
 		AutonMode = autonMode;
 	}
 	
-	public static final String[] AUTONS = new String[]{"None", "DriveToPeg", "BoilerPath", "StraightToPegPath"};
+	public static final String[] AUTONS = new String[]{"None", "DriveToPeg", "BoilerPath", "StraightToPegPath", "DriveDistance"};
 	
 	public static final int ACTOR_COUNT = 1;
 	
@@ -35,8 +35,8 @@ public abstract class Constants extends RobotValues{
 	public static final double driveRightDeadband = 0;
 	public static final double driveCenterDeadband = 0;
 	
-	public static final double leftAxisDeadband = 0.05;
-	public static final double rightAxisDeadband = 0.05;
+	public static final double leftAxisDeadband = 0.1;
+	public static final double rightAxisDeadband = 0.1;
 	
 	//Axis
 	public static final int steerAxis = 0;

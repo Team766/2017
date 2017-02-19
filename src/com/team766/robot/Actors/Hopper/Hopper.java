@@ -2,9 +2,9 @@ package com.team766.robot.Actors.Hopper;
 
 import com.team766.lib.Messages.HopperIntake;
 import com.team766.lib.Messages.MotorCommand;
+import com.team766.lib.Messages.Stop;
 import com.team766.robot.HardwareProvider;
 import com.team766.robot.Actors.Drive.MotorSubCommand;
-
 import interfaces.DigitalInputReader;
 import interfaces.SpeedController;
 import interfaces.SubActor;
@@ -39,6 +39,8 @@ public class Hopper extends Actor{
 				
 				if(currentMessage instanceof HopperIntake)
 					currentCommand = new HopperIntakeCommand(currentMessage);
+				if(currentMessage instanceof Stop)
+					currentCommand.stop();
 			}
 			step();
 		}

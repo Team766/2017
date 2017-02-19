@@ -2,6 +2,7 @@ package com.team766.robot.Actors.GearPlacer;
 
 import com.team766.lib.Messages.CheesyDrive;
 import com.team766.lib.Messages.MotorCommand;
+import com.team766.lib.Messages.Stop;
 import com.team766.lib.Messages.UpdateGearCollector;
 import com.team766.robot.HardwareProvider;
 import com.team766.robot.Actors.Drive.MotorSubCommand;
@@ -42,6 +43,8 @@ public class GearPlacer extends Actor{
 					this.setTopOpener(gearMessage.getTop());
 					this.setPlacer(gearMessage.getBottom());
 				}
+				if(currentMessage instanceof Stop)
+					currentCommand.stop();
 					
 			}
 			step();
