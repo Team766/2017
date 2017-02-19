@@ -64,8 +64,12 @@ public class ConfigFile {
 		return ConfigFileReader.getInstance().getPort("hopperMotor");
 	}
 	
-	public static int getHopperSensor(){
-		return ConfigFileReader.getInstance().getPort("hopperSensor");
+	public static int getHopperOpener(){
+		return ConfigFileReader.getInstance().getPort("hopperOpener");
+	}
+	
+	public static int getHopperCloser(){
+		return ConfigFileReader.getInstance().getPort("hopperCloser");
 	}
 	
 	public static int getGearPlacerOpener(){
@@ -74,6 +78,10 @@ public class ConfigFile {
 	
 	public static int getGearPlacer(){
 		return ConfigFileReader.getInstance().getPort("gearPlacer");
+	}
+
+	public static int getClimberDeploy() {
+		return ConfigFileReader.getInstance().getPort("climberDeploy");
 	}
 	
 }

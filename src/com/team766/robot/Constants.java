@@ -18,12 +18,12 @@ public abstract class Constants extends RobotValues{
 	
 	public static final boolean TANK_DRIVE = false;
 	
-	public static final double wheel_circumference = 2.0/3.0 * Math.PI; //feet
-	public static final double counts_per_rev = 360;
+	public static final double wheel_circumference = 1.0/3.0 * Math.PI; //feet
+	public static final double counts_per_rev = 1000.0;
 	
 
 	public static final double follower_wheel_circumference = 0.27083 * Math.PI; //3.25 in
-	public static final double center_counts_per_rev = 360;
+	public static final double center_counts_per_rev = 1000.0;
 	
 	
 	public static final double maxAngularVelocity = 50;

@@ -20,6 +20,7 @@ public class Buttons {
 	public static final int climbUp = 10;
 	public static final int climbDown = 9;
 
-
+	//disable field centric
+	public static final int disableFieldCentric = 2;
 	
 }

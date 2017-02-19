@@ -1,13 +1,18 @@
 package com.team766.robot.Actors;
 
 import interfaces.JoystickReader;
+
 import lib.Actor;
+import lib.ConstantsFileReader;
 import lib.LogFactory;
 import lib.Scheduler;
 
 import com.team766.lib.Messages.CheesyDrive;
+import com.team766.lib.Messages.ClimbDeploy;
 import com.team766.lib.Messages.HDrive;
+import com.team766.lib.Messages.HopperSetRoller;
 import com.team766.lib.Messages.MotorCommand;
+import com.team766.lib.Messages.SetHopperState;
 import com.team766.lib.Messages.UpdateClimber;
 import com.team766.lib.Messages.UpdateGearCollector;
 import com.team766.robot.Buttons;
@@ -27,6 +32,7 @@ public class OperatorControl extends Actor {
 	
 	private double[] leftAxis = new double[4];
 	private double[] rightAxis = new double[4];
+	private boolean[] prevPress = new boolean[10];  //previous press array
 		
 	public void init() {
 		acceptableMessages = new Class[]{};
@@ -34,6 +40,9 @@ public class OperatorControl extends Actor {
 		previousRight = 0;
 		previousHeading = 0;
 		previousPress = false;
+		
+		//Stop autonomous movements
+		sendMessage(new HDrive(0,0,0, false));
 	}
 	
 	/*
@@ -46,7 +55,7 @@ public class OperatorControl extends Actor {
 			leftAxis[0] = (Math.abs(jLeft.getRawAxis(0)) > Constants.leftAxisDeadband)? jLeft.getRawAxis(0) : 0;
 			leftAxis[1] = (Math.abs(jLeft.getRawAxis(1)) > Constants.leftAxisDeadband)? -jLeft.getRawAxis(1) : 0;			
 			leftAxis[2] = (Math.abs(jLeft.getRawAxis(2)) > Constants.leftAxisDeadband)? -jLeft.getRawAxis(2) : 0;
-			leftAxis[3] = (Math.abs(jLeft.getRawAxis(3)) > Constants.leftAxisDeadband)? -jLeft.getRawAxis(3) : 0;
+			leftAxis[3] = (Math.abs(jLeft.getRawAxis(3)) > Constants.leftAxisDeadband)? jLeft.getRawAxis(3) : 0;
 			
 			rightAxis[0] = (Math.abs(jRight.getRawAxis(0)) > Constants.rightAxisDeadband)? -jRight.getRawAxis(0) : 0;
 			rightAxis[1] = (Math.abs(jRight.getRawAxis(1)) > Constants.rightAxisDeadband)? -jRight.getRawAxis(1) : 0;
@@ -63,38 +72,99 @@ public class OperatorControl extends Actor {
 				previousLeft = leftAxis[1];
 				previousRight = rightAxis[1];
 			}else{
-//				if(previousLeft != jLeft.getRawAxis(Constants.accelAxis) || 
-//						previousRight != jRight.getRawAxis(Constants.steerAxis)){
-//					sendMessage(new MotorCommand(-jLeft.getRawAxis(Constants.accelAxis) - jRight.getRawAxis(Constants.steerAxis), MotorCommand.Motor.leftDrive));
-//					sendMessage(new MotorCommand(-jLeft.getRawAxis(Constants.accelAxis) + jRight.getRawAxis(Constants.steerAxis), MotorCommand.Motor.rightDrive));
-//				}
-				
-				if(previousLeft != leftAxis[0] ||
-					previousHeading != rightAxis[2] ||
-					previousRight != leftAxis[1]){
-					sendMessage(new  HDrive(leftAxis[0], leftAxis[1], rightAxis[2], false));
+				switch((int)ConstantsFileReader.getInstance().get("DriveScheme")){
+					//2 joysicks
+					case 0:
+						if(previousLeft != leftAxis[0] ||
+							previousHeading != rightAxis[0] ||
+							previousRight != leftAxis[1]){
+							sendMessage(new  HDrive(leftAxis[0], leftAxis[1], rightAxis[0], false));
+						}
+		
+						previousLeft = leftAxis[0];
+						previousRight = leftAxis[1];
+						previousHeading = rightAxis[0];
+						break;
+					//1 joysick - twist
+					case 1:
+						if(previousLeft != leftAxis[0] ||
+							previousHeading != leftAxis[3] ||
+							previousRight != leftAxis[1]){
+							sendMessage(new  HDrive(leftAxis[0], leftAxis[1], leftAxis[3], false));
+						}
+		
+						previousLeft = leftAxis[0];
+						previousRight = leftAxis[1];
+						previousHeading = leftAxis[3];
+						break;
 				}
-				//H-Drive
-				
+			}
+			
 
-//				if(previousLeft != jLeft.getRawAxis(Constants.accelAxis) || 
-//					previousRight != jRight.getRawAxis(Constants.steerAxis))
-//					sendMessage(new CheesyDrive(jLeft.getRawButton(Constants.driverQuickTurn), jLeft.getRawAxis(Constants.accelAxis), jRight.getRawAxis(Constants.steerAxis)));
-				
-				previousLeft = leftAxis[0];
-				previousRight = leftAxis[1];
-				previousHeading = rightAxis[2];
-			}
 			
-			if(jLeft.getRawButton(Buttons.scoreGears) || jLeft.getRawButton(Buttons.loadGears)){
-				sendMessage(new UpdateGearCollector(jLeft.getRawButton(Buttons.loadGears), jLeft.getRawButton(Buttons.scoreGears)));
-			}
+			//button for load balls(prevPress[0])
+			if(!prevPress[0] && jBox.getRawButton(Buttons.loadBalls))
+				sendMessage(new SetHopperState(SetHopperState.State.Intake));
+			prevPress[0] = jBox.getRawButton(Buttons.loadBalls);
 			
-			//button for climber
-			if(!previousPress && jLeft.getRawButton(Buttons.climbUp)){
-				sendMessage(new UpdateClimber(jLeft.getRawButton(Buttons.climbUp)));
-			}
-			previousPress = jLeft.getRawButton(Buttons.climbUp);
+			
+			//button for score balls(prevPress[1])
+			if(!prevPress[1] && jBox.getRawButton(Buttons.scoreBalls))
+				sendMessage(new SetHopperState(SetHopperState.State.Exhaust));
+			prevPress[1] = jBox.getRawButton(Buttons.scoreBalls);
+			
+			
+			//button for roller forward(prevPress[2])
+			if(!prevPress[2] && jBox.getRawButton(Buttons.rollerForwards))
+				sendMessage(new HopperSetRoller(jBox.getRawButton(Buttons.rollerForwards)));
+			prevPress[2] = jBox.getRawButton(Buttons.rollerForwards);
+			
+			
+			//button for roller backward(prevPress[3])
+			if(!prevPress[3] && jBox.getRawButton(Buttons.rollerBackwards))
+				sendMessage(new HopperSetRoller(jBox.getRawButton(Buttons.rollerForwards)));
+			prevPress[3] = jBox.getRawButton(Buttons.rollerBackwards);
+			
+			
+			//button for store ball(prevPress[4])
+			if(!prevPress[4] && jBox.getRawButton(Buttons.store))
+				sendMessage(new SetHopperState(SetHopperState.State.Store));
+			prevPress[4] = jBox.getRawButton(Buttons.store);
+			
+			
+			//button for load gears(prevPress[5])
+			if(!prevPress[5] && jBox.getRawButton(Buttons.loadGears))
+				sendMessage(new UpdateGearCollector(false, true));
+			prevPress[5] = jBox.getRawButton(Buttons.loadGears);
+			
+			
+			//button for score gears(prevPress[6])
+			if(!prevPress[6] && jBox.getRawButton(Buttons.scoreGears))
+				sendMessage(new UpdateGearCollector(true, false));
+			prevPress[6] = jBox.getRawButton(Buttons.scoreGears);
+			
+			
+			//button for deploy climb(prevPress[7])
+			if(!prevPress[7] && jBox.getRawButton(Buttons.climbDeploy))
+				sendMessage(new ClimbDeploy(jBox.getRawButton(Buttons.climbDeploy)));
+			prevPress[7] = jBox.getRawButton(Buttons.climbDeploy);
+			
+			
+			//button for up climb(prevPress[8])
+			if(!prevPress[8] && jBox.getRawButton(Buttons.climbUp))
+				sendMessage(new UpdateClimber(true));
+			prevPress[8] = jBox.getRawButton(Buttons.climbUp);
+			
+			
+			//button for down climb(prevPress[9])
+			if(!prevPress[9] && jBox.getRawButton(Buttons.climbDown))
+				sendMessage(new UpdateClimber(false));
+			prevPress[9] = jBox.getRawButton(Buttons.climbDown);
+			
+			//button for disable field centric
+			if(jLeft.getRawButton(Buttons.disableFieldCentric))
+				//sendMessage();
+			
 			
 				
 				

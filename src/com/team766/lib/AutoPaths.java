@@ -13,14 +13,13 @@ public class AutoPaths {
 	public final static String[] kPathNames = {"StraightAheadPath",
 												"SquarePath",
 												"ToPegPath",
-												"BoilerPath",
 												"StraightToPegPath"
 												};
 	public final static String[] kPathDescriptions = { "Straight ahead", 
 														"Drive square path",
 														"Drives path to place peg",
-														"Drives to front of boiler to score",
-														"Drives straight to peg"};
+														"Drives straight to peg"
+													 };
 	static Hashtable<String, Path> paths_ = new Hashtable<String, Path>();
 
 	public static void loadPaths() {

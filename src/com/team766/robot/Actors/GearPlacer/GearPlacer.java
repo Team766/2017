@@ -76,7 +76,7 @@ public class GearPlacer extends Actor{
 		return placer.get();
 	}
 	
-	protected void setTopOpener(boolean open){
+	public void setTopOpener(boolean open){
 		topOpener.set(open);
 	}
 	
