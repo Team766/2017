@@ -27,19 +27,19 @@ public class OperatorControl extends Actor {
 	JoystickReader jBox = HardwareProvider.getInstance().getBoxJoystick();
 	
 	private double previousLeft, previousRight, previousHeading;
-	private int dropButton, collectButton;
-	private boolean previousPress;
 	
 	private double[] leftAxis = new double[4];
 	private double[] rightAxis = new double[4];
-	private boolean[] prevPress = new boolean[10];  //previous press array
+	private boolean[] prevPress = new boolean[11];  //previous press array
+	private boolean toggleFieldCentric;
 		
 	public void init() {
 		acceptableMessages = new Class[]{};
 		previousLeft = 0;
 		previousRight = 0;
 		previousHeading = 0;
-		previousPress = false;
+		toggleFieldCentric = false;
+		
 		
 		//Stop autonomous movements
 		sendMessage(new HDrive(0,0,0, false));
@@ -78,7 +78,7 @@ public class OperatorControl extends Actor {
 						if(previousLeft != leftAxis[0] ||
 							previousHeading != rightAxis[0] ||
 							previousRight != leftAxis[1]){
-							sendMessage(new  HDrive(leftAxis[0], leftAxis[1], rightAxis[0], false));
+							sendMessage(new  HDrive(leftAxis[0], leftAxis[1], rightAxis[0], toggleFieldCentric));
 						}
 		
 						previousLeft = leftAxis[0];
@@ -90,7 +90,7 @@ public class OperatorControl extends Actor {
 						if(previousLeft != leftAxis[0] ||
 							previousHeading != leftAxis[3] ||
 							previousRight != leftAxis[1]){
-							sendMessage(new  HDrive(leftAxis[0], leftAxis[1], leftAxis[3], false));
+							sendMessage(new  HDrive(leftAxis[0], leftAxis[1], leftAxis[3], toggleFieldCentric));
 						}
 		
 						previousLeft = leftAxis[0];
@@ -161,9 +161,11 @@ public class OperatorControl extends Actor {
 				sendMessage(new UpdateClimber(false));
 			prevPress[9] = jBox.getRawButton(Buttons.climbDown);
 			
-			//button for disable field centric
-			if(jLeft.getRawButton(Buttons.disableFieldCentric))
-				//sendMessage();
+			//button for disable field centric(prevPress[10])
+			if(!prevPress[10] && jLeft.getRawButton(Buttons.disableFieldCentric))
+				toggleFieldCentric = !toggleFieldCentric;
+			prevPress[10] = jLeft.getRawButton(Buttons.disableFieldCentric);
+			
 			
 			
 				
