@@ -18,6 +18,8 @@ import com.team766.lib.Messages.HDrive;
 import com.team766.lib.Messages.MotorCommand;
 import com.team766.robot.Constants;
 import com.team766.robot.HardwareProvider;
+import com.team766.robot.Robot;
+import com.team766.robot.Robot.GameState;
 
 public class Drive extends Actor{
 
@@ -57,6 +59,8 @@ public class Drive extends Actor{
 	
 	private boolean commandFinished;
 	
+	private double gyroOffset;
+	
 	Message currentMessage;
 	MotorCommand[] motors;
 	SubActor currentCommand;
@@ -74,6 +78,8 @@ public class Drive extends Actor{
 		lastLeftDist = leftDist();
 		lastRightDist = rightDist();
 		lastAngle = 0;
+		
+		gyroOffset = Constants.STARTING_HEADING;
 		
 		lastAngVelTime = System.currentTimeMillis() / 1000.0;
 		
@@ -112,7 +118,7 @@ public class Drive extends Actor{
 			
 //			LogFactory.getInstance("General").printPeriodic("Left: " + leftDist() + " Right: " + rightDist() + " Center: " + centerDist(), "Encoders", 200);
 			step();
-			
+						
 			//Send Status Update	#StayUpToDate	#Current	#inTheKnow
 			sendMessage(new DriveStatusUpdate(commandFinished, currentMessage, xPos, yPos, avgLinearRate()));
 
@@ -245,6 +251,15 @@ public class Drive extends Actor{
 		}
 	}
 	
+	protected void resetAngle(){
+		setGyroAngle(0.0);
+	}
+	
+	protected void setGyroAngle(double angle){
+		gyro.reset();
+		gyroOffset = angle;
+	}
+	
 	protected void resetEncoders(){
 		leftEncoder.reset();
 		rightEncoder.reset();
@@ -263,7 +278,7 @@ public class Drive extends Actor{
 	}
 	
 	protected double getAngle(){
-		return gyro.getAngle() + Constants.STARTING_HEADING;
+		return gyro.getAngle() + gyroOffset;
 	}
 	
 	/**

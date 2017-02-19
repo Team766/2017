@@ -1,5 +1,6 @@
 package com.team766.robot.Actors.Drive;
 
+import lib.ConstantsFileReader;
 import lib.Message;
 
 import com.team766.lib.CommandBase;
@@ -9,9 +10,10 @@ public class DriveProfilerCommand extends CommandBase{
 
 	DriveDistance command;
 	
-	final double kMaxVel = 30; //ft/sec
-	final double kMaxAccel = 20; //ft/sec^2
+	double kMaxVel = 30; //ft/sec
+	double kMaxAccel = 20; //ft/sec^2
 	final double kDt = 0.010;
+	final double STOP_THRESH = 0.2;
 
 	double velocity;
 	double goal = 0;
@@ -35,6 +37,9 @@ public class DriveProfilerCommand extends CommandBase{
 		
 		direction = (goal < 0) ? -1 : 1;
 		velocity = 0;
+		
+		kMaxVel =  ConstantsFileReader.getInstance().get("maxVel");
+		kMaxAccel = ConstantsFileReader.getInstance().get("maxAccel");
 		
 		done = false;
 	}
@@ -67,7 +72,7 @@ public class DriveProfilerCommand extends CommandBase{
 				break;
 		}
 		
-		if((Math.abs(goal) - Math.abs(position) <= distToStop(Drive.avgLinearRate())) && (state_ != State.LOCK)){
+		if((Math.abs(goal) - STOP_THRESH <= Math.abs(position) + distToStop(Drive.avgLinearRate())) && (state_ != State.LOCK)){
 			state_ = State.RAMP_DOWN;
 		}
 	

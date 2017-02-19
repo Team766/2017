@@ -47,6 +47,7 @@ public class DrivePathCommand extends CommandBase {
 		followerRight.configure(0.05, 0, 0, 0, 0.005);
 		
 		Drive.resetEncoders();
+		Drive.resetAngle();
 
 		loadProfile(path.getLeftWheelTrajectory(),
 				path.getRightWheelTrajectory(), 1.0, 0.0);
@@ -103,7 +104,7 @@ public class DrivePathCommand extends CommandBase {
 		reset();
 		followerLeft.setTrajectory(leftProfile);
 		followerRight.setTrajectory(rightProfile);
-		this.direction = -direction;
+		this.direction = direction;
 		this.heading = heading;
 	}
 
