@@ -101,7 +101,8 @@ public class Drive extends Actor{
 				else if(currentMessage instanceof DrivePath)
 					currentCommand = new DrivePathCommand(currentMessage);
 				else if(currentMessage instanceof DriveDistance)
-					currentCommand = new DriveDistanceCommand(currentMessage);
+					currentCommand = new DriveProfilerCommand(currentMessage);
+//					currentCommand = new DriveDistanceCommand(currentMessage);
 							
 				//Reset Control loops
 				resetControlLoops();
