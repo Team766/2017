@@ -1,15 +1,20 @@
 package com.team766.robot.Actors;
 
 import interfaces.JoystickReader;
+
 import lib.Actor;
 import lib.LogFactory;
 import lib.Scheduler;
 
 import com.team766.lib.Messages.CheesyDrive;
+import com.team766.lib.Messages.ClimbDeploy;
 import com.team766.lib.Messages.HDrive;
+import com.team766.lib.Messages.HopperSetRoller;
 import com.team766.lib.Messages.MotorCommand;
+import com.team766.lib.Messages.SetHopperState;
 import com.team766.lib.Messages.UpdateClimber;
 import com.team766.lib.Messages.UpdateGearCollector;
+import com.team766.robot.Buttons;
 import com.team766.robot.Constants;
 import com.team766.robot.HardwareProvider;
 import com.team766.robot.Robot;
@@ -26,6 +31,7 @@ public class OperatorControl extends Actor {
 	
 	private double[] leftAxis = new double[4];
 	private double[] rightAxis = new double[4];
+	private boolean[] prevPress = new boolean[10];  //previous press array
 		
 	public void init() {
 		acceptableMessages = new Class[]{};
@@ -85,15 +91,69 @@ public class OperatorControl extends Actor {
 				previousHeading = rightAxis[2];
 			}
 			
-			if(jLeft.getRawButton(Constants.dropGear) || jLeft.getRawButton(Constants.collectGear)){
-				sendMessage(new UpdateGearCollector(jLeft.getRawButton(Constants.collectGear), jLeft.getRawButton(Constants.dropGear)));
-			}
 			
-			//button for climber
-			if(!previousPress && jLeft.getRawButton(Constants.climb)){
-				sendMessage(new UpdateClimber(jLeft.getRawButton(Constants.climb)));
-			}
-			previousPress = jLeft.getRawButton(Constants.climb);
+			//button for load balls(prevPress[0])
+			if(!prevPress[0] && jBox.getRawButton(Buttons.loadBalls))
+				sendMessage(new SetHopperState(SetHopperState.State.Intake));
+			prevPress[0] = jBox.getRawButton(Buttons.loadBalls);
+			
+			
+			//button for score balls(prevPress[1])
+			if(!prevPress[1] && jBox.getRawButton(Buttons.scoreBalls))
+				sendMessage(new SetHopperState(SetHopperState.State.Exhaust));
+			prevPress[1] = jBox.getRawButton(Buttons.scoreBalls);
+			
+			
+			//button for roller forward(prevPress[2])
+			if(!prevPress[2] && jBox.getRawButton(Buttons.rollerForwards))
+				sendMessage(new HopperSetRoller(jBox.getRawButton(Buttons.rollerForwards)));
+			prevPress[2] = jBox.getRawButton(Buttons.rollerForwards);
+			
+			
+			//button for roller backward(prevPress[3])
+			if(!prevPress[3] && jBox.getRawButton(Buttons.rollerBackwards))
+				sendMessage(new HopperSetRoller(jBox.getRawButton(Buttons.rollerForwards)));
+			prevPress[3] = jBox.getRawButton(Buttons.rollerBackwards);
+			
+			
+			//button for store ball(prevPress[4])
+			if(!prevPress[4] && jBox.getRawButton(Buttons.store))
+				sendMessage(new SetHopperState(SetHopperState.State.Store));
+			prevPress[4] = jBox.getRawButton(Buttons.store);
+			
+			
+			//button for load gears(prevPress[5])
+			if(!prevPress[5] && jBox.getRawButton(Buttons.loadGears))
+				sendMessage(new UpdateGearCollector(false, true));
+			prevPress[5] = jBox.getRawButton(Buttons.loadGears);
+			
+			
+			//button for score gears(prevPress[6])
+			if(!prevPress[6] && jBox.getRawButton(Buttons.scoreGears))
+				sendMessage(new UpdateGearCollector(true, false));
+			prevPress[6] = jBox.getRawButton(Buttons.scoreGears);
+			
+			
+			//button for deploy climb(prevPress[7])
+			if(!prevPress[7] && jBox.getRawButton(Buttons.climbDeploy))
+				sendMessage(new ClimbDeploy(jBox.getRawButton(Buttons.climbDeploy)));
+			prevPress[7] = jBox.getRawButton(Buttons.climbDeploy);
+			
+			
+			//button for up climb(prevPress[8])
+			if(!prevPress[8] && jBox.getRawButton(Buttons.climbUp))
+				sendMessage(new UpdateClimber(true));
+			prevPress[8] = jBox.getRawButton(Buttons.climbUp);
+			
+			
+			//button for down climb(prevPress[9])
+			if(!prevPress[9] && jBox.getRawButton(Buttons.climbDown))
+				sendMessage(new UpdateClimber(false));
+			prevPress[9] = jBox.getRawButton(Buttons.climbDown);
+			
+			
+			
+			
 			
 				
 				

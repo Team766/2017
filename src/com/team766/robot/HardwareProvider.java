@@ -61,13 +61,23 @@ public class HardwareProvider {
 	public SolenoidController getGearPlacerOpener(){
 		return RobotProvider.instance.getSolenoid(ConfigFile.getGearPlacerOpener());
 	}
+	
 	public SolenoidController getGearPlacer(){
 		return RobotProvider.instance.getSolenoid(ConfigFile.getGearPlacer());
 	}
 	
-	public DigitalInputReader getHopperSensor(){
-		return RobotProvider.instance.getDigitalInput(ConfigFile.getHopperSensor());
+	public SolenoidController getClimberDeploy(){
+		return RobotProvider.instance.getSolenoid(ConfigFile.getClimberDeploy());
 	}
+	
+	public SolenoidController getHopperOpener(){
+		return RobotProvider.instance.getSolenoid(ConfigFile.getHopperOpener());
+	}
+	
+	public SolenoidController getHopperCloser(){
+		return RobotProvider.instance.getSolenoid(ConfigFile.getHopperCloser());
+	}
+	
 
 	// Operator Devices
 	public JoystickReader getLeftJoystick(){

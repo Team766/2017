@@ -1,5 +1,6 @@
 package com.team766.robot.Actors.Climber;
 
+import com.team766.lib.Messages.ClimbDeploy;
 import com.team766.lib.Messages.UpdateClimber;
 import com.team766.lib.Messages.UpdateGearCollector;
 import com.team766.robot.HardwareProvider;
@@ -7,7 +8,10 @@ import com.team766.robot.HardwareProvider;
 
 
 
+
+
 import interfaces.EncoderReader;
+import interfaces.SolenoidController;
 import interfaces.SpeedController;
 import interfaces.SubActor;
 import lib.Actor;
@@ -21,6 +25,7 @@ public class Climber extends Actor {
 	
 	SpeedController climberMotor = HardwareProvider.getInstance().getClimber();
 	EncoderReader climberEncoder = HardwareProvider.getInstance().getClimberEncoder();
+	SolenoidController climberSolenoid = HardwareProvider.getInstance().getClimberDeploy();
 	
 	Message currentMessage;
 	SubActor currentCommand;
@@ -46,8 +51,17 @@ public class Climber extends Actor {
 					if(climberMessage.getClimb() == true)
 						this.setClimberMotor(motorSpeed);
 					else
-						this.setClimberMotor(0.0);
+						this.setClimberMotor(-motorSpeed);
 				}
+				
+				if(currentMessage instanceof ClimbDeploy){
+					ClimbDeploy climberMessage = (ClimbDeploy)currentMessage;
+					if(climberMessage.getClimbDeploy() == true)
+						this.setClimberDeploy(true);
+					else
+						this.setClimberDeploy(false);
+				}
+				
 				
 			}
 			step();
@@ -87,6 +101,10 @@ public class Climber extends Actor {
 	
 	protected void setClimberMotor(double d){
 		climberMotor.set(d);
+	}
+	
+	protected void setClimberDeploy(boolean b){
+		climberSolenoid.set(b);
 	}
 	
 	
