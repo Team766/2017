@@ -11,12 +11,12 @@ import interfaces.ConfigFileReader;
 
 public class ConfigFile {
 	
-	public static int getLeftMotor(){
-		return ConfigFileReader.getInstance().getPort("leftMotor");
+	public static int[] getLeftMotor(){
+		return ConfigFileReader.getInstance().getPorts("leftMotor");
 	}
 	
-	public static int getRightMotor(){
-		return ConfigFileReader.getInstance().getPort("rightMotor");
+	public static int[] getRightMotor(){
+		return ConfigFileReader.getInstance().getPorts("rightMotor");
 	}
 	
 	public static int getCenterMotor(){
@@ -29,6 +29,10 @@ public class ConfigFile {
 	
 	public static int[] getRightEncoder(){
 		return ConfigFileReader.getInstance().getPorts("rightEncoder");
+	}
+	
+	public static int[] getCenterEncoder(){
+		return ConfigFileReader.getInstance().getPorts("centerEncoder");
 	}
 	
 	public static int[] getClimberEncoder(){

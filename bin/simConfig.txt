@@ -1,5 +1,5 @@
-leftMotor,10
-rightMotor,11
+leftMotor,10,0
+rightMotor,11,0
 centerMotor,9
 leftEncoder,10,17
 rightEncoder,11,15

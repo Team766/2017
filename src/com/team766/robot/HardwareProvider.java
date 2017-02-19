@@ -21,11 +21,17 @@ public class HardwareProvider {
 	}
 	
 	// HAL
-	public SpeedController getLeftDrive(){
-		return RobotProvider.instance.getMotor(ConfigFile.getLeftMotor());
+	public SpeedController getLeftDriveA(){
+		return RobotProvider.instance.getMotor(ConfigFile.getLeftMotor()[0]);
 	}
-	public SpeedController getRightDrive(){
-		return RobotProvider.instance.getMotor(ConfigFile.getRightMotor());
+	public SpeedController getLeftDriveB(){
+		return RobotProvider.instance.getMotor(ConfigFile.getLeftMotor()[1]);
+	}
+	public SpeedController getRightDriveA(){
+		return RobotProvider.instance.getMotor(ConfigFile.getRightMotor()[0]);
+	}
+	public SpeedController getRightDriveB(){
+		return RobotProvider.instance.getMotor(ConfigFile.getRightMotor()[1]);
 	}
 	public SpeedController getCenterDrive(){
 		return RobotProvider.instance.getMotor(ConfigFile.getCenterMotor());
@@ -44,6 +50,9 @@ public class HardwareProvider {
 	}
 	public EncoderReader getRightEncoder(){
 		return RobotProvider.instance.getEncoder(ConfigFile.getRightEncoder()[0], ConfigFile.getRightEncoder()[1]);
+	}
+	public EncoderReader getCenterEncoder(){
+		return RobotProvider.instance.getEncoder(ConfigFile.getCenterEncoder()[0], ConfigFile.getCenterEncoder()[1]);
 	}
 	
 	public EncoderReader getClimberEncoder(){

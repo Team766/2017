@@ -5,6 +5,7 @@ import interfaces.GyroReader;
 import interfaces.SpeedController;
 import interfaces.SubActor;
 import lib.Actor;
+import lib.ConstantsFileReader;
 import lib.LogFactory;
 import lib.Message;
 import lib.PIDController;
@@ -20,12 +21,15 @@ import com.team766.robot.HardwareProvider;
 
 public class Drive extends Actor{
 
-	SpeedController leftMotor = HardwareProvider.getInstance().getLeftDrive();
-	SpeedController rightMotor = HardwareProvider.getInstance().getRightDrive();
+	SpeedController leftMotorA = HardwareProvider.getInstance().getLeftDriveA();
+	SpeedController leftMotorB = HardwareProvider.getInstance().getLeftDriveB();
+	SpeedController rightMotorA = HardwareProvider.getInstance().getRightDriveA();
+	SpeedController rightMotorB = HardwareProvider.getInstance().getRightDriveB();	
 	SpeedController centerMotor = HardwareProvider.getInstance().getCenterDrive();
 	
 	EncoderReader leftEncoder = HardwareProvider.getInstance().getLeftEncoder();
 	EncoderReader rightEncoder = HardwareProvider.getInstance().getRightEncoder();
+	EncoderReader centerEncoder = HardwareProvider.getInstance().getCenterEncoder();
 	
 	GyroReader gyro = HardwareProvider.getInstance().getGyro();
 	
@@ -97,7 +101,8 @@ public class Drive extends Actor{
 				else if(currentMessage instanceof DrivePath)
 					currentCommand = new DrivePathCommand(currentMessage);
 				else if(currentMessage instanceof DriveDistance)
-					currentCommand = new DriveDistanceCommand(currentMessage);
+					currentCommand = new DriveProfilerCommand(currentMessage);
+//					currentCommand = new DriveDistanceCommand(currentMessage);
 							
 				//Reset Control loops
 				resetControlLoops();
@@ -105,6 +110,7 @@ public class Drive extends Actor{
 						
 			//LogFactory.getInstance("General").printPeriodic("Gyro: " + getAngle(), "Gyro", 200);
 			
+//			LogFactory.getInstance("General").printPeriodic("Left: " + leftDist() + " Right: " + rightDist() + " Center: " + centerDist(), "Encoders", 200);
 			step();
 			
 			//Send Status Update	#StayUpToDate	#Current	#inTheKnow
@@ -192,11 +198,15 @@ public class Drive extends Actor{
 	}
 	
 	protected double leftDist(){
-		return leftEncoder.getRaw() / Constants.counts_per_rev * Constants.wheel_circumference;
+		return ConstantsFileReader.getInstance().get("LeftEncoderDirection") * (leftEncoder.getRaw() / Constants.counts_per_rev * Constants.wheel_circumference);
 	}
 	
 	protected double rightDist(){
-		return leftEncoder.getRaw() / Constants.counts_per_rev * Constants.wheel_circumference;
+		return ConstantsFileReader.getInstance().get("RightEncoderDirection") * (rightEncoder.getRaw() / Constants.counts_per_rev * Constants.wheel_circumference);
+	}
+	
+	protected double centerDist(){
+		return ConstantsFileReader.getInstance().get("CenterEncoderDirection") * (centerEncoder.getRaw() / Constants.center_counts_per_rev * Constants.follower_wheel_circumference);
 	}
 	
 	protected void setDrive(double power){
@@ -205,29 +215,40 @@ public class Drive extends Actor{
 	}
 	
 	protected void setLeft(double power){
-		if(Math.abs(power) < Constants.driveLeftDeadband)
-			leftMotor.set(0);
-		else
-			leftMotor.set(power);
+		if(Math.abs(power) < Constants.driveLeftDeadband){
+			leftMotorA.set(0);
+			leftMotorB.set(0);
+		}else{
+			power *= ConstantsFileReader.getInstance().get("LeftMotorDirection");
+			leftMotorA.set(power);
+			leftMotorB.set(power);
+		}
 	}
 	
 	protected void setRight(double power){
-		if(Math.abs(power) < Constants.driveRightDeadband)
-			rightMotor.set(0);
-		else
-			rightMotor.set(power);
+		if(Math.abs(power) < Constants.driveRightDeadband){
+			rightMotorA.set(0);
+			rightMotorB.set(0);
+		}else{
+			power *= ConstantsFileReader.getInstance().get("RightMotorDirection");
+			rightMotorA.set(power);
+			rightMotorB.set(power);
+		}
 	}
 	
 	protected void setCenter(double power){
 		if(Math.abs(power) < Constants.driveCenterDeadband)
 			centerMotor.set(0);
-		else
-			centerMotor.set(-power);
+		else{
+			power *= ConstantsFileReader.getInstance().get("CenterMotorDirection");
+			centerMotor.set(power);
+		}
 	}
 	
 	protected void resetEncoders(){
 		leftEncoder.reset();
 		rightEncoder.reset();
+		centerEncoder.reset();
 	}
 	
 	public String toString(){

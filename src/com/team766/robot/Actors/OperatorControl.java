@@ -3,6 +3,7 @@ package com.team766.robot.Actors;
 import interfaces.JoystickReader;
 
 import lib.Actor;
+import lib.ConstantsFileReader;
 import lib.LogFactory;
 import lib.Scheduler;
 
@@ -39,6 +40,9 @@ public class OperatorControl extends Actor {
 		previousRight = 0;
 		previousHeading = 0;
 		previousPress = false;
+		
+		//Stop autonomous movements
+		sendMessage(new HDrive(0,0,0, false));
 	}
 	
 	/*
@@ -51,9 +55,9 @@ public class OperatorControl extends Actor {
 			leftAxis[0] = (Math.abs(jLeft.getRawAxis(0)) > Constants.leftAxisDeadband)? jLeft.getRawAxis(0) : 0;
 			leftAxis[1] = (Math.abs(jLeft.getRawAxis(1)) > Constants.leftAxisDeadband)? -jLeft.getRawAxis(1) : 0;			
 			leftAxis[2] = (Math.abs(jLeft.getRawAxis(2)) > Constants.leftAxisDeadband)? -jLeft.getRawAxis(2) : 0;
-			leftAxis[3] = (Math.abs(jLeft.getRawAxis(3)) > Constants.leftAxisDeadband)? -jLeft.getRawAxis(3) : 0;
+			leftAxis[3] = (Math.abs(jLeft.getRawAxis(3)) > Constants.leftAxisDeadband)? jLeft.getRawAxis(3) : 0;
 			
-			rightAxis[0] = (Math.abs(jRight.getRawAxis(0)) > Constants.leftAxisDeadband)? -jRight.getRawAxis(0) : 0;
+			rightAxis[0] = (Math.abs(jRight.getRawAxis(0)) > Constants.leftAxisDeadband)? jRight.getRawAxis(0) : 0;
 			rightAxis[1] = (Math.abs(jRight.getRawAxis(1)) > Constants.leftAxisDeadband)? -jRight.getRawAxis(1) : 0;
 			rightAxis[2] = (Math.abs(jRight.getRawAxis(2)) > Constants.leftAxisDeadband)? jRight.getRawAxis(2) : 0;
 			rightAxis[3] = (Math.abs(jRight.getRawAxis(3)) > Constants.leftAxisDeadband)? -jRight.getRawAxis(3) : 0;
@@ -68,29 +72,35 @@ public class OperatorControl extends Actor {
 				previousLeft = leftAxis[1];
 				previousRight = rightAxis[1];
 			}else{
-//				if(previousLeft != jLeft.getRawAxis(Constants.accelAxis) || 
-//						previousRight != jRight.getRawAxis(Constants.steerAxis)){
-//					sendMessage(new MotorCommand(-jLeft.getRawAxis(Constants.accelAxis) - jRight.getRawAxis(Constants.steerAxis), MotorCommand.Motor.leftDrive));
-//					sendMessage(new MotorCommand(-jLeft.getRawAxis(Constants.accelAxis) + jRight.getRawAxis(Constants.steerAxis), MotorCommand.Motor.rightDrive));
-//				}
-				
-				if(previousLeft != leftAxis[0] ||
-					previousHeading != rightAxis[2] ||
-					previousRight != leftAxis[1]){
-					sendMessage(new  HDrive(leftAxis[0], leftAxis[1], rightAxis[2]));
+				switch((int)ConstantsFileReader.getInstance().get("DriveScheme")){
+					//2 joysicks
+					case 0:
+						if(previousLeft != leftAxis[0] ||
+							previousHeading != rightAxis[0] ||
+							previousRight != leftAxis[1]){
+							sendMessage(new  HDrive(leftAxis[0], leftAxis[1], rightAxis[0], false));
+						}
+		
+						previousLeft = leftAxis[0];
+						previousRight = leftAxis[1];
+						previousHeading = rightAxis[0];
+						break;
+					//1 joysick - twist
+					case 1:
+						if(previousLeft != leftAxis[0] ||
+							previousHeading != leftAxis[3] ||
+							previousRight != leftAxis[1]){
+							sendMessage(new  HDrive(leftAxis[0], leftAxis[1], leftAxis[3], false));
+						}
+		
+						previousLeft = leftAxis[0];
+						previousRight = leftAxis[1];
+						previousHeading = leftAxis[3];
+						break;
 				}
-				//H-Drive
-				
-
-//				if(previousLeft != jLeft.getRawAxis(Constants.accelAxis) || 
-//					previousRight != jRight.getRawAxis(Constants.steerAxis))
-//					sendMessage(new CheesyDrive(jLeft.getRawButton(Constants.driverQuickTurn), jLeft.getRawAxis(Constants.accelAxis), jRight.getRawAxis(Constants.steerAxis)));
-				
-				previousLeft = leftAxis[0];
-				previousRight = leftAxis[1];
-				previousHeading = rightAxis[2];
 			}
 			
+
 			
 			//button for load balls(prevPress[0])
 			if(!prevPress[0] && jBox.getRawButton(Buttons.loadBalls))
@@ -151,8 +161,9 @@ public class OperatorControl extends Actor {
 				sendMessage(new UpdateClimber(false));
 			prevPress[9] = jBox.getRawButton(Buttons.climbDown);
 			
-			
-			
+			//button for disable field centric
+			if(jLeft.getRawButton(Buttons.disableFieldCentric))
+				//sendMessage();
 			
 			
 				
