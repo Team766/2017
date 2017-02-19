@@ -13,3 +13,6 @@ hopperMotor,3
 hopperSensor,0
 gearPlacerOpener,3
 gearPlacer,4
+climberDeploy,5
+hopperOpener,7
+hopperCloser,6

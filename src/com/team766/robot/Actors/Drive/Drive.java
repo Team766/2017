@@ -16,6 +16,7 @@ import com.team766.lib.Messages.DriveDistance;
 import com.team766.lib.Messages.DriveStatusUpdate;
 import com.team766.lib.Messages.HDrive;
 import com.team766.lib.Messages.MotorCommand;
+import com.team766.lib.Messages.Stop;
 import com.team766.robot.Constants;
 import com.team766.robot.HardwareProvider;
 import com.team766.robot.Robot;
@@ -106,6 +107,8 @@ public class Drive extends Actor{
 					currentCommand = new HDriveCommand(currentMessage);
 				else if(currentMessage instanceof DrivePath)
 					currentCommand = new DrivePathCommand(currentMessage);
+				if(currentMessage instanceof Stop)
+					currentCommand.stop();
 				else if(currentMessage instanceof DriveDistance)
 					currentCommand = new DriveProfilerCommand(currentMessage);
 //					currentCommand = new DriveDistanceCommand(currentMessage);

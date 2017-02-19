@@ -8,6 +8,7 @@ import lib.Scheduler;
 
 import com.team766.lib.AutoPaths;
 import com.team766.lib.CommandBase;
+import com.team766.lib.Messages.Stop;
 import com.team766.robot.Actors.OperatorControl;
 import com.team766.robot.Actors.Auton.AutonSelector;
 import com.team766.robot.Actors.Drive.Drive;
@@ -15,7 +16,7 @@ import com.team766.robot.Actors.Drive.Drive;
 /**
  * 2017 Robot code
  * 
- * @author Bratt Levenson;
+ * @author Bratt Levinson;
  */
 public class Robot implements MyRobot {
 	private long prevTime;
@@ -52,7 +53,7 @@ public class Robot implements MyRobot {
 		Scheduler.getInstance().add(CommandBase.Climber);
 		
 		AutoPaths.loadPaths();
-		System.out.println("IM ALIVE!!");
+		System.out.println("IM ALIVE lmao!!");
 		
 		new Thread(new HTTPServer(Constants.AUTONS)).start();
 		
@@ -96,6 +97,12 @@ public class Robot implements MyRobot {
     	
     	Scheduler.getInstance().remove(OperatorControl.class);
     	
+    	try {
+			Scheduler.getInstance().sendMessage(new Stop());
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+    	
     	//Update Constants
     	ConstantsFileReader.getInstance().loadConstants();
     	
@@ -127,7 +134,7 @@ public class Robot implements MyRobot {
 			//System.out.println("Curr: " + System.currentTimeMillis() + "\tLast: " + lastSleepTime);
 			Thread.sleep(RUN_TIME - (System.currentTimeMillis() - lastSleepTime));
 		} catch (Exception e) {
-			System.out.println(toString() + "\tNo time to sleep, running behind schedule!!");
+			System.out.println(toString() + "\tNo time to sleep, running behind schedule!! rut roh :/");
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException e1) {}

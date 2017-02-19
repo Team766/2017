@@ -1,11 +1,13 @@
 package com.team766.robot.Actors.Hopper;
 
-import com.team766.lib.Messages.HopperIntake;
+import com.team766.lib.Messages.HopperSetRoller;
 import com.team766.lib.Messages.MotorCommand;
+import com.team766.lib.Messages.Stop;
+import com.team766.lib.Messages.SetHopperState;
 import com.team766.robot.HardwareProvider;
 import com.team766.robot.Actors.Drive.MotorSubCommand;
-
 import interfaces.DigitalInputReader;
+import interfaces.SolenoidController;
 import interfaces.SpeedController;
 import interfaces.SubActor;
 import lib.Actor;
@@ -19,10 +21,11 @@ public class Hopper extends Actor{
 	SubActor currentCommand;
 	
 	SpeedController hopperMotor = HardwareProvider.getInstance().getHopper();
-	DigitalInputReader hopperSensor = HardwareProvider.getInstance().getHopperSensor();
+	SolenoidController intakeFlap = HardwareProvider.getInstance().getHopperOpener();
+	SolenoidController exhaustFlap = HardwareProvider.getInstance().getHopperCloser();
 	
 	public void init() {
-		acceptableMessages = new Class[]{HopperIntake.class};
+		acceptableMessages = new Class[]{SetHopperState.class};
 	}
 	
 	public void run() {
@@ -37,8 +40,17 @@ public class Hopper extends Actor{
 				if(currentMessage == null)
 					break;
 				
-				if(currentMessage instanceof HopperIntake)
-					currentCommand = new HopperIntakeCommand(currentMessage);
+				if(currentMessage instanceof SetHopperState)
+					currentCommand = new SetHopperStateCommand(currentMessage);
+				else if(currentMessage instanceof Stop)
+					currentCommand.stop();
+				else if(currentMessage instanceof HopperSetRoller){
+					HopperSetRoller HopperMessage = (HopperSetRoller)currentMessage;
+					if(HopperMessage.getForward() == true)
+						this.setHopperMotor(1);
+					else
+						this.setHopperMotor(-1);
+				}
 			}
 			step();
 		}
@@ -68,8 +80,20 @@ public class Hopper extends Actor{
 		hopperMotor.set(value);
 	}
 	
-	public boolean getHopperSensor(){
-		return hopperSensor.get();
+	public void setIntakeFlap(boolean b){
+		intakeFlap.set(b);
+	}
+	
+	public void setExhaustFlap(boolean b){
+		exhaustFlap.set(b);
+	}
+	
+	public boolean getHopperOpener(){
+		return intakeFlap.get();
+	}
+	
+	public boolean getHopperCloser(){
+		return exhaustFlap.get();
 	}
 
 }
