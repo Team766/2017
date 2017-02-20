@@ -43,7 +43,7 @@ public class Hopper extends Actor{
 				if(currentMessage instanceof SetHopperState)
 					currentCommand = new SetHopperStateCommand(currentMessage);
 				else if(currentMessage instanceof Stop)
-					currentCommand.stop();
+					stopCurrentCommand();
 				else if(currentMessage instanceof HopperSetRoller){
 					HopperSetRoller HopperMessage = (HopperSetRoller)currentMessage;
 					if(HopperMessage.getForward() == true)
@@ -63,13 +63,17 @@ public class Hopper extends Actor{
 	public void step() {
 		if(currentCommand != null){
 			if(currentCommand.isDone()){
-				currentCommand.stop();
-				commandFinished = true;
-				currentCommand = null;
+				stopCurrentCommand();
 			}else{
 				currentCommand.update();
 			}
 		}
+	}
+	
+	private void stopCurrentCommand(){
+		currentCommand.stop();
+		commandFinished = true;
+		currentCommand = null;
 	}
 	
 	public double getHopperMotor(){

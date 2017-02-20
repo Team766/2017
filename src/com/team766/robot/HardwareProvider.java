@@ -1,5 +1,6 @@
 package com.team766.robot;
 
+import interfaces.CameraInterface;
 import interfaces.EncoderReader;
 import interfaces.GyroReader;
 import interfaces.JoystickReader;
@@ -57,6 +58,10 @@ public class HardwareProvider {
 	
 	public EncoderReader getClimberEncoder(){
 		return RobotProvider.instance.getEncoder(ConfigFile.getClimberEncoder()[0], ConfigFile.getClimberEncoder()[1]);
+	}
+	
+	public CameraInterface getCameraServer(){
+		return RobotProvider.instance.getCamServer();
 	}
 	
 	

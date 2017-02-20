@@ -5,7 +5,6 @@ import lib.Message;
 public class Stop implements Message{
 
 	public Stop(){
-		
 	}
 	
 	public String toString(){

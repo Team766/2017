@@ -35,8 +35,6 @@ public class AutonSelector extends Actor{
 			case "None":
 				System.out.println("Auton: None");
 				LogFactory.getInstance("General").print("Auton: None");
-//				waitForMessage(new DriveDistance(4, 180), DriveStatusUpdate.class);
-				waitForMessage(new DriveDistance(4, 0), DriveStatusUpdate.class);
 				break;
 			case "DriveToPeg":
 				System.out.println("Auton: DriveToPeg");

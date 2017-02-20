@@ -44,7 +44,7 @@ public class GearPlacer extends Actor{
 					this.setPlacer(gearMessage.getBottom());
 				}
 				if(currentMessage instanceof Stop)
-					currentCommand.stop();
+					stopCurrentCommand();
 					
 			}
 			step();
@@ -59,13 +59,17 @@ public class GearPlacer extends Actor{
 	public void step() {
 		if(currentCommand != null){
 			if(currentCommand.isDone()){
-				currentCommand.stop();
-				commandFinished = true;
-				currentCommand = null;
+				stopCurrentCommand();
 			}else{
 				currentCommand.update();
 			}
 		}
+	}
+	
+	private void stopCurrentCommand(){
+		currentCommand.stop();
+		commandFinished = true;
+		currentCommand = null;
 	}
 	
 	protected boolean getOpener(){
