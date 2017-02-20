@@ -287,6 +287,10 @@ public class Drive extends Actor{
 		return gyro.getAngle() + gyroOffset;
 	}
 	
+	protected double getRawAngle(){
+		return gyro.getAngle() + Constants.STARTING_HEADING;
+	}
+	
 	/**
 	 * -180 to 180 degrees
 	 * @return
