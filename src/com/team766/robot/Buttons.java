@@ -22,5 +22,6 @@ public class Buttons {
 
 	//disable field centric
 	public static final int disableFieldCentric = 2;
+	public static final int resetAngle = 2;
 	
 }
