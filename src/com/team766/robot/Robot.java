@@ -51,6 +51,7 @@ public class Robot implements MyRobot {
 		Scheduler.getInstance().add(CommandBase.GearPlacer);
 		Scheduler.getInstance().add(CommandBase.Hopper);
 		Scheduler.getInstance().add(CommandBase.Climber);
+		Scheduler.getInstance().add(CommandBase.Vision);
 		
 		AutoPaths.loadPaths();
 		System.out.println("IM ALIVE lmao!!");

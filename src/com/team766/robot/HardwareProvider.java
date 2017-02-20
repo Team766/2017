@@ -1,5 +1,6 @@
 package com.team766.robot;
 
+import interfaces.CameraInterface;
 import interfaces.EncoderReader;
 import interfaces.GyroReader;
 import interfaces.JoystickReader;
@@ -61,6 +62,10 @@ public class HardwareProvider {
 	
 	public DigitalInputReader getHopperSensor(){
 		return RobotProvider.instance.getDigitalInput(ConfigFile.getHopperSensor());
+	}
+		
+	public CameraInterface getCameraServer(){
+		return RobotProvider.instance.getCamServer();
 	}
 	
 	

@@ -118,8 +118,9 @@ public class Drive extends Actor{
 					currentCommand = new HDriveCommand(currentMessage);
 				else if(currentMessage instanceof DrivePath)
 					currentCommand = new DrivePathCommand(currentMessage);
-				else if(currentMessage instanceof Stop)
-					currentCommand.stop();
+				else if(currentMessage instanceof Stop){
+					stopCurrentCommand();
+				}
 				else if(currentMessage instanceof ResetDriveAngle){
 					ResetDriveAngle angleMessage = (ResetDriveAngle)currentMessage;
 					setGyroAngle(angleMessage.getAngle());
@@ -152,13 +153,17 @@ public class Drive extends Actor{
 	public void step(){
 		if(currentCommand != null){
 			if(currentCommand.isDone()){
-				currentCommand.stop();
-				commandFinished = true;
-				currentCommand = null;
+				stopCurrentCommand();
 			}else{
 				currentCommand.update();
 			}
 		}
+	}
+	
+	private void stopCurrentCommand(){
+		currentCommand.stop();
+		commandFinished = true;
+		currentCommand = null;
 	}
 	
 	

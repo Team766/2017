@@ -54,12 +54,12 @@ public class OperatorControl extends Actor {
 	public void run() {
 		while(Robot.getState() == Robot.GameState.Teleop){
 			
-			leftAxis[0] = (Math.abs(jLeft.getRawAxis(0)) > Constants.leftAxisDeadband)? Math.pow(jLeft.getRawAxis(0), 3) : 0;
-			leftAxis[1] = (Math.abs(jLeft.getRawAxis(1)) > Constants.leftAxisDeadband)? Math.pow(-jLeft.getRawAxis(1), 3) : 0;			
-			leftAxis[2] = (Math.abs(jLeft.getRawAxis(2)) > Constants.leftAxisDeadband)? Math.pow(-jLeft.getRawAxis(2), 3) : 0;
+			leftAxis[0] = (Math.abs(jLeft.getRawAxis(0)) > Constants.leftAxisDeadband)? curveJoystick(jLeft.getRawAxis(0)) : 0;
+			leftAxis[1] = (Math.abs(jLeft.getRawAxis(1)) > Constants.leftAxisDeadband)? curveJoystick(-jLeft.getRawAxis(1)) : 0;			
+			leftAxis[2] = (Math.abs(jLeft.getRawAxis(2)) > Constants.leftAxisDeadband)? curveJoystick(-jLeft.getRawAxis(2)) : 0;
 			leftAxis[3] = (Math.abs(jLeft.getRawAxis(3)) > Constants.leftAxisDeadband)? jLeft.getRawAxis(3) : 0;
 			
-			rightAxis[0] = (Math.abs(jRight.getRawAxis(0)) > Constants.rightAxisDeadband)? Math.pow(jRight.getRawAxis(0), 3) : 0;
+			rightAxis[0] = (Math.abs(jRight.getRawAxis(0)) > Constants.rightAxisDeadband)? curveJoystick(jRight.getRawAxis(0)) : 0;
 			rightAxis[1] = (Math.abs(jRight.getRawAxis(1)) > Constants.rightAxisDeadband)? -jRight.getRawAxis(1) : 0;
 			rightAxis[2] = (Math.abs(jRight.getRawAxis(2)) > Constants.rightAxisDeadband)? jRight.getRawAxis(2) : 0;
 			rightAxis[3] = (Math.abs(jRight.getRawAxis(3)) > Constants.rightAxisDeadband)? -jRight.getRawAxis(3) : 0;
@@ -186,6 +186,11 @@ public class OperatorControl extends Actor {
 			sleep();
 		}
 		Scheduler.getInstance().remove(this);
+	}
+	
+	private double curveJoystick(double value){
+		return value * Math.abs(value);
+//		return Math.pow(value, 3);
 	}
 	
 	public void step(){

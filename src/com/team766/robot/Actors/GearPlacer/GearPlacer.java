@@ -47,6 +47,7 @@ public class GearPlacer extends Actor{
 					this.setTopOpener(gearMessage.getTop());
 					this.setPlacer(gearMessage.getBottom());
 				}
+<<<<<<< HEAD
 				else if(currentMessage instanceof Stop)
 					currentCommand.stop();
 				else if(currentMessage instanceof TrackPeg){
@@ -55,6 +56,10 @@ public class GearPlacer extends Actor{
 				}
 					
 				
+=======
+				if(currentMessage instanceof Stop)
+					stopCurrentCommand();
+>>>>>>> branch 'master' of https://github.com/Team766/2017.git
 					
 			}
 			step();
@@ -69,13 +74,17 @@ public class GearPlacer extends Actor{
 	public void step() {
 		if(currentCommand != null){
 			if(currentCommand.isDone()){
-				currentCommand.stop();
-				commandFinished = true;
-				currentCommand = null;
+				stopCurrentCommand();
 			}else{
 				currentCommand.update();
 			}
 		}
+	}
+	
+	private void stopCurrentCommand(){
+		currentCommand.stop();
+		commandFinished = true;
+		currentCommand = null;
 	}
 	
 	protected boolean getOpener(){

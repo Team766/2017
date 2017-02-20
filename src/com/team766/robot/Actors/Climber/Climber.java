@@ -49,7 +49,7 @@ public class Climber extends Actor {
 						this.setClimberMotor(-motorSpeed);
 				}
 				else if(currentMessage instanceof Stop)
-					currentCommand.stop();
+					stopCurrentCommand();
 				else if(currentMessage instanceof ClimbDeploy){
 					ClimbDeploy climberMessage = (ClimbDeploy)currentMessage;
 					if(climberMessage.getClimbDeploy() == true)
@@ -76,13 +76,17 @@ public class Climber extends Actor {
 	public void step() {
 		if(currentCommand != null){
 			if(currentCommand.isDone()){
-				currentCommand.stop();
-				commandFinished = true;
-				currentCommand = null;
+				stopCurrentCommand();
 			}else{
 				currentCommand.update();
 			}
 		}
+	}
+	
+	private void stopCurrentCommand(){
+		currentCommand.stop();
+		commandFinished = true;
+		currentCommand = null;
 	}
 	
 	protected double getClimberMotor(){
