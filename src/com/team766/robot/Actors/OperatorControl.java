@@ -55,7 +55,7 @@ public class OperatorControl extends Actor {
 			leftAxis[0] = (Math.abs(jLeft.getRawAxis(0)) > Constants.leftAxisDeadband)? Math.pow(jLeft.getRawAxis(0), 3) : 0;
 			leftAxis[1] = (Math.abs(jLeft.getRawAxis(1)) > Constants.leftAxisDeadband)? Math.pow(-jLeft.getRawAxis(1), 3) : 0;			
 			leftAxis[2] = (Math.abs(jLeft.getRawAxis(2)) > Constants.leftAxisDeadband)? Math.pow(-jLeft.getRawAxis(2), 3) : 0;
-			leftAxis[3] = (Math.abs(jLeft.getRawAxis(3)) > Constants.leftAxisDeadband)? Math.pow(jLeft.getRawAxis(3), 3) : 0;
+			leftAxis[3] = (Math.abs(jLeft.getRawAxis(3)) > Constants.leftAxisDeadband)? jLeft.getRawAxis(3) : 0;
 			
 			rightAxis[0] = (Math.abs(jRight.getRawAxis(0)) > Constants.rightAxisDeadband)? Math.pow(jRight.getRawAxis(0), 3) : 0;
 			rightAxis[1] = (Math.abs(jRight.getRawAxis(1)) > Constants.rightAxisDeadband)? -jRight.getRawAxis(1) : 0;
@@ -164,10 +164,6 @@ public class OperatorControl extends Actor {
 			//button for disable field centric
 			if(jLeft.getRawButton(Buttons.disableFieldCentric))
 				//sendMessage();
-			
-			
-				
-				
 				
 //			LogFactory.getInstance("General").printPeriodic("JoystickValues: " + jLeft.getRawAxis(1) + " R:" + jRight.getRawAxis(1), "Joysticks", 200);
 			
