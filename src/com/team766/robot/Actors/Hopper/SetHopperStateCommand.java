@@ -10,17 +10,14 @@ public class SetHopperStateCommand extends CommandBase{
 
 	public SetHopperState command;
 	private boolean done;
-	private long startTime, currTime;
 	
 	public SetHopperStateCommand(Message command){
 		this.command = (SetHopperState)command;
 		done = false;
-		startTime = System.currentTimeMillis();
 	}
 	
 	@Override
 	public void update() {
-		currTime = System.currentTimeMillis();
 		switch(command.getHopperState()){
 			case Store:
 				GearPlacer.setTopOpener(false);
@@ -32,7 +29,7 @@ public class SetHopperStateCommand extends CommandBase{
 				GearPlacer.setTopOpener(true);
 				Hopper.setIntakeFlap(true);
 				Hopper.setExhaustFlap(false);
-				if(currTime - startTime < 5000)
+				if(Hopper.getHopperSensor())
 					Hopper.setHopperMotor(1.0);
 				else
 					done = true;

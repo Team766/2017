@@ -1,8 +1,12 @@
 package com.team766.robot.Actors.GearPlacer;
 
 import com.team766.lib.Messages.CheesyDrive;
+import com.team766.lib.Messages.DriveStatusUpdate;
 import com.team766.lib.Messages.MotorCommand;
+import com.team766.lib.Messages.SnapToAngle;
+import com.team766.lib.Messages.StartTrackingPeg;
 import com.team766.lib.Messages.Stop;
+import com.team766.lib.Messages.TrackPeg;
 import com.team766.lib.Messages.UpdateGearCollector;
 import com.team766.robot.HardwareProvider;
 import com.team766.robot.Actors.Drive.MotorSubCommand;
@@ -23,7 +27,7 @@ public class GearPlacer extends Actor{
 	SubActor currentCommand;
 	
 	public void init() {
-		acceptableMessages = new Class[]{UpdateGearCollector.class};
+		acceptableMessages = new Class[]{UpdateGearCollector.class, DriveStatusUpdate.class};
 	}
 	
 	public void run() {
@@ -43,8 +47,14 @@ public class GearPlacer extends Actor{
 					this.setTopOpener(gearMessage.getTop());
 					this.setPlacer(gearMessage.getBottom());
 				}
-				if(currentMessage instanceof Stop)
+				else if(currentMessage instanceof Stop)
 					currentCommand.stop();
+				else if(currentMessage instanceof TrackPeg){
+					waitForMessage(new SnapToAngle(), DriveStatusUpdate.class);
+					waitForMessage(new StartTrackingPeg(), DriveStatusUpdate.class);
+				}
+					
+				
 					
 			}
 			step();
