@@ -47,19 +47,12 @@ public class GearPlacer extends Actor{
 					this.setTopOpener(gearMessage.getTop());
 					this.setPlacer(gearMessage.getBottom());
 				}
-<<<<<<< HEAD
 				else if(currentMessage instanceof Stop)
-					currentCommand.stop();
+					stopCurrentCommand();
 				else if(currentMessage instanceof TrackPeg){
 					waitForMessage(new SnapToAngle(), DriveStatusUpdate.class);
 					waitForMessage(new StartTrackingPeg(), DriveStatusUpdate.class);
 				}
-					
-				
-=======
-				if(currentMessage instanceof Stop)
-					stopCurrentCommand();
->>>>>>> branch 'master' of https://github.com/Team766/2017.git
 					
 			}
 			step();
