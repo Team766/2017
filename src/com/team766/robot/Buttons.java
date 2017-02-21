@@ -14,7 +14,7 @@ public class Buttons {
 	//gears
 	public static final int loadGears = 2;
 	public static final int scoreGears = 1;
-	public static final int trackPeg = 3;
+	public static final int trackPeg = 1;
 	
 	//climber
 	public static final int climbDeploy = 8;

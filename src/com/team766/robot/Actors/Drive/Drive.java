@@ -68,7 +68,7 @@ public class Drive extends Actor{
 	SubActor currentCommand;
 	
 	public void init() {
-		acceptableMessages = new Class[]{MotorCommand.class, CheesyDrive.class, HDrive.class, DrivePath.class, DriveDistance.class, ResetDriveAngle.class};
+		acceptableMessages = new Class[]{MotorCommand.class, CheesyDrive.class, HDrive.class, DrivePath.class, DriveDistance.class, ResetDriveAngle.class, SnapToAngle.class, Stop.class};
 		commandFinished = false;
 		
 		lastPosTime = System.currentTimeMillis() / 1000.0;
@@ -102,15 +102,13 @@ public class Drive extends Actor{
 								
 				if(currentMessage instanceof SnapToAngle){
 					if(Math.abs(getRawAngle()) < 30)
-						currentCommand = new DriveDistanceCommand(0, 0);
+						currentCommand = new DriveDistanceCommand(0, -gyroOffset);
 					else if(getRawAngle() >= 30)
-						currentCommand = new DriveDistanceCommand(0, 60);
+						currentCommand = new DriveDistanceCommand(0, 60 - gyroOffset);
 					else if(getRawAngle() <= -30)
-						currentCommand = new DriveDistanceCommand(0, -60);
+						currentCommand = new DriveDistanceCommand(0, -60 - gyroOffset);
 				}
-				
-				
-				if(currentMessage instanceof MotorCommand)
+				else if(currentMessage instanceof MotorCommand)
 					currentCommand = new MotorSubCommand(currentMessage);
 				else if(currentMessage instanceof CheesyDrive)
 					currentCommand = new CheesyDriveCommand(currentMessage);
@@ -279,7 +277,6 @@ public class Drive extends Actor{
 	}
 	
 	protected void setGyroAngle(double angle){
-		gyro.reset();
 		gyroOffset = angle;
 	}
 	
@@ -301,7 +298,7 @@ public class Drive extends Actor{
 	}
 	
 	protected double getAngle(){
-		return gyro.getAngle() + gyroOffset;
+		return gyro.getAngle() - gyroOffset;
 	}
 	
 	public double getRawAngle(){

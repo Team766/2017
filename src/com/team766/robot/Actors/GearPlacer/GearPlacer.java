@@ -27,7 +27,7 @@ public class GearPlacer extends Actor{
 	SubActor currentCommand;
 	
 	public void init() {
-		acceptableMessages = new Class[]{UpdateGearCollector.class, DriveStatusUpdate.class};
+		acceptableMessages = new Class[]{UpdateGearCollector.class, DriveStatusUpdate.class, TrackPeg.class};
 	}
 	
 	public void run() {

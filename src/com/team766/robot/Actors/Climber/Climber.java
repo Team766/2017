@@ -25,7 +25,10 @@ public class Climber extends Actor {
 	Message currentMessage;
 	SubActor currentCommand;
 	
-
+	@Override
+	public void init() {
+		acceptableMessages = new Class[]{UpdateClimber.class, ClimbDeploy.class, Stop.class};
+	}
 
 	@Override
 	public void run() {
@@ -60,11 +63,6 @@ public class Climber extends Actor {
 			}
 			step();
 		}
-	}
-
-	@Override
-	public void init() {
-		acceptableMessages = new Class[]{UpdateClimber.class};
 	}
 
 	@Override
