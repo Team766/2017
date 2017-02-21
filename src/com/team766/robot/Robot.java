@@ -46,6 +46,7 @@ public class Robot implements MyRobot {
 	public void robotInit() {
 		CommandBase.init();
 		LogFactory.createInstance("General");
+		LogFactory.createInstance("Vision");
 		
 		Scheduler.getInstance().add(CommandBase.Drive);
 		Scheduler.getInstance().add(CommandBase.GearPlacer);
