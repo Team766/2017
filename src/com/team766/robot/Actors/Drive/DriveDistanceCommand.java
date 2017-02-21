@@ -27,6 +27,10 @@ public class DriveDistanceCommand extends CommandBase{
 		
 		Drive.anglePID.setSetpoint(Drive.getAngle());
 	}
+	
+	public DriveDistanceCommand(double distance, double angle){
+		this(new DriveDistance(distance, angle));
+	}
 
 	@Override
 	public void update() {

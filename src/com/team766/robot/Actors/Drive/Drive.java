@@ -17,9 +17,11 @@ import com.team766.lib.Messages.HDrive;
 import com.team766.lib.Messages.HopperSetRoller;
 import com.team766.lib.Messages.MotorCommand;
 import com.team766.lib.Messages.ResetDriveAngle;
+import com.team766.lib.Messages.SnapToAngle;
 import com.team766.lib.Messages.Stop;
 import com.team766.robot.Constants;
 import com.team766.robot.HardwareProvider;
+import com.team766.robot.Actors.GearPlacer.GearPlacer;
 
 public class Drive extends Actor{
 
@@ -98,6 +100,16 @@ public class Drive extends Actor{
 				if(currentMessage == null)
 					break;
 								
+				if(currentMessage instanceof SnapToAngle){
+					if(Math.abs(getRawAngle()) < 30)
+						currentCommand = new DriveDistanceCommand(0, 0);
+					else if(getRawAngle() >= 30)
+						currentCommand = new DriveDistanceCommand(0, 60);
+					else if(getRawAngle() <= -30)
+						currentCommand = new DriveDistanceCommand(0, -60);
+				}
+				
+				
 				if(currentMessage instanceof MotorCommand)
 					currentCommand = new MotorSubCommand(currentMessage);
 				else if(currentMessage instanceof CheesyDrive)
@@ -292,7 +304,7 @@ public class Drive extends Actor{
 		return gyro.getAngle() + gyroOffset;
 	}
 	
-	protected double getRawAngle(){
+	public double getRawAngle(){
 		return gyro.getAngle() + Constants.STARTING_HEADING;
 	}
 	

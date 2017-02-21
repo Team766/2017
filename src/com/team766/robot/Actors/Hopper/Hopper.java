@@ -20,6 +20,7 @@ public class Hopper extends Actor{
 	Message currentMessage;
 	SubActor currentCommand;
 	
+	DigitalInputReader hopperSensor = HardwareProvider.getInstance().getHopperSensor();
 	SpeedController hopperMotor = HardwareProvider.getInstance().getHopper();
 	SolenoidController intakeFlap = HardwareProvider.getInstance().getHopperOpener();
 	SolenoidController exhaustFlap = HardwareProvider.getInstance().getHopperCloser();
@@ -98,6 +99,10 @@ public class Hopper extends Actor{
 	
 	public boolean getHopperCloser(){
 		return exhaustFlap.get();
+	}
+	
+	public boolean getHopperSensor(){
+		return hopperSensor.get();
 	}
 
 }

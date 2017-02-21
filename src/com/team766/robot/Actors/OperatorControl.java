@@ -14,6 +14,7 @@ import com.team766.lib.Messages.HopperSetRoller;
 import com.team766.lib.Messages.MotorCommand;
 import com.team766.lib.Messages.ResetDriveAngle;
 import com.team766.lib.Messages.SetHopperState;
+import com.team766.lib.Messages.TrackPeg;
 import com.team766.lib.Messages.UpdateClimber;
 import com.team766.lib.Messages.UpdateGearCollector;
 import com.team766.robot.Buttons;
@@ -31,7 +32,7 @@ public class OperatorControl extends Actor {
 	
 	private double[] leftAxis = new double[4];
 	private double[] rightAxis = new double[4];
-	private boolean[] prevPress = new boolean[12];  //previous press array
+	private boolean[] prevPress = new boolean[13];  //previous press array
 	private boolean toggleFieldCentric;
 		
 	public void init() {
@@ -171,7 +172,15 @@ public class OperatorControl extends Actor {
 				sendMessage(new ResetDriveAngle(0.0));
 			prevPress[11] = jRight.getRawButton(Buttons.resetAngle);
 			
-//			LogFactory.getInstance("General").printPeriodic("JoystickValues: " + jLeft.getRawAxis(1) + " R:" + jRight.getRawAxis(1), "Joysticks", 200);
+			
+			//button for track peg
+			if(!prevPress[12] && jLeft.getRawButton(Buttons.trackPeg))
+				sendMessage(new TrackPeg());	
+			prevPress[12] = jLeft.getRawButton(Buttons.trackPeg);
+			
+//			
+			
+			LogFactory.getInstance("General").printPeriodic("JoystickValues: " + jLeft.getRawAxis(1) + " R:" + jRight.getRawAxis(1), "Joysticks", 200);
 			
 			itsPerSec++;
 			sleep();
