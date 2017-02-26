@@ -159,7 +159,8 @@ public class Drive extends Actor{
 	}
 	
 	private void stopCurrentCommand(){
-		currentCommand.stop();
+		if(currentCommand != null)
+			currentCommand.stop();
 		commandFinished = true;
 		currentCommand = null;
 	}

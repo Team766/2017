@@ -180,7 +180,7 @@ public class OperatorControl extends Actor {
 			
 //			
 			
-			LogFactory.getInstance("General").printPeriodic("JoystickValues: " + jLeft.getRawAxis(1) + " R:" + jRight.getRawAxis(1), "Joysticks", 200);
+//			LogFactory.getInstance("General").printPeriodic("JoystickValues: " + jLeft.getRawAxis(1) + " R:" + jRight.getRawAxis(1), "Joysticks", 200);
 			
 			itsPerSec++;
 			sleep();
