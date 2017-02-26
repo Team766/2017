@@ -12,6 +12,7 @@ import lib.PIDController;
 import com.team766.lib.Messages.CheesyDrive;
 import com.team766.lib.Messages.DriveDistance;
 import com.team766.lib.Messages.DrivePath;
+import com.team766.lib.Messages.DriveSideways;
 import com.team766.lib.Messages.DriveStatusUpdate;
 import com.team766.lib.Messages.HDrive;
 import com.team766.lib.Messages.HopperSetRoller;
@@ -68,7 +69,7 @@ public class Drive extends Actor{
 	SubActor currentCommand;
 	
 	public void init() {
-		acceptableMessages = new Class[]{MotorCommand.class, CheesyDrive.class, HDrive.class, DrivePath.class, DriveDistance.class, ResetDriveAngle.class, SnapToAngle.class, Stop.class};
+		acceptableMessages = new Class[]{MotorCommand.class, CheesyDrive.class, HDrive.class, DrivePath.class, DriveDistance.class, ResetDriveAngle.class, SnapToAngle.class, Stop.class, DriveSideways.class};
 		commandFinished = false;
 		
 		lastPosTime = System.currentTimeMillis() / 1000.0;
@@ -126,7 +127,8 @@ public class Drive extends Actor{
 				else if(currentMessage instanceof DriveDistance)
 					currentCommand = new DriveProfilerCommand(currentMessage);
 //					currentCommand = new DriveDistanceCommand(currentMessage);
-							
+				else if(currentMessage instanceof DriveSideways)
+					currentCommand = new DriveSidewaysCommand(currentMessage);
 				//Reset Control loops
 				resetControlLoops();
 			}
