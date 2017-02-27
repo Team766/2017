@@ -226,7 +226,7 @@ public class Vision extends Actor{
 					//Same Area: two squares among alot of others
 					if((Math.abs(r.height - r1.height) < X_OFFSET_THRESH &&  //Areas have same height
 							((Math.abs(1.0 - Math.max(r.area(), r1.area()) / Math.min(r.area(), r1.area()))) < AreaSimularityThresh) && //Areas similar
-							(r.area() > imporRects[0].area() && r.area() > imporRects[0].area()))){	//Area bigger than previously found rects
+							(r.area() > imporRects[0].area() && r1.area() > imporRects[1].area()))){	//Area bigger than previously found rects
 						System.out.println("Same AREA");
 						imporRects[0] = r;
 						imporRects[1] = r1;
@@ -297,10 +297,10 @@ public class Vision extends Actor{
 		return display;
 	}
 	
-	private double arraySize(Object[] in){
+	private int arraySize(Object[] in){
 		int count = 0;
 		for(Object i : in){
-			if(in != null)
+			if(i != null)
 				count++;
 		}
 		return count;
