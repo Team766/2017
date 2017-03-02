@@ -7,3 +7,6 @@ CenterMotorDirection, 1
 LeftEncoderDirection, 1
 RightEncoderDirection, 1
 CenterEncoderDirection, 1
+LeftDriveFeedTerm, 1
+RightDriveFeedTerm, 1
+DriveCorrectionP, 1
