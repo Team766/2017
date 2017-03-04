@@ -62,6 +62,7 @@ public class Climber extends Actor {
 				}
 			}
 			step();
+			sleep();
 		}
 	}
 

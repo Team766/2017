@@ -54,6 +54,7 @@ public class Hopper extends Actor{
 				}
 			}
 			step();
+			sleep();
 		}
 	}
 
