@@ -10,3 +10,5 @@ CenterEncoderDirection, 1
 LeftDriveFeedTerm, 1
 RightDriveFeedTerm, 1
 DriveCorrectionP, 1
+maxVel, 1
+maxAccel, 1

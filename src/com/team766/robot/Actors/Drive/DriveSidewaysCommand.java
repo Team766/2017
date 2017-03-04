@@ -4,8 +4,7 @@ import lib.ConstantsFileReader;
 import lib.Message;
 
 import com.team766.lib.CommandBase;
-import com.team766.lib.Messages.DriveSideways;	
-import com.team766.robot.Constants;
+import com.team766.lib.Messages.DriveSideways;
 
 public class DriveSidewaysCommand extends CommandBase{
 
@@ -54,16 +53,18 @@ public class DriveSidewaysCommand extends CommandBase{
 		switch(state_){
 			case RAMP_UP:
 				velocity += direction * kMaxAccel * kDt;
-				
 				if(Math.abs(velocity) >= kMaxVel){
 					state_ = State.MAX_VEL;
 				}
+				//System.out.println("ramp-up");
 				break;
 			case MAX_VEL:
 				velocity = kMaxVel * direction;
+				//System.out.println("max-vel");
 				break;
 			case RAMP_DOWN:
 				velocity -= direction * kMaxAccel * kDt;
+				//System.out.println("ramp-down");
 				if (Math.abs(position) >= Math.abs(goal)){
 					state_ = State.LOCK;
 				}
@@ -71,6 +72,7 @@ public class DriveSidewaysCommand extends CommandBase{
 			case LOCK:
 				velocity = 0;
 				done = true;
+				//System.out.println("lock");
 				break;
 		}
 		
@@ -82,13 +84,33 @@ public class DriveSidewaysCommand extends CommandBase{
 		idealPosition += velocity * kDt;
 	
 		Drive.linearVelocity.setSetpoint(velocity);
-		Drive.linearVelocity.calculate(Drive.avgLinearRate(), false);
+		
+		System.out.println("direction: " + direction);
+		System.out.println("velocity:" + velocity);
+		Drive.linearVelocity.calculate(Drive.centerRate(), false);
+	
+		System.out.println("linearVelocity:  " + Drive.linearVelocity.getOutput());
+		Drive.setCenter(Drive.linearVelocity.getOutput());
 		
 		Drive.setLeft((currentAngle - Drive.getAngle()) * AngleP);
 		Drive.setRight(-(currentAngle - Drive.getAngle()) * AngleP);
+		
 	}
 
-	@Override
+	public static String getState() {
+		if(State.RAMP_UP != null) 
+			return "RAMP_UP";
+		if(State.MAX_VEL != null) 
+			return "MAX_VEL";
+		if(State.RAMP_DOWN != null) 
+			return "RAMP_DOWN";
+		if(State.LOCK != null) 
+			return "LOCK";
+		
+		return "no state!";
+	}
+	
+	
 	public void stop() {
 		Drive.setDrive(0.0);
 	}
