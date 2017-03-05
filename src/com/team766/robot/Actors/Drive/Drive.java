@@ -6,6 +6,7 @@ import interfaces.SpeedController;
 import interfaces.SubActor;
 import lib.Actor;
 import lib.ConstantsFileReader;
+import lib.LogFactory;
 import lib.Message;
 import lib.PIDController;
 
@@ -15,14 +16,12 @@ import com.team766.lib.Messages.DrivePath;
 import com.team766.lib.Messages.DriveSideways;
 import com.team766.lib.Messages.DriveStatusUpdate;
 import com.team766.lib.Messages.HDrive;
-import com.team766.lib.Messages.HopperSetRoller;
 import com.team766.lib.Messages.MotorCommand;
 import com.team766.lib.Messages.ResetDriveAngle;
 import com.team766.lib.Messages.SnapToAngle;
 import com.team766.lib.Messages.Stop;
 import com.team766.robot.Constants;
 import com.team766.robot.HardwareProvider;
-import com.team766.robot.Actors.GearPlacer.GearPlacer;
 
 public class Drive extends Actor{
 

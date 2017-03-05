@@ -15,7 +15,7 @@ public class DriveSidewaysCommand extends CommandBase{
 	double kMaxAccel = 20; //ft/sec^2
 	final double kDt = 0.010;
 	final double STOP_THRESH = 0.2;
-	final double AngleP = 0.02;
+	final double AngleP = 0.05;
 
 	double velocity;
 	double goal = 0;
@@ -83,7 +83,7 @@ public class DriveSidewaysCommand extends CommandBase{
 	
 		Drive.linearVelocity.setSetpoint(velocity);
 		Drive.linearVelocity.calculate(Drive.avgLinearRate(), false);
-		
+
 		Drive.setLeft((currentAngle - Drive.getAngle()) * AngleP);
 		Drive.setRight(-(currentAngle - Drive.getAngle()) * AngleP);
 	}

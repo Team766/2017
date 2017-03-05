@@ -16,7 +16,7 @@ import com.team766.robot.Actors.Drive.Drive;
 /**
  * 2017 Robot code
  * 
- * @author Bratt Levinson;
+ * @author Bratt Levenson;
  */
 public class Robot implements MyRobot {
 	private long prevTime;
