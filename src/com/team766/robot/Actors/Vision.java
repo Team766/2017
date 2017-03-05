@@ -3,9 +3,9 @@ package com.team766.robot.Actors;
 import interfaces.CameraInterface;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import lib.Actor;
+import lib.ConstantsFileReader;
 import lib.LogFactory;
 import lib.Message;
 
@@ -19,16 +19,14 @@ import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
-import com.team766.lib.Messages.DriveSideways;
-import com.team766.lib.Messages.DriveStatusUpdate;
+import com.team766.lib.Messages.DriveDistance;
+import com.team766.lib.Messages.DriveIntoPeg;
 import com.team766.lib.Messages.MotorCommand;
 import com.team766.lib.Messages.MotorCommand.Motor;
-import com.team766.lib.Messages.SnapToAngle;
 import com.team766.lib.Messages.StartTrackingPeg;
 import com.team766.lib.Messages.Stop;
-import com.team766.lib.Messages.TrackPeg;
-import com.team766.lib.Messages.UpdateGearCollector;
 import com.team766.lib.Messages.VisionStatusUpdate;
+import com.team766.robot.Constants;
 import com.team766.robot.HardwareProvider;
 
 public class Vision extends Actor{
@@ -52,14 +50,16 @@ public class Vision extends Actor{
 	
 	private final double RECT_WIDTH = 10.25;
 	private final double FOCAL_LENGTH = 160;//2.8; //pixels
-	private final double CENTER_X = 320;
-	private final double CENTER_Y = 240;
+	private final double CENTER_X = 80;
+	private final double CENTER_Y = 60;
 
 	private double outputDist;
 	private double outputAngle;
 	
-	private boolean trackingBangBang = false;
-	private double driveP = 0.05;
+	private boolean trackingEnabled = false;
+	private boolean drivingEnabled = false;
+	private double count;
+	private final double MAX_COUNT = 50;
 	
 	CameraInterface camServer = HardwareProvider.getInstance().getCameraServer();
 	
@@ -67,11 +67,13 @@ public class Vision extends Actor{
 	
 	@Override
 	public void init() {
-		acceptableMessages = new Class[]{StartTrackingPeg.class};
+		acceptableMessages = new Class[]{StartTrackingPeg.class, Stop.class, DriveIntoPeg.class};
 		
 		LogFactory.getInstance("General").print("Vision: INIT");
 		outputDist = 0;
 		outputAngle = 0;
+		
+		done = false;
 	}
 	
 	@Override
@@ -80,6 +82,30 @@ public class Vision extends Actor{
 		while(true){
 			itsPerSec++;
 			sleep(RUN_TIME);
+			
+			if(newMessage()){
+				currentMessage = readMessage();
+				if(currentMessage == null)
+					break;
+				
+				if(currentMessage instanceof StartTrackingPeg){
+					trackingEnabled = true;
+					done = false;
+					//Needs to send message when tracking
+//					sendMessage(new DriveSideways(-getDist() * Math.sin(Math.toRadians(getAngle()))));
+				}
+				else if(currentMessage instanceof DriveIntoPeg){
+					drivingEnabled = true;
+					done = false;
+				}
+				else if(currentMessage instanceof Stop){
+					//Stop
+					trackingEnabled = false;
+					done = true;
+					sendMessage(new MotorCommand(0, Motor.centerDrive));
+				}
+					
+			}
 			
 			camServer.getFrame(img);
 			if(img == null || img.empty()){
@@ -95,28 +121,18 @@ public class Vision extends Actor{
 			
 			camServer.putFrame(out);
 			
-			if(newMessage()){
-				currentMessage = readMessage();
-				if(currentMessage == null)
-					break;
-				
-				if(currentMessage instanceof StartTrackingPeg){
-					trackingBangBang = true;
-//					sendMessage(new DriveSideways(-getDist() * Math.sin(Math.toRadians(getAngle()))));
-				}
-				else if(currentMessage instanceof Stop){
-					//Stop
-					trackingBangBang = false;
-				}
-					
-					
+			if(trackingEnabled){
+				sendMessage(new MotorCommand(-getDist() * Math.sin(Math.toRadians(getAngle()) * ConstantsFileReader.getInstance().get("centerDriveP")), Motor.centerDrive));
+//				sendMessage(new DriveSideways(-getDist() * Math.sin(Math.toRadians(getAngle()))));
+				done = Math.abs(getDist() * Math.sin(Math.toRadians(getAngle()))) < Constants.ALLIGNING_SIDEWAYS_DIST_THRESH;
 			}
 			
-			if(trackingBangBang){
-				sendMessage(new MotorCommand(-getDist() * Math.sin(Math.toRadians(getAngle()) * driveP), Motor.centerDrive));
+			if(drivingEnabled){
+				sendMessage(new DriveDistance(getDist(), 0.0));
+				done = getDist() < Constants.DRIVE_INTO_PEG_THRESH;
 			}
 			
-			sendMessage(new VisionStatusUpdate(getAngle(), getDist()));
+			sendMessage(new VisionStatusUpdate(done, currentMessage, getAngle(), getDist()));
 		}
 	}
 	
@@ -339,6 +355,7 @@ public class Vision extends Actor{
 		//Set values
 		outputDist = ((RECT_WIDTH * FOCAL_LENGTH) / (maxX - minX))/12.0;	//Inch to feet
 		Imgproc.putText(display, "dist: " + outputDist, new Point(10, 40), 1, 0.5, new Scalar(0, 255, 255));
+//		Imgproc.putText(display, "horDist: " + (-getDist() * Math.sin(Math.toRadians(getAngle()))), new Point(10, 40), 1, 0.5, new Scalar(0, 255, 255));
 		
 		return display;
 	}

@@ -6,11 +6,13 @@ import lib.Scheduler;
 
 import com.team766.lib.CommandBase;
 import com.team766.lib.Messages.DriveDistance;
+import com.team766.lib.Messages.DriveIntoPeg;
 import com.team766.lib.Messages.DrivePath;
 import com.team766.lib.Messages.DriveStatusUpdate;
 import com.team766.lib.Messages.MotorCommand;
 import com.team766.lib.Messages.MotorCommand.Motor;
 import com.team766.lib.Messages.StartTrackingPeg;
+import com.team766.lib.Messages.VisionStatusUpdate;
 import com.team766.robot.Constants;
 import com.team766.robot.Actors.Drive.Drive;
 import com.team766.robot.Actors.Drive.DriveDistanceCommand;
@@ -36,6 +38,9 @@ public class AutonSelector extends Actor{
 			case "None":
 				System.out.println("Auton: None");
 				LogFactory.getInstance("General").print("Auton: None");
+				waitForMessage(new StartTrackingPeg(), VisionStatusUpdate.class);
+				System.out.println("Done alligning with Peg!");
+				sendMessage(new DriveIntoPeg());
 				break;
 			case "DriveToPeg":
 				System.out.println("Auton: DriveToPeg");

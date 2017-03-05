@@ -121,6 +121,8 @@ public class Drive extends Actor{
 				else if(currentMessage instanceof DrivePath)
 					currentCommand = new DrivePathCommand(currentMessage);
 				else if(currentMessage instanceof Stop){
+					setDrive(0.0);
+					setCenter(0.0);
 					stopCurrentCommand();
 				}
 				else if(currentMessage instanceof ResetDriveAngle){
@@ -140,7 +142,7 @@ public class Drive extends Actor{
 			
 //			LogFactory.getInstance("General").printPeriodic("Left: " + leftDist() + " Right: " + rightDist() + " Center: " + centerDist(), "Encoders", 200);
 			step();
-						
+			
 			//Send Status Update	#StayUpToDate	#Current	#inTheKnow
 			sendMessage(new DriveStatusUpdate(commandFinished, currentMessage, xPos, yPos, avgLinearRate()));
 

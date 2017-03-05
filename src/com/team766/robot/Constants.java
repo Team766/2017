@@ -21,6 +21,10 @@ public abstract class Constants extends RobotValues{
 	public static final double wheel_circumference = 1.0/3.0 * Math.PI; //feet
 	public static final double counts_per_rev = 1000.0;
 	
+	//Auton constants
+	public static final double ALLIGNING_SIDEWAYS_DIST_THRESH = 3.5 / 12.0;
+	public static final double DRIVE_INTO_PEG_THRESH = 10.0 / 12.0;
+	
 
 	public static final double follower_wheel_circumference = 0.27083 * Math.PI; //3.25 in
 	public static final double center_counts_per_rev = 1000.0;
@@ -35,8 +39,8 @@ public abstract class Constants extends RobotValues{
 	public static final double driveRightDeadband = 0;
 	public static final double driveCenterDeadband = 0;
 	
-	public static final double leftAxisDeadband = 0.1;
-	public static final double rightAxisDeadband = 0.1;
+	public static final double leftAxisDeadband = 0;	//0.1
+	public static final double rightAxisDeadband = 0;
 	
 	//Axis
 	public static final int steerAxis = 0;
