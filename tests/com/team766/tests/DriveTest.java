@@ -11,7 +11,7 @@ public class DriveTest extends RobotTestCase {
 
 	public void testDriveDistance() throws Exception {
 		
-		//Forward 5 meters, at end point
+		//Forward 5 meters, at end point 
 		Scheduler.getInstance().sendMessage(new DriveDistance(5, 0));
 		
 		((tests.Gyro)instance.getGyro(ConfigFile.getGyro())).setAngle(0);
@@ -22,7 +22,7 @@ public class DriveTest extends RobotTestCase {
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getLeftMotor()[0]).get() == 0;}, 2); 
 		
 
-		//sets end point to 10 meters 45 degrees, checks middle of path 
+		//sets end point to 10 meters 45 degrees, checks middle of path
 		Scheduler.getInstance().sendMessage(new DriveDistance(10, 45));
 		
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getRightMotor()[0]).get() != 0;}, 2); 

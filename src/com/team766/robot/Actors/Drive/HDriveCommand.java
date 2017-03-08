@@ -1,5 +1,6 @@
 package com.team766.robot.Actors.Drive;
 
+import lib.ConstantsFileReader;
 import lib.Message;
 import interfaces.SubActor;
 
@@ -10,9 +11,11 @@ public class HDriveCommand extends CommandBase{
 	HDrive command;
 	
 	public double left, right, center, norm;
+	private double lockHeading;
 	
 	public HDriveCommand(Message m){
 		command = (HDrive)m;
+		lockHeading = Drive.getAngle();
 	}
 
 	@Override
@@ -38,10 +41,14 @@ public class HDriveCommand extends CommandBase{
 		right /= norm;
 		center /= norm;
 //		System.out.printf("l, r, c: %f %f %f\n", left, right, center);
-		Drive.setLeft(round2D(left));
-		Drive.setRight(round2D(right));
+		if(command.getHeading() == 0){
+			Drive.setLeft((ConstantsFileReader.getInstance().get("LeftDriveFeedTerm") * round2D(left)) + ((lockHeading - Drive.getAngle()) * ConstantsFileReader.getInstance().get("DriveCorrectionP")));
+			Drive.setRight((ConstantsFileReader.getInstance().get("RightDriveFeedTerm") * round2D(right)) - ((lockHeading - Drive.getAngle()) * ConstantsFileReader.getInstance().get("DriveCorrectionP")));
+		}else{
+			Drive.setLeft(round2D(left));
+			Drive.setRight(round2D(right));
+		}
 		Drive.setCenter(center);
-		
 	}
 
 	@Override

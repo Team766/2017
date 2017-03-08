@@ -9,7 +9,8 @@ public class MotorCommand implements Message{
 	
 	public enum Motor{
 		rightDrive,
-		leftDrive
+		leftDrive,
+		centerDrive
 	}
 	
 	public MotorCommand(double in, Motor mot){

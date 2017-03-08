@@ -2,17 +2,14 @@ package com.team766.robot.Actors.Auton;
 
 import lib.Actor;
 import lib.LogFactory;
-import lib.Scheduler;
 
-import com.team766.lib.CommandBase;
-import com.team766.lib.Messages.DriveDistance;
+import com.team766.lib.Messages.DriveIntoPeg;
 import com.team766.lib.Messages.DrivePath;
 import com.team766.lib.Messages.DriveStatusUpdate;
-import com.team766.lib.Messages.MotorCommand;
-import com.team766.lib.Messages.MotorCommand.Motor;
+import com.team766.lib.Messages.SnapToAngle;
+import com.team766.lib.Messages.StartTrackingPeg;
+import com.team766.lib.Messages.VisionStatusUpdate;
 import com.team766.robot.Constants;
-import com.team766.robot.Actors.Drive.Drive;
-import com.team766.robot.Actors.Drive.DriveDistanceCommand;
 
 public class AutonSelector extends Actor{
 	
@@ -39,13 +36,21 @@ public class AutonSelector extends Actor{
 			case "DriveToPeg":
 				System.out.println("Auton: DriveToPeg");
 				LogFactory.getInstance("General").print("Auton: DriveToPeg");
-				sendMessage(new DrivePath("ToPegPath"));
+				waitForMessage(new DrivePath("ToPegPath"), DriveStatusUpdate.class);
+				waitForMessage(new SnapToAngle(), DriveStatusUpdate.class);
 				break;	
 			case "BoilerPath":
 				System.out.println("Auton: BoilerPath");
 				LogFactory.getInstance("General").print("Auton: BoilerPath");
 				sendMessage(new DrivePath("BoilerPath"));
 				break;	
+			case "StraightToPeg":
+				System.out.println("Auton: Using Vision to Drive straight to peg");
+				LogFactory.getInstance("General").print("Auton: StraightToPeg");
+				waitForMessage(new StartTrackingPeg(), VisionStatusUpdate.class);
+				System.out.println("Done alligning with Peg!");
+				sendMessage(new DriveIntoPeg());
+				break;
 			case "StraightToPegPath":
 				System.out.println("Auton: StraightToPegPath");
 				LogFactory.getInstance("General").print("Auton: StraightToPegPath");

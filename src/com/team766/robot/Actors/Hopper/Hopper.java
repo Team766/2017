@@ -54,6 +54,7 @@ public class Hopper extends Actor{
 				}
 			}
 			step();
+			sleep();
 		}
 	}
 
@@ -72,7 +73,8 @@ public class Hopper extends Actor{
 	}
 	
 	private void stopCurrentCommand(){
-		currentCommand.stop();
+		if(currentCommand != null)
+			currentCommand.stop();
 		commandFinished = true;
 		currentCommand = null;
 	}

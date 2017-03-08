@@ -61,8 +61,8 @@ public class OperatorControl extends Actor {
 			
 			rightAxis[0] = (Math.abs(jRight.getRawAxis(0)) > Constants.rightAxisDeadband)? curveJoystick(jRight.getRawAxis(0)) : 0;
 			rightAxis[1] = (Math.abs(jRight.getRawAxis(1)) > Constants.rightAxisDeadband)? -jRight.getRawAxis(1) : 0;
-			rightAxis[2] = (Math.abs(jRight.getRawAxis(2)) > Constants.rightAxisDeadband)? jRight.getRawAxis(2) : 0;
-			rightAxis[3] = (Math.abs(jRight.getRawAxis(3)) > Constants.rightAxisDeadband)? -jRight.getRawAxis(3) : 0;
+//			rightAxis[2] = (Math.abs(jRight.getRawAxis(2)) > Constants.rightAxisDeadband)? jRight.getRawAxis(2) : 0;
+//			rightAxis[3] = (Math.abs(jRight.getRawAxis(3)) > Constants.rightAxisDeadband)? -jRight.getRawAxis(3) : 0;
 			
 			
 			if(Constants.TANK_DRIVE){
@@ -80,7 +80,7 @@ public class OperatorControl extends Actor {
 						if(previousLeft != leftAxis[0] ||
 							previousHeading != rightAxis[0] ||
 							previousRight != leftAxis[1]){
-							sendMessage(new  HDrive(leftAxis[0], leftAxis[1], rightAxis[0], toggleFieldCentric));
+							sendMessage(new HDrive(leftAxis[0], leftAxis[1], rightAxis[0], toggleFieldCentric));
 						}
 		
 						previousLeft = leftAxis[0];
@@ -180,7 +180,7 @@ public class OperatorControl extends Actor {
 			
 //			
 			
-			LogFactory.getInstance("General").printPeriodic("JoystickValues: " + jLeft.getRawAxis(1) + " R:" + jRight.getRawAxis(1), "Joysticks", 200);
+//			LogFactory.getInstance("General").printPeriodic("JoystickValues: " + jLeft.getRawAxis(1) + " R:" + jRight.getRawAxis(1), "Joysticks", 200);
 			
 			itsPerSec++;
 			sleep();

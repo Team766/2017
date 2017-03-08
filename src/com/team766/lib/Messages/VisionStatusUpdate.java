@@ -1,12 +1,15 @@
 package com.team766.lib.Messages;
 
 import lib.Message;
+import lib.StatusUpdateMessage;
 
-public class VisionStatusUpdate implements Message{
+public class VisionStatusUpdate extends StatusUpdateMessage{
 	
 	private double angle, dist;
 	
-	public VisionStatusUpdate(double angle, double dist){
+	public VisionStatusUpdate(boolean done, Message currentMessage, double angle, double dist){
+		super(done, currentMessage);
+		
 		this.angle = angle;
 		this.dist = dist;
 	}

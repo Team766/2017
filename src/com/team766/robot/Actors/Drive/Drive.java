@@ -6,22 +6,22 @@ import interfaces.SpeedController;
 import interfaces.SubActor;
 import lib.Actor;
 import lib.ConstantsFileReader;
+import lib.LogFactory;
 import lib.Message;
 import lib.PIDController;
 
 import com.team766.lib.Messages.CheesyDrive;
 import com.team766.lib.Messages.DriveDistance;
 import com.team766.lib.Messages.DrivePath;
+import com.team766.lib.Messages.DriveSideways;
 import com.team766.lib.Messages.DriveStatusUpdate;
 import com.team766.lib.Messages.HDrive;
-import com.team766.lib.Messages.HopperSetRoller;
 import com.team766.lib.Messages.MotorCommand;
 import com.team766.lib.Messages.ResetDriveAngle;
 import com.team766.lib.Messages.SnapToAngle;
 import com.team766.lib.Messages.Stop;
 import com.team766.robot.Constants;
 import com.team766.robot.HardwareProvider;
-import com.team766.robot.Actors.GearPlacer.GearPlacer;
 
 public class Drive extends Actor{
 
@@ -54,10 +54,12 @@ public class Drive extends Actor{
 	private double lastAngVelTime;
 	private double rightVel;
 	private double leftVel;
+	private double centerVel;
 	private double angVel;
 	private double lastAngle;
 	private double lastRightDist;
 	private double lastLeftDist;
+	private double lastCenterDist;
 	
 	private boolean commandFinished;
 	
@@ -68,7 +70,7 @@ public class Drive extends Actor{
 	SubActor currentCommand;
 	
 	public void init() {
-		acceptableMessages = new Class[]{MotorCommand.class, CheesyDrive.class, HDrive.class, DrivePath.class, DriveDistance.class, ResetDriveAngle.class, SnapToAngle.class, Stop.class};
+		acceptableMessages = new Class[]{MotorCommand.class, CheesyDrive.class, HDrive.class, DrivePath.class, DriveDistance.class, ResetDriveAngle.class, SnapToAngle.class, Stop.class, DriveSideways.class};
 		commandFinished = false;
 		
 		lastPosTime = System.currentTimeMillis() / 1000.0;
@@ -77,8 +79,10 @@ public class Drive extends Actor{
 		lastVelTime = System.currentTimeMillis() / 1000.0;
 		leftVel = 0;
 		rightVel = 0;
+		centerVel = 0;
 		lastLeftDist = leftDist();
 		lastRightDist = rightDist();
+		lastCenterDist = centerDist();
 		lastAngle = 0;
 		
 		gyroOffset = Constants.STARTING_HEADING;
@@ -117,16 +121,19 @@ public class Drive extends Actor{
 				else if(currentMessage instanceof DrivePath)
 					currentCommand = new DrivePathCommand(currentMessage);
 				else if(currentMessage instanceof Stop){
+					setDrive(0.0);
+					setCenter(0.0);
 					stopCurrentCommand();
 				}
 				else if(currentMessage instanceof ResetDriveAngle){
 					ResetDriveAngle angleMessage = (ResetDriveAngle)currentMessage;
 					setGyroAngle(angleMessage.getAngle());
 				}
+				else if(currentMessage instanceof DriveSideways)
+					currentCommand = new DriveSidewaysCommand(currentMessage);
 				else if(currentMessage instanceof DriveDistance)
 					currentCommand = new DriveProfilerCommand(currentMessage);
 //					currentCommand = new DriveDistanceCommand(currentMessage);
-							
 				//Reset Control loops
 				resetControlLoops();
 			}
@@ -135,7 +142,7 @@ public class Drive extends Actor{
 			
 //			LogFactory.getInstance("General").printPeriodic("Left: " + leftDist() + " Right: " + rightDist() + " Center: " + centerDist(), "Encoders", 200);
 			step();
-						
+			
 			//Send Status Update	#StayUpToDate	#Current	#inTheKnow
 			sendMessage(new DriveStatusUpdate(commandFinished, currentMessage, xPos, yPos, avgLinearRate()));
 
@@ -159,7 +166,8 @@ public class Drive extends Actor{
 	}
 	
 	private void stopCurrentCommand(){
-		currentCommand.stop();
+		if(currentCommand != null)
+			currentCommand.stop();
 		commandFinished = true;
 		currentCommand = null;
 	}
@@ -170,11 +178,13 @@ public class Drive extends Actor{
 			
 			leftVel = (leftDist() - lastLeftDist) / (System.currentTimeMillis()/1000.0 - lastVelTime);
 			rightVel = (rightDist() - lastRightDist) / (System.currentTimeMillis()/1000.0 - lastVelTime);
+			centerVel = (centerDist() - lastCenterDist) / (System.currentTimeMillis()/1000.0 - lastVelTime);
 			
 //			System.out.printf("Rates: %f\t%f\t%f\n", avgLinearRate(), rightVel, rightVel);
 			
 			lastLeftDist = leftDist();
 			lastRightDist = rightDist();
+			lastCenterDist = centerDist();
 			lastVelTime = System.currentTimeMillis()/1000.0;
 		}
 	}
@@ -218,6 +228,10 @@ public class Drive extends Actor{
 	
 	protected double rightRate(){
 		return rightVel;
+	}
+	
+	protected double centerRate(){
+		return centerVel;
 	}
 	
 	protected double avgDist(){

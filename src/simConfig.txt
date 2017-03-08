@@ -1,6 +1,7 @@
 leftMotor,10,0
 rightMotor,11,0
 centerMotor,9
+centerEncoder,12,16
 leftEncoder,10,17
 rightEncoder,11,15
 centerEncoder,16,18
