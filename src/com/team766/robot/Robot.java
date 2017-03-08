@@ -22,7 +22,6 @@ public class Robot implements MyRobot {
 	private long prevTime;
 	private boolean autonDone = false;
 	private boolean teleopDone = false;
-	
 	private final long RUN_TIME = 30;
 	private long lastSleepTime = 0;
 	
@@ -47,6 +46,7 @@ public class Robot implements MyRobot {
 		CommandBase.init();
 		LogFactory.createInstance("General");
 		LogFactory.createInstance("Vision");
+		LogFactory.createInstance("Errors");
 		
 		Scheduler.getInstance().add(CommandBase.Drive);
 		Scheduler.getInstance().add(CommandBase.GearPlacer);

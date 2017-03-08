@@ -4,7 +4,7 @@ import lib.Message;
 
 public class UpdateClimber implements Message{
 	
-	//true is up, false is down
+	//true is forward, false is backwards
 	private boolean climb;
 	
 	public UpdateClimber(boolean climb){

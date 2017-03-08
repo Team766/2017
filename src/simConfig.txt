@@ -3,6 +3,7 @@ rightMotor,11,0
 centerMotor,9
 leftEncoder,10,17
 rightEncoder,11,15
+centerEncoder,16,18
 gyro,12
 leftJoystick,0
 rightJoystick,1
