@@ -31,7 +31,7 @@ import com.team766.robot.HardwareProvider;
 
 public class Vision extends Actor{
 	
-	private final long RUN_TIME = 12;
+	private final long RUN_TIME = 10;
 	
 	private int hueMin = 38;
 	private int satMin = 92;
@@ -58,7 +58,8 @@ public class Vision extends Actor{
 	
 	private boolean trackingEnabled = false;
 	private boolean drivingEnabled = false;
-	private double count;
+	private final int UPDATE_RATE = 50;
+	private int counter;
 	private final double MAX_COUNT = 50;
 	
 	CameraInterface camServer = HardwareProvider.getInstance().getCameraServer();
@@ -72,6 +73,7 @@ public class Vision extends Actor{
 		LogFactory.getInstance("General").print("Vision: INIT");
 		outputDist = 0;
 		outputAngle = 0;
+		counter = UPDATE_RATE;
 		
 		done = false;
 	}
@@ -91,17 +93,20 @@ public class Vision extends Actor{
 				if(currentMessage instanceof StartTrackingPeg){
 					trackingEnabled = true;
 					done = false;
+					counter = UPDATE_RATE;
 					//Needs to send message when tracking
 //					sendMessage(new DriveSideways(-getDist() * Math.sin(Math.toRadians(getAngle()))));
 				}
 				else if(currentMessage instanceof DriveIntoPeg){
 					drivingEnabled = true;
 					done = false;
+					counter = UPDATE_RATE;
 				}
 				else if(currentMessage instanceof Stop){
 					//Stop
 					trackingEnabled = false;
 					done = true;
+					counter = UPDATE_RATE;
 					sendMessage(new MotorCommand(0, Motor.centerDrive));
 				}
 					
@@ -109,28 +114,33 @@ public class Vision extends Actor{
 			
 			camServer.getFrame(img);
 			if(img == null || img.empty()){
-				LogFactory.getInstance("Vision").print("Vision: :(");
+				LogFactory.getInstance("Vision").print("Vision: No Input Image");
 				continue;
 			}
 			//Begin processing image below
 			Mat out = process(img);
 			if(out == null){
-				LogFactory.getInstance("Vision").print("Vision: :(((((");
+				LogFactory.getInstance("Vision").print("Vision: No/Not enough Countours found");
 				continue;
 			}
 			
 			camServer.putFrame(out);
 			
-			if(trackingEnabled){
-				sendMessage(new MotorCommand(-getDist() * Math.sin(Math.toRadians(getAngle()) * ConstantsFileReader.getInstance().get("centerDriveP")), Motor.centerDrive));
-//				sendMessage(new DriveSideways(-getDist() * Math.sin(Math.toRadians(getAngle()))));
-				done = Math.abs(getDist() * Math.sin(Math.toRadians(getAngle()))) < Constants.ALLIGNING_SIDEWAYS_DIST_THRESH;
+			if(counter >= UPDATE_RATE){
+				if(trackingEnabled){
+					sendMessage(new MotorCommand(-getDist() * Math.sin(Math.toRadians(getAngle()) * ConstantsFileReader.getInstance().get("centerDriveP")), Motor.centerDrive));
+	//				sendMessage(new DriveSideways(-getDist() * Math.sin(Math.toRadians(getAngle()))));
+					done = Math.abs(getDist() * Math.sin(Math.toRadians(getAngle()))) < Constants.ALLIGNING_SIDEWAYS_DIST_THRESH;
+				}
+				
+				if(drivingEnabled){
+					sendMessage(new DriveDistance(getDist(), 0.0));
+					done = getDist() < Constants.DRIVE_INTO_PEG_THRESH;
+				}
+				
+				counter = 0;
 			}
-			
-			if(drivingEnabled){
-				sendMessage(new DriveDistance(getDist(), 0.0));
-				done = getDist() < Constants.DRIVE_INTO_PEG_THRESH;
-			}
+			counter++;
 			
 			sendMessage(new VisionStatusUpdate(done, currentMessage, getAngle(), getDist()));
 		}
