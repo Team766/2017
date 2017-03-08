@@ -60,6 +60,15 @@ public class Drive extends Actor{
 	private double lastRightDist;
 	private double lastLeftDist;
 	private double lastCenterDist;
+	private double leftAccel;
+	private double rightAccel;
+	private double centerAccel;
+	private double lastAccelTime;
+	private double lastRightVel;
+	private double lastLeftVel;
+	private double lastCenterVel;
+
+
 	
 	private boolean commandFinished;
 	
@@ -83,7 +92,14 @@ public class Drive extends Actor{
 		lastLeftDist = leftDist();
 		lastRightDist = rightDist();
 		lastCenterDist = centerDist();
+		leftAccel = 0;
+		rightAccel = 0;
+		centerAccel = 0;
 		lastAngle = 0;
+		lastLeftVel = leftRate();
+		lastRightVel = rightRate();
+		lastCenterVel = centerRate();
+		lastAccelTime = System.currentTimeMillis() / 1000.0;
 		
 		gyroOffset = Constants.STARTING_HEADING;
 		
@@ -94,6 +110,7 @@ public class Drive extends Actor{
 	public void run() {
 		while(true){			
 			//Check for new messages
+
 			if(newMessage()){
 				if(currentCommand != null)
 					currentCommand.stop();
@@ -149,6 +166,7 @@ public class Drive extends Actor{
 			updateVelocities();
 			updateAngularRate();
 			updateLocation();
+			updateAccelerations();
 			
 			itsPerSec++;
 			sleep();
@@ -186,6 +204,21 @@ public class Drive extends Actor{
 			lastRightDist = rightDist();
 			lastCenterDist = centerDist();
 			lastVelTime = System.currentTimeMillis()/1000.0;
+		}
+	}
+	
+	private void updateAccelerations(){
+		if(System.currentTimeMillis()/1000.0 - lastAccelTime > 0.1){
+			leftAccel = (leftRate() - lastLeftVel) / (System.currentTimeMillis()/1000.0 - lastAccelTime);
+			rightAccel = (rightRate() - lastRightVel) / (System.currentTimeMillis()/1000.0 - lastAccelTime);
+			centerAccel = (centerRate() - lastCenterVel) / (System.currentTimeMillis()/1000.0 - lastAccelTime);
+			
+//			System.out.printf("Accelerations: %f\t%f\t%f\n", leftAccel, rightAccel, centerAccel);
+
+			lastLeftVel = leftRate();
+			lastRightVel = rightRate();
+			lastCenterVel = centerRate();
+			lastAccelTime = System.currentTimeMillis()/1000.0;
 		}
 	}
 	
@@ -291,7 +324,7 @@ public class Drive extends Actor{
 	}
 	
 	protected void setGyroAngle(double angle){
-		gyroOffset = angle;
+		gyroOffset = gyro.getAngle() + angle;
 	}
 	
 	protected void resetEncoders(){
