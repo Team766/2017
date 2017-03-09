@@ -8,6 +8,7 @@ import trajectory.TrajectoryFollower;
 
 import com.team766.lib.CommandBase;
 import com.team766.lib.Messages.DrivePath;
+import com.team766.robot.Constants;
 
 /**
  * DrivePathAction causes the robot to drive along a Path
@@ -30,6 +31,8 @@ public class DrivePathCommand extends CommandBase {
 	double kTurn = 0.004;//-3.0 / 80.0;
 
 	public DrivePathCommand(Message m) {
+		//if(command.getPath() == null)
+		//	LogFactory.getInstance("Errors").print("No path");
 		done = false;
 		LogFactory.getInstance("General").print("Drive: DrivePathCommand");
 		command = (DrivePath) m;
@@ -96,7 +99,7 @@ public class DrivePathCommand extends CommandBase {
 	}
 
 	public boolean onTarget() {
-		return followerLeft.isFinishedTrajectory();
+		return followerLeft.isFinishedTrajectory() && angleDiff < Constants.k_angularThresh ;
 	}
 
 	public void loadProfile(Trajectory leftProfile, Trajectory rightProfile,

@@ -6,6 +6,7 @@ import interfaces.SpeedController;
 import interfaces.SubActor;
 import lib.Actor;
 import lib.ConstantsFileReader;
+import lib.LogFactory;
 import lib.Message;
 import lib.PIDController;
 
@@ -15,14 +16,12 @@ import com.team766.lib.Messages.DrivePath;
 import com.team766.lib.Messages.DriveSideways;
 import com.team766.lib.Messages.DriveStatusUpdate;
 import com.team766.lib.Messages.HDrive;
-import com.team766.lib.Messages.HopperSetRoller;
 import com.team766.lib.Messages.MotorCommand;
 import com.team766.lib.Messages.ResetDriveAngle;
 import com.team766.lib.Messages.SnapToAngle;
 import com.team766.lib.Messages.Stop;
 import com.team766.robot.Constants;
 import com.team766.robot.HardwareProvider;
-import com.team766.robot.Actors.GearPlacer.GearPlacer;
 
 public class Drive extends Actor{
 
@@ -61,6 +60,15 @@ public class Drive extends Actor{
 	private double lastRightDist;
 	private double lastLeftDist;
 	private double lastCenterDist;
+	private double leftAccel;
+	private double rightAccel;
+	private double centerAccel;
+	private double lastAccelTime;
+	private double lastRightVel;
+	private double lastLeftVel;
+	private double lastCenterVel;
+
+
 	
 	private boolean commandFinished;
 	
@@ -84,7 +92,14 @@ public class Drive extends Actor{
 		lastLeftDist = leftDist();
 		lastRightDist = rightDist();
 		lastCenterDist = centerDist();
+		leftAccel = 0;
+		rightAccel = 0;
+		centerAccel = 0;
 		lastAngle = 0;
+		lastLeftVel = leftRate();
+		lastRightVel = rightRate();
+		lastCenterVel = centerRate();
+		lastAccelTime = System.currentTimeMillis() / 1000.0;
 		
 		gyroOffset = Constants.STARTING_HEADING;
 		
@@ -95,6 +110,7 @@ public class Drive extends Actor{
 	public void run() {
 		while(true){			
 			//Check for new messages
+
 			if(newMessage()){
 				if(currentCommand != null)
 					currentCommand.stop();
@@ -122,6 +138,8 @@ public class Drive extends Actor{
 				else if(currentMessage instanceof DrivePath)
 					currentCommand = new DrivePathCommand(currentMessage);
 				else if(currentMessage instanceof Stop){
+					setDrive(0.0);
+					setCenter(0.0);
 					stopCurrentCommand();
 				}
 				else if(currentMessage instanceof ResetDriveAngle){
@@ -141,13 +159,14 @@ public class Drive extends Actor{
 			
 //			LogFactory.getInstance("General").printPeriodic("Left: " + leftDist() + " Right: " + rightDist() + " Center: " + centerDist(), "Encoders", 200);
 			step();
-						
+			
 			//Send Status Update	#StayUpToDate	#Current	#inTheKnow
 			sendMessage(new DriveStatusUpdate(commandFinished, currentMessage, xPos, yPos, avgLinearRate()));
 
 			updateVelocities();
 			updateAngularRate();
 			updateLocation();
+			updateAccelerations();
 			
 			itsPerSec++;
 			sleep();
@@ -185,6 +204,21 @@ public class Drive extends Actor{
 			lastRightDist = rightDist();
 			lastCenterDist = centerDist();
 			lastVelTime = System.currentTimeMillis()/1000.0;
+		}
+	}
+	
+	private void updateAccelerations(){
+		if(System.currentTimeMillis()/1000.0 - lastAccelTime > 0.1){
+			leftAccel = (leftRate() - lastLeftVel) / (System.currentTimeMillis()/1000.0 - lastAccelTime);
+			rightAccel = (rightRate() - lastRightVel) / (System.currentTimeMillis()/1000.0 - lastAccelTime);
+			centerAccel = (centerRate() - lastCenterVel) / (System.currentTimeMillis()/1000.0 - lastAccelTime);
+			
+//			System.out.printf("Accelerations: %f\t%f\t%f\n", leftAccel, rightAccel, centerAccel);
+
+			lastLeftVel = leftRate();
+			lastRightVel = rightRate();
+			lastCenterVel = centerRate();
+			lastAccelTime = System.currentTimeMillis()/1000.0;
 		}
 	}
 	
@@ -290,7 +324,7 @@ public class Drive extends Actor{
 	}
 	
 	protected void setGyroAngle(double angle){
-		gyroOffset = angle;
+		gyroOffset = gyro.getAngle() + angle;
 	}
 	
 	protected void resetEncoders(){

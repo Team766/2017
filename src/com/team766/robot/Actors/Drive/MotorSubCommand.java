@@ -24,6 +24,9 @@ public class MotorSubCommand extends CommandBase{
 			case rightDrive:
 				Drive.setRight(command.getValue());
 				break;
+			case centerDrive:
+				Drive.setCenter(command.getValue());
+				break;
 			default:
 				System.out.println("Motor not recognized!");
 				break;

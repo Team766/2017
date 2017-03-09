@@ -14,7 +14,7 @@ public class DriveSidewaysCommand extends CommandBase{
 	double kMaxAccel = 20; //ft/sec^2
 	final double kDt = 0.010;
 	final double STOP_THRESH = 0.2;
-	final double AngleP = 0.02;
+	final double AngleP = 0.05;
 
 	double velocity;
 	double goal = 0;

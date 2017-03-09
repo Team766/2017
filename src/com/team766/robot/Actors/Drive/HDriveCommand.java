@@ -12,10 +12,12 @@ public class HDriveCommand extends CommandBase{
 	
 	public double left, right, center, norm;
 	private double initialHeading;
+	private double lockHeading;
 	
 	public HDriveCommand(Message m){
 		command = (HDrive)m;
 		initialHeading = Drive.getAngle();
+		lockHeading = Drive.getAngle();
 	}
 
 	@Override
@@ -44,12 +46,15 @@ public class HDriveCommand extends CommandBase{
 		if(command.getHeading() == 0){
 			Drive.setLeft(ConstantsFileReader.getInstance().get("LeftDriveFeedTerm") * round2D(left) - ((Drive.getAngle() - initialHeading) * ConstantsFileReader.getInstance().get("DriveCorrectionP")));
 			Drive.setRight(ConstantsFileReader.getInstance().get("RightDriveFeedTerm") * round2D(right) + ((Drive.getAngle() - initialHeading) * ConstantsFileReader.getInstance().get("DriveCorrectionP")));
+			Drive.setLeft((ConstantsFileReader.getInstance().get("LeftDriveFeedTerm") * round2D(left)) + ((lockHeading - Drive.getAngle()) * ConstantsFileReader.getInstance().get("DriveCorrectionP")));
+			Drive.setRight((ConstantsFileReader.getInstance().get("RightDriveFeedTerm") * round2D(right)) - ((lockHeading - Drive.getAngle()) * ConstantsFileReader.getInstance().get("DriveCorrectionP")));
 		}else{
 			Drive.setLeft(round2D(left));
 			Drive.setRight(round2D(right));
 		}
 		Drive.setCenter(round2D(center));
 		
+		Drive.setCenter(center);
 	}
 
 	@Override

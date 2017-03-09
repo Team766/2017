@@ -3,10 +3,11 @@ package com.team766.robot.Actors;
 import interfaces.CameraInterface;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import lib.Actor;
+import lib.ConstantsFileReader;
 import lib.LogFactory;
+import lib.Message;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -18,12 +19,19 @@ import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
+import com.team766.lib.Messages.DriveDistance;
+import com.team766.lib.Messages.DriveIntoPeg;
+import com.team766.lib.Messages.MotorCommand;
+import com.team766.lib.Messages.MotorCommand.Motor;
+import com.team766.lib.Messages.StartTrackingPeg;
+import com.team766.lib.Messages.Stop;
 import com.team766.lib.Messages.VisionStatusUpdate;
+import com.team766.robot.Constants;
 import com.team766.robot.HardwareProvider;
 
 public class Vision extends Actor{
 	
-	private final long RUN_TIME = 70;
+	private final long RUN_TIME = 10;
 	
 	private int hueMin = 38;
 	private int satMin = 92;
@@ -41,19 +49,33 @@ public class Vision extends Actor{
 	private final double X_OFFSET_THRESH = 10;
 	
 	private final double RECT_WIDTH = 10.25;
-	private final double FOCAL_LENGTH = 1892.8;//2.8; //pixels
-	private final double CENTER_X = 320;
-	private final double CENTER_Y = 240;
+	private final double FOCAL_LENGTH = 160;//2.8; //pixels
+	private final double CENTER_X = 80;
+	private final double CENTER_Y = 60;
 
 	private double outputDist;
 	private double outputAngle;
 	
+	private boolean trackingEnabled = false;
+	private boolean drivingEnabled = false;
+	private final int UPDATE_RATE = 50;
+	private int counter;
+	private final double MAX_COUNT = 50;
+	
 	CameraInterface camServer = HardwareProvider.getInstance().getCameraServer();
+	
+	Message currentMessage;
 	
 	@Override
 	public void init() {
+		acceptableMessages = new Class[]{StartTrackingPeg.class, Stop.class, DriveIntoPeg.class};
+		
+		LogFactory.getInstance("General").print("Vision: INIT");
 		outputDist = 0;
 		outputAngle = 0;
+		counter = UPDATE_RATE;
+		
+		done = false;
 	}
 	
 	@Override
@@ -62,23 +84,65 @@ public class Vision extends Actor{
 		while(true){
 			itsPerSec++;
 			sleep(RUN_TIME);
-	
-			camServer.getFrame(img);
-			if(img == null || img.empty())
-				continue;
-		
-			//Begin processing image below
-
-			Mat out = process(img);
 			
-			if(out == null)
+			if(newMessage()){
+				currentMessage = readMessage();
+				if(currentMessage == null)
+					break;
+				
+				if(currentMessage instanceof StartTrackingPeg){
+					trackingEnabled = true;
+					done = false;
+					counter = UPDATE_RATE;
+					//Needs to send message when tracking
+//					sendMessage(new DriveSideways(-getDist() * Math.sin(Math.toRadians(getAngle()))));
+				}
+				else if(currentMessage instanceof DriveIntoPeg){
+					drivingEnabled = true;
+					done = false;
+					counter = UPDATE_RATE;
+				}
+				else if(currentMessage instanceof Stop){
+					//Stop
+					trackingEnabled = false;
+					done = true;
+					counter = UPDATE_RATE;
+					sendMessage(new MotorCommand(0, Motor.centerDrive));
+				}
+					
+			}
+			
+			camServer.getFrame(img);
+			if(img == null || img.empty()){
+				LogFactory.getInstance("Vision").print("Vision: No Input Image");
 				continue;
+			}
+			//Begin processing image below
+			Mat out = process(img);
+			if(out == null){
+				LogFactory.getInstance("Vision").print("Vision: No/Not enough Countours found");
+				continue;
+			}
 			
 			camServer.putFrame(out);
 			
-			LogFactory.getInstance("Vision").printPeriodic("Angle: " + getAngle() + "\tDist: " + getDist(), "VisionUpdate", 200);
+			if(counter >= UPDATE_RATE){
+				if(trackingEnabled){
+					sendMessage(new MotorCommand(-getDist() * Math.sin(Math.toRadians(getAngle()) * ConstantsFileReader.getInstance().get("centerDriveP")), Motor.centerDrive));
+	//				sendMessage(new DriveSideways(-getDist() * Math.sin(Math.toRadians(getAngle()))));
+					done = Math.abs(getDist() * Math.sin(Math.toRadians(getAngle()))) < Constants.ALLIGNING_SIDEWAYS_DIST_THRESH;
+				}
+				
+				if(drivingEnabled){
+					sendMessage(new DriveDistance(getDist(), 0.0));
+					done = getDist() < Constants.DRIVE_INTO_PEG_THRESH;
+				}
+				
+				counter = 0;
+			}
+			counter++;
 			
-			sendMessage(new VisionStatusUpdate(getAngle(), getDist()));
+			sendMessage(new VisionStatusUpdate(done, currentMessage, getAngle(), getDist()));
 		}
 	}
 	
@@ -139,7 +203,7 @@ public class Vision extends Actor{
 		if (angle > 45)
 			angle -= 90;
 		
-		System.out.println("Angle: " + angle);
+//		System.out.println("Angle: " + angle);
 						
 		//Rotate image x degrees
 		Point src_center = new Point(output.cols()/2.0F, output.rows()/2.0F);
@@ -162,7 +226,10 @@ public class Vision extends Actor{
 		ArrayList<MatOfPoint> contours = new ArrayList<MatOfPoint>();
 		Mat hierarchy = new Mat();
 		Imgproc.findContours(output, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
-		Imgproc.drawContours(display, contours, -1, new Scalar(0, 255, 0));
+//		Imgproc.drawContours(display, contours, -1, new Scalar(0, 255, 0));
+		
+		if(contours.isEmpty())
+			return null;
 		
 		MatOfPoint2f[] contours_poly = new MatOfPoint2f[contours.size()];
 		for(int i = 0; i < contours_poly.length; i++){
@@ -173,6 +240,9 @@ public class Vision extends Actor{
 			boundRect[i] = new Rect();
 		}
 		
+		if(boundRect.length == 0)
+			return null;
+		
 		//Important boundingRects
 		Rect[] imporRects = new Rect[3];
 		int maxIndex = 0;
@@ -181,7 +251,7 @@ public class Vision extends Actor{
 		for(int i = 0; i < contours.size(); i++ ){
 			Imgproc.approxPolyDP(new MatOfPoint2f(contours.get(i).toArray()), contours_poly[i], 3.0, true);
 			boundRect[i] = Imgproc.boundingRect(new MatOfPoint(contours_poly[i].toArray()));
-	    }		
+	    }
 		
 		//Remove duplicates
 		for(int i = 0; i < boundRect.length; i++){
@@ -194,13 +264,13 @@ public class Vision extends Actor{
 					boundRect[j] = null;
 			}
 		}
-		System.out.println("Bounded: " + Arrays.toString(boundRect));
+//		System.out.println("Bounded: " + Arrays.toString(boundRect));
 		//Check if it should have 3 rects or just 2
 		
 		boolean pairFound = false;
 		//Check to see if there are two rects with same width, and if multiple largest area prioritized
 		if(arraySize(boundRect) > 2){
-			System.out.println("Checking: " + Arrays.toString(boundRect));
+//			System.out.println("Checking: " + Arrays.toString(boundRect));
 			imporRects[0] = new Rect(0,0,0,0);
 			imporRects[1] = new Rect(0,0,0,0);
 			for(Rect r : boundRect){
@@ -214,7 +284,7 @@ public class Vision extends Actor{
 							(r1.height/r1.width == 2) && 
 							((Math.abs(1.0 - Math.max(r.area(), r1.area()) / Math.min(r.area(), r1.area()))) < AreaSimularityThresh) && //Areas similar
 							(r.area() > imporRects[0].area() && r1.area() > imporRects[1].area()))){	//Area bigger than previously found rects
-						System.out.println("Same AREA: " + r.area() + "\t" + r1.area());
+//						System.out.println("Same AREA: " + r.area() + "\t" + r1.area());
 						imporRects[0] = r;
 						imporRects[1] = r1;
 						pairFound = true;
@@ -238,7 +308,7 @@ public class Vision extends Actor{
 								((r1.br().y - r2.tl().y)/((r1.width + r2.width)/2) == 2) && 
 								Math.abs(1.0 - Math.max(r.height, (r1.br().y - r2.tl().y)) / Math.min(r.height, (r1.br().y - r2.tl().y))) < WIDTH_THRESH){
 								
-							System.out.println("Same Stuff");
+//							System.out.println("Same Stuff");
 							//Only save the first ones or bigger areas
 							if((imporRects[0] == null || imporRects[1] == null || imporRects[2] == null) ||
 									 (r.area()> imporRects[0].area() && r1.area()> imporRects[1].area() && r2.area()> imporRects[2].area())){
@@ -270,7 +340,7 @@ public class Vision extends Actor{
 				Math.abs(imporRects[1].x - imporRects[2].x) > X_OFFSET_THRESH)
 				imporRects[2] = null;		
 		
-		System.out.println("Important: " + Arrays.toString(imporRects));
+//		System.out.println("Important: " + Arrays.toString(imporRects));
 		
 		if(imporRects[0] != null && imporRects[1] != null){
 			Point centerPoint = new Point((imporRects[0].x + imporRects[0].width/2.0  + imporRects[1].x + imporRects[1].width/2.0)/2.0, CENTER_Y);
@@ -278,16 +348,24 @@ public class Vision extends Actor{
 		}
 		double maxX = 0;
 		double minX = output.width();
-		if(imporRects.length > 2){
-			maxX = Math.max(Math.max(imporRects[0].br().x, imporRects[1].br().x), imporRects[3].br().x );
-			minX = Math.min(Math.min(imporRects[0].br().x, imporRects[1].br().x), imporRects[3].br().x );
-		}else if(imporRects.length == 2){
+		if(arraySize(imporRects) > 2){
+			maxX = Math.max(Math.max(imporRects[0].br().x, imporRects[1].br().x), imporRects[2].br().x);
+			minX = Math.min(Math.min(imporRects[0].tl().x, imporRects[1].tl().x), imporRects[2].tl().x);
+		}else if(arraySize(imporRects) == 2){
 			maxX = Math.max(imporRects[0].br().x, imporRects[1].br().x);
-			minX = Math.min(imporRects[0].br().x, imporRects[1].br().x);
+			minX = Math.min(imporRects[0].tl().x, imporRects[1].tl().x);
+		}
+		
+		for(Rect r : imporRects){
+			if(r == null)
+				continue;
+			Imgproc.rectangle(display, r.tl(), r.br(), new Scalar(0, 255, 0));
 		}
 		
 		//Set values
-		outputDist = (RECT_WIDTH * FOCAL_LENGTH) / (maxX - minX);
+		outputDist = ((RECT_WIDTH * FOCAL_LENGTH) / (maxX - minX))/12.0;	//Inch to feet
+		Imgproc.putText(display, "dist: " + outputDist, new Point(10, 40), 1, 0.5, new Scalar(0, 255, 255));
+//		Imgproc.putText(display, "horDist: " + (-getDist() * Math.sin(Math.toRadians(getAngle()))), new Point(10, 40), 1, 0.5, new Scalar(0, 255, 255));
 		
 		return display;
 	}

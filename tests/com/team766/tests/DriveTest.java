@@ -81,7 +81,5 @@ public class DriveTest extends RobotTestCase {
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getRightMotor()[0]).get() == 0;}, 2); 
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getLeftMotor()[0]).get() == 0;}, 2); 
 		
-		
-		
 	}
 }
