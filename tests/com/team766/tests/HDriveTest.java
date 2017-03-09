@@ -28,7 +28,6 @@ public class HDriveTest extends RobotTestCase{
 		//Heading 90
 		((Gyro)(instance.getGyro(ConfigFile.getGyro()))).setAngle(90.0);
 		
-		//Joystick Forward
 		Scheduler.getInstance().sendMessage(new HDrive(0, 1, 0, true));
 		
 		//Robot drives forwards
@@ -36,7 +35,7 @@ public class HDriveTest extends RobotTestCase{
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getLeftMotor()[0]).get() == 0;}, 2);
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getRightMotor()[0]).get() == 0;}, 2);
 		//Use the line below to test what getCenterMotor's number actually is.
-		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getCenterMotor()).get() > 0;}, 2);
+		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getCenterMotor()).get() < 0;}, 2);
 	}
 	
 	@Test
@@ -63,15 +62,15 @@ public class HDriveTest extends RobotTestCase{
 		//Robot drives forwards
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getLeftMotor()[0]).get() > 0;}, 2);
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getRightMotor()[0]).get() < 0;}, 2);
-		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getCenterMotor()).get() < 0.5;}, 2);
+		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getCenterMotor()).get()  == 0;}, 2);
 		
 		((Gyro)(instance.getGyro(ConfigFile.getGyro()))).setAngle(90.0);
 		//Facing 90 deg, drive motors now moving it sideways
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getLeftMotor()[0]).get() > 0;}, 2);
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getRightMotor()[0]).get() == 0;}, 2);
-		// Line below is print out getRightMotor's value for testing purposes
-		System.out.println("This be " + instance.getMotor(ConfigFile.getCenterMotor()).get());
-		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getCenterMotor()).get() < 0;}, 2);
+		
+		System.out.println("get centerMotor" + instance.getMotor(ConfigFile.getCenterMotor()).get());
+		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getCenterMotor()).get() == 0;}, 2);
 		
 	}
 }
