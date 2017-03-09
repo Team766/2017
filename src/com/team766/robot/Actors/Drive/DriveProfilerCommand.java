@@ -5,6 +5,7 @@ import lib.Message;
 
 import com.team766.lib.CommandBase;
 import com.team766.lib.Messages.DriveDistance;
+import com.team766.robot.Constants;
 
 public class DriveProfilerCommand extends CommandBase{
 
@@ -47,7 +48,7 @@ public class DriveProfilerCommand extends CommandBase{
 	//Values: {avgLinearRate(), leftRate(), rightRate(), avgDist(), leftDist(), rightDist()}
 	@Override
 	public void update() {
-		position += Drive.avgLinearRate() * kDt;
+		//position += Drive.avgLinearRate() * kDt;
 		
 		switch(state_){
 			case RAMP_UP:
@@ -62,7 +63,7 @@ public class DriveProfilerCommand extends CommandBase{
 				break;
 			case RAMP_DOWN:
 				velocity -= direction * kMaxAccel * kDt;
-				if (Math.abs(position) >= Math.abs(goal)){
+				if (Math.abs(Drive.avgDist()) + Constants.k_linearThresh >= Math.abs(goal)){
 					state_ = State.LOCK;
 				}
 				break;
@@ -72,12 +73,12 @@ public class DriveProfilerCommand extends CommandBase{
 				break;
 		}
 		
-		if((Math.abs(goal) - STOP_THRESH <= Math.abs(position) + distToStop(Drive.avgLinearRate())) && (state_ != State.LOCK)){
+		if((Math.abs(goal) - STOP_THRESH <= Math.abs(Drive.avgDist()) + distToStop(Drive.avgLinearRate())) && (state_ != State.LOCK)){
 			state_ = State.RAMP_DOWN;
 		}
 	
 //		System.out.println("Vel: " + values[0] + " pos: " + values[3]);
-		System.out.println("distToStop: " + distToStop(Drive.avgLinearRate()) + " position: " + position + " state_: " + state_ + " vel: " + velocity);
+		System.out.println("distToStop: " + distToStop(Drive.avgLinearRate()) + " position: " + Drive.avgDist() + " state_: " + state_ + " vel: " + velocity);
 	
 		idealPosition += velocity * kDt;
 	

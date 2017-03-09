@@ -62,9 +62,12 @@ public class HDriveTest extends RobotTestCase{
 		//Robot drives forwards
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getLeftMotor()[0]).get() > 0;}, 2);
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getRightMotor()[0]).get() < 0;}, 2);
-		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getCenterMotor()).get()  == 0;}, 2);
+		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getCenterMotor()).get() > 0;}, 2);
 		
 		((Gyro)(instance.getGyro(ConfigFile.getGyro()))).setAngle(90.0);
+		
+		Scheduler.getInstance().sendMessage(new HDrive(1, 0, 1, true));
+		
 		//Facing 90 deg, drive motors now moving it sideways
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getLeftMotor()[0]).get() > 0;}, 2);
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getRightMotor()[0]).get() == 0;}, 2);
@@ -72,5 +75,10 @@ public class HDriveTest extends RobotTestCase{
 		System.out.println("get centerMotor" + instance.getMotor(ConfigFile.getCenterMotor()).get());
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getCenterMotor()).get() == 0;}, 2);
 		
+	}
+	
+	private void reset(){
+		//Heading 0
+		((Gyro)(instance.getGyro(ConfigFile.getGyro()))).setAngle(0.0);
 	}
 }
