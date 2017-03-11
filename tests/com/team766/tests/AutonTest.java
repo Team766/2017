@@ -11,7 +11,7 @@ import tests.RobotTestCase;
 import com.team766.lib.ConfigFile;
 import com.team766.lib.Messages.HDrive;
 
-public class AutonTest extends RobotTestCase{
+public class AutonTest extends TestCase {
 
 	@Test
 	public void testNoAuton() throws Exception {
@@ -25,9 +25,5 @@ public class AutonTest extends RobotTestCase{
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getRightMotor()[0]).get() == 0;}, 2);
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getCenterMotor()).get() == 0;}, 2);
 		
-		//Heading 90
-		((Gyro)(instance.getGyro(ConfigFile.getGyro()))).setAngle(90.0);
-		
-		Scheduler.getInstance().sendMessage(new HDrive(0, 1, 0, true));
 	}
 }

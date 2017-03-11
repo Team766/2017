@@ -148,9 +148,10 @@ public class Drive extends Actor{
 				}
 				else if(currentMessage instanceof DriveSideways)
 					currentCommand = new DriveSidewaysCommand(currentMessage);
-				else if(currentMessage instanceof DriveDistance)
+				else if(currentMessage instanceof DriveDistance){
 					currentCommand = new DriveProfilerCommand(currentMessage);
 //					currentCommand = new DriveDistanceCommand(currentMessage);
+				}
 				//Reset Control loops
 				resetControlLoops();
 			}
@@ -184,10 +185,11 @@ public class Drive extends Actor{
 	}
 	
 	private void stopCurrentCommand(){
-		if(currentCommand != null)
+		if(currentCommand != null){
 			currentCommand.stop();
-		commandFinished = true;
+		}
 		currentCommand = null;
+		commandFinished = true;
 	}
 	
 	

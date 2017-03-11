@@ -12,10 +12,9 @@ import com.team766.robot.Actors.Drive.DriveSidewaysCommand;
 import tests.Gyro;
 import tests.RobotTestCase;
 
-public class DriveSidewaysTest extends RobotTestCase {
+public class DriveSidewaysTest extends TestCase {
 	
 	public void testDriveSideways() throws Exception {
-				
 		//set end point to 5 feet to the right
 		Scheduler.getInstance().sendMessage(new DriveSideways(5));
 		
@@ -32,6 +31,9 @@ public class DriveSidewaysTest extends RobotTestCase {
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getLeftMotor()[0]).get() < 0;}, 2);
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getRightMotor()[0]).get() > 0;}, 2);
 		
+	}
+	
+	public void testDriveNegSideways() throws Exception {
 		
 		//set end point to 8 feet to the left
 		Scheduler.getInstance().sendMessage(new DriveSideways(-6));
@@ -40,7 +42,6 @@ public class DriveSidewaysTest extends RobotTestCase {
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getCenterMotor()).get() < 0;}, 2);
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getLeftMotor()[0]).get() == 0;}, 2);
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getRightMotor()[0]).get() == 0;}, 2);
-
 	}
 
 }

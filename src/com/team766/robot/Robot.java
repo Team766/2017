@@ -68,6 +68,10 @@ public class Robot implements MyRobot {
     	emptyInboxes();
     	Scheduler.getInstance().add(new AutonSelector(Constants.getAutonMode()));
     	
+    	try{
+    		Scheduler.getInstance().sendMessage(new Stop());
+    	}catch(Exception e){}
+    	
     	autonDone = true;
     }
 
