@@ -89,8 +89,12 @@ public class HardwareProvider {
 		return RobotProvider.instance.getSolenoid(ConfigFile.getGearPlacer());
 	}
 	
-	public SolenoidController getClimberDeploy(){
-		return RobotProvider.instance.getSolenoid(ConfigFile.getClimberDeploy());
+	public SolenoidController getClimberDeployOut(){
+		return RobotProvider.instance.getSolenoid(ConfigFile.getClimberDeployOut());
+	}
+	
+	public SolenoidController getClimberDeployIn(){
+		return RobotProvider.instance.getSolenoid(ConfigFile.getClimberDeployIn());
 	}
 	
 	public SolenoidController getHopperOpener(){

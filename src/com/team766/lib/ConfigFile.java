@@ -88,8 +88,12 @@ public class ConfigFile {
 		return ConfigFileReader.getInstance().getPort("gearPlacer");
 	}
 
-	public static int getClimberDeploy() {
-		return ConfigFileReader.getInstance().getPort("climberDeploy");
+	public static int getClimberDeployOut() {
+		return ConfigFileReader.getInstance().getPort("climberDeployOut");
+	}
+	
+	public static int getClimberDeployIn() {
+		return ConfigFileReader.getInstance().getPort("climberDeployIn");
 	}
 	
 }

@@ -20,7 +20,8 @@ public class Climber extends Actor {
 	
 	SpeedController climberMotor = HardwareProvider.getInstance().getClimber();
 	EncoderReader climberEncoder = HardwareProvider.getInstance().getClimberEncoder();
-	SolenoidController climberSolenoid = HardwareProvider.getInstance().getClimberDeploy();
+	SolenoidController climberSolenoidOut = HardwareProvider.getInstance().getClimberDeployOut();
+	SolenoidController climberSolenoidIn = HardwareProvider.getInstance().getClimberDeployIn();
 	
 	Message currentMessage;
 	SubActor currentCommand;
@@ -101,8 +102,9 @@ public class Climber extends Actor {
 		climberMotor.set(d);
 	}
 	
-	protected void setClimberDeploy(boolean b){
-		climberSolenoid.set(b);
+	protected void setClimberDeploy(boolean out){
+		climberSolenoidOut.set(out);
+		climberSolenoidIn.set(!out);
 	}
 	
 	
