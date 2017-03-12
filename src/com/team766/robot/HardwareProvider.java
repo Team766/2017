@@ -65,8 +65,8 @@ public class HardwareProvider {
 		return RobotProvider.instance.getAnalogInput(ConfigFile.getHopperSensor());
 	}
 	
-	public AnalogInputReader getGearSensor(){
-		return RobotProvider.instance.getAnalogInput(ConfigFile.getGearSensor());
+	public DigitalInputReader getGearSensor(){
+		return RobotProvider.instance.getDigitalInput(ConfigFile.getGearSensor());
 	}
 		
 	public CameraInterface getCameraServer(){
