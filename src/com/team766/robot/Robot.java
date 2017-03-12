@@ -140,7 +140,7 @@ public class Robot implements MyRobot {
 			//System.out.println("Curr: " + System.currentTimeMillis() + "\tLast: " + lastSleepTime);
 			Thread.sleep(RUN_TIME - (System.currentTimeMillis() - lastSleepTime));
 		} catch (Exception e) {
-			System.out.println(toString() + "\tNo time to sleep, running behind schedule!! rut roh :/");
+			System.out.println(toString() + "\tNo time to sleep, running behind schedule!! rut roh :/  Robert the robot drank 2 much coffee...can't sleep");
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException e1) {}

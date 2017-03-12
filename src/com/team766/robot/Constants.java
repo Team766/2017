@@ -25,7 +25,9 @@ public abstract class Constants extends RobotValues{
 	public static final double ALLIGNING_SIDEWAYS_DIST_THRESH = 3.5 / 12.0;
 	public static final double DRIVE_INTO_PEG_THRESH = 10.0 / 12.0;
 	
-
+	//Analog Sensors
+	public static final double PHOTOGATE_STEP_VOLTAGE = 2.5;
+	
 	public static final double follower_wheel_circumference = 0.27083 * Math.PI; //3.25 in
 	public static final double center_counts_per_rev = 1000.0;
 	

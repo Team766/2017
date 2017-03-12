@@ -24,15 +24,18 @@ public class SetHopperStateCommand extends CommandBase{
 				Hopper.setIntakeFlap(false);
 				Hopper.setExhaustFlap(false);
 				Hopper.setHopperMotor(0.0);
+				done = true;
 				break;
 			case Intake:
 				GearPlacer.setTopOpener(true);
 				Hopper.setIntakeFlap(true);
 				Hopper.setExhaustFlap(false);
-				if(Hopper.getHopperSensor())
+				if(!Hopper.isBallPresent()){
 					Hopper.setHopperMotor(1.0);
-				else
+				}else{
 					done = true;
+					Hopper.setHopperMotor(0.0);
+				}
 				break;
 			case Exhaust:
 				GearPlacer.setTopOpener(false);

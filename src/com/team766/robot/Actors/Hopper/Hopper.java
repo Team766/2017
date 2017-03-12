@@ -4,8 +4,11 @@ import com.team766.lib.Messages.HopperSetRoller;
 import com.team766.lib.Messages.MotorCommand;
 import com.team766.lib.Messages.Stop;
 import com.team766.lib.Messages.SetHopperState;
+import com.team766.robot.Constants;
 import com.team766.robot.HardwareProvider;
 import com.team766.robot.Actors.Drive.MotorSubCommand;
+
+import interfaces.AnalogInputReader;
 import interfaces.DigitalInputReader;
 import interfaces.SolenoidController;
 import interfaces.SpeedController;
@@ -20,7 +23,7 @@ public class Hopper extends Actor{
 	Message currentMessage;
 	SubActor currentCommand;
 	
-	DigitalInputReader hopperSensor = HardwareProvider.getInstance().getHopperSensor();
+	AnalogInputReader hopperSensor = HardwareProvider.getInstance().getHopperSensor();
 	SpeedController hopperMotor = HardwareProvider.getInstance().getHopper();
 	SolenoidController intakeFlap = HardwareProvider.getInstance().getHopperOpener();
 	SolenoidController exhaustFlap = HardwareProvider.getInstance().getHopperCloser();
@@ -48,12 +51,13 @@ public class Hopper extends Actor{
 				else if(currentMessage instanceof HopperSetRoller){
 					HopperSetRoller HopperMessage = (HopperSetRoller)currentMessage;
 					if(HopperMessage.getForward() == true)
-						this.setHopperMotor(1);
+						this.setHopperMotor(1.0);
 					else
-						this.setHopperMotor(-1);
+						this.setHopperMotor(-1.0);
 				}
 			}
 			step();
+			
 			sleep();
 		}
 	}
@@ -103,8 +107,12 @@ public class Hopper extends Actor{
 		return exhaustFlap.get();
 	}
 	
-	public boolean getHopperSensor(){
-		return hopperSensor.get();
+	public double getHopperSensorVoltage(){
+		return hopperSensor.getVoltage();
+	}
+	
+	public boolean isBallPresent(){
+		return getHopperSensorVoltage() < Constants.PHOTOGATE_STEP_VOLTAGE;
 	}
 
 }

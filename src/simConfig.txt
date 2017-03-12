@@ -17,3 +17,4 @@ climberDeploy,5
 hopperOpener,7
 hopperCloser,6
 hopperSensor,20
+gearSensor,21

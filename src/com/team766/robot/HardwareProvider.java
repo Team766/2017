@@ -1,5 +1,6 @@
 package com.team766.robot;
 
+import interfaces.AnalogInputReader;
 import interfaces.CameraInterface;
 import interfaces.EncoderReader;
 import interfaces.GyroReader;
@@ -60,8 +61,12 @@ public class HardwareProvider {
 		return RobotProvider.instance.getEncoder(ConfigFile.getClimberEncoder()[0], ConfigFile.getClimberEncoder()[1]);
 	}
 	
-	public DigitalInputReader getHopperSensor(){
-		return RobotProvider.instance.getDigitalInput(ConfigFile.getHopperSensor());
+	public AnalogInputReader getHopperSensor(){
+		return RobotProvider.instance.getAnalogInput(ConfigFile.getHopperSensor());
+	}
+	
+	public AnalogInputReader getGearSensor(){
+		return RobotProvider.instance.getAnalogInput(ConfigFile.getGearSensor());
 	}
 		
 	public CameraInterface getCameraServer(){
