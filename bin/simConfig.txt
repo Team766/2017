@@ -4,7 +4,6 @@ centerMotor,9
 centerEncoder,12,16
 leftEncoder,10,17
 rightEncoder,11,15
-centerEncoder,16,18
 gyro,12
 leftJoystick,0
 rightJoystick,1
@@ -12,9 +11,11 @@ boxJoystick,2
 climberEncoder,0,1
 climberMotor,2
 hopperMotor,3
-hopperSensor,0
 gearPlacerOpener,3
 gearPlacer,4
-climberDeploy,5
 hopperOpener,7
 hopperCloser,6
+hopperSensor,2
+gearSensor,3
+climberDeployOut,2
+climberDeployIn,0

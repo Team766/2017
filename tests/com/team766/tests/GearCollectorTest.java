@@ -5,6 +5,7 @@ import lib.Scheduler;
 import org.junit.Test;
 
 import tests.AnalogInput;
+import tests.DigitalInput;
 import tests.RobotTestCase;
 
 import com.team766.lib.ConfigFile;
@@ -55,7 +56,7 @@ public class GearCollectorTest extends RobotTestCase{
 		Scheduler.getInstance().sendMessage(new RequestDropPeg());
 		
 		//Peg found
-		((AnalogInput)(instance.getAnalogInput(ConfigFile.getGearSensor()))).set(0.0);
+		((DigitalInput)(instance.getDigitalInput(ConfigFile.getGearSensor()))).set(true);
 		
 		//Check dropping peg
 		assertTrueTimed(() -> {return instance.getSolenoid(ConfigFile.getGearPlacerOpener()).get() == false;}, 2); 
