@@ -37,13 +37,13 @@ public class AutonSelector extends Actor{
 			case "DriveToPeg":
 				System.out.println("Auton: DriveToPeg");
 				LogFactory.getInstance("General").print("Auton: DriveToPeg");
-				waitForMessage(new DrivePath("ToPegPath"), DriveStatusUpdate.class);
+				waitForMessage(new DrivePath("ToPegPath", false), DriveStatusUpdate.class);
 				waitForMessage(new SnapToAngle(), DriveStatusUpdate.class);
 				break;	
 			case "BoilerPath":
 				System.out.println("Auton: BoilerPath");
 				LogFactory.getInstance("General").print("Auton: BoilerPath");
-				sendMessage(new DrivePath("BoilerPath"));
+				sendMessage(new DrivePath("BoilerPath", false));
 				break;	
 			case "StraightToPeg":
 				System.out.println("Auton: Using Vision to Drive straight to peg");
@@ -55,7 +55,13 @@ public class AutonSelector extends Actor{
 			case "StraightToPegPath":
 				System.out.println("Auton: StraightToPegPath");
 				LogFactory.getInstance("General").print("Auton: StraightToPegPath");
-				sendMessage(new DrivePath("StraightToPegPath"));
+				sendMessage(new DrivePath("StraightToPegPath", false));
+				break;
+			case "FlipDriveToPegPath":
+				System.out.println("Auton: FlipDriveToPegPath");
+				LogFactory.getInstance("General").print("auton: FlipDriveToPegPath");
+				waitForMessage(new DrivePath("ToPegPath", true), DriveStatusUpdate.class);
+				waitForMessage(new SnapToAngle(), DriveStatusUpdate.class);
 				break;
 			default:
 				System.out.println("Auton: Failed to select auton");

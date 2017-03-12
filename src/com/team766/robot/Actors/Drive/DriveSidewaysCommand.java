@@ -5,6 +5,7 @@ import lib.Message;
 
 import com.team766.lib.CommandBase;
 import com.team766.lib.Messages.DriveSideways;
+import com.team766.robot.Constants;
 
 public class DriveSidewaysCommand extends CommandBase{
 
@@ -65,7 +66,7 @@ public class DriveSidewaysCommand extends CommandBase{
 			case RAMP_DOWN:
 				velocity -= direction * kMaxAccel * kDt;
 				//System.out.println("ramp-down");
-				if (Math.abs(position) >= Math.abs(goal)){
+				if (Math.abs(Drive.avgDist()) + Constants.k_linearThresh >= Math.abs(goal)){
 					state_ = State.LOCK;
 				}
 				break;
