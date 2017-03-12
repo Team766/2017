@@ -20,6 +20,7 @@ public class DrivePathCommand extends CommandBase {
 	
 	double angleDiff = 0;
 	
+	boolean flip;
 	boolean done;
 	
 	double heading;
@@ -37,6 +38,7 @@ public class DrivePathCommand extends CommandBase {
 		LogFactory.getInstance("General").print("Drive: DrivePathCommand");
 		command = (DrivePath) m;
 		path = command.getPath();
+		this.flip = command.getFlip();
 	
 		start();
 	}
@@ -79,12 +81,16 @@ public class DrivePathCommand extends CommandBase {
 			 System.out.println("SpeedRight:" + speedRight + "\n");
 
 			double goalHeading = followerLeft.getHeading();
+			System.out.println("goalHeading:" + goalHeading);
+			
 			double observedHeading = Drive.getGyroAngleInRadians();
 
 			double angleDiffRads = getDifferenceInAngleRadians(observedHeading,
 					goalHeading);
 
 			angleDiff = Math.toDegrees(angleDiffRads);
+			System.out.println("angleDiff: " + angleDiff);
+			
 			double turn = kTurn * angleDiff;
 			
 			Drive.setLeft(speedLeft + turn);
@@ -94,19 +100,29 @@ public class DrivePathCommand extends CommandBase {
 
 	public void loadProfileNoReset(Trajectory leftProfile,
 			Trajectory rightProfile) {
+		leftProfile.setInvertedY(flip);
+		rightProfile.setInvertedY(flip);
 		followerLeft.setTrajectory(leftProfile);
 		followerRight.setTrajectory(rightProfile);
 	}
 
 	public boolean onTarget() {
-		return followerLeft.isFinishedTrajectory() && angleDiff < Constants.k_angularThresh ;
+		return followerLeft.isFinishedTrajectory() && Math.abs(angleDiff) < Constants.k_angularThresh ;
 	}
 
 	public void loadProfile(Trajectory leftProfile, Trajectory rightProfile,
 			double direction, double heading) {
 		reset();
+		
+		leftProfile.setInvertedY(flip);
+		rightProfile.setInvertedY(flip);
 		followerLeft.setTrajectory(leftProfile);
 		followerRight.setTrajectory(rightProfile);
+		
+		
+		//followerLeft.setTrajectory(leftProfile);
+		//followerRight.setTrajectory(rightProfile);
+		
 		this.direction = direction;
 		this.heading = heading;
 	}
