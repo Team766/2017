@@ -50,7 +50,7 @@ public class Climber extends Actor {
 					if(climberMessage.getClimb() == true)
 						this.setClimberMotor(motorSpeed);
 					else
-						this.setClimberMotor(-motorSpeed);
+						this.setClimberMotor(0.0);
 				}
 				else if(currentMessage instanceof Stop)
 					stopCurrentCommand();
