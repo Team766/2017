@@ -150,7 +150,7 @@ public class OperatorControl extends Actor {
 			
 			//button for deploy climb(prevPress[7])
 			if(!prevPress[7] && jBox.getRawButton(Buttons.climbDeploy))
-				sendMessage(new ClimbDeploy(jBox.getRawButton(Buttons.climbDeploy)));
+				sendMessage(new ClimbDeploy(true));
 			prevPress[7] = jBox.getRawButton(Buttons.climbDeploy);
 			
 			

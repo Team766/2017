@@ -56,10 +56,7 @@ public class Climber extends Actor {
 					stopCurrentCommand();
 				else if(currentMessage instanceof ClimbDeploy){
 					ClimbDeploy climberMessage = (ClimbDeploy)currentMessage;
-					if(climberMessage.getClimbDeploy() == true)
-						this.setClimberDeploy(true);
-					else
-						this.setClimberDeploy(false);
+					this.setClimberDeploy(!climberMessage.getClimbDeploy());
 				}
 			}
 			step();
