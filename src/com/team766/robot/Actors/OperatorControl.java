@@ -15,6 +15,7 @@ import com.team766.lib.Messages.MotorCommand;
 import com.team766.lib.Messages.ResetDriveAngle;
 import com.team766.lib.Messages.SetHopperState;
 import com.team766.lib.Messages.StartTrackingPeg;
+import com.team766.lib.Messages.StopTrackingPeg;
 import com.team766.lib.Messages.TrackPeg;
 import com.team766.lib.Messages.UpdateClimber;
 import com.team766.lib.Messages.UpdateGearCollector;
@@ -179,6 +180,8 @@ public class OperatorControl extends Actor {
 			//button for track peg
 			if(!prevPress[12] && jLeft.getRawButton(Buttons.trackPeg))
 				sendMessage(new StartTrackingPeg());	
+			if(prevPress[12] && !jLeft.getRawButton(Buttons.trackPeg))
+				sendMessage(new StopTrackingPeg());
 			prevPress[12] = jLeft.getRawButton(Buttons.trackPeg);
 			
 //			

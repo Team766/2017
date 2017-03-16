@@ -25,6 +25,7 @@ import com.team766.lib.Messages.MotorCommand;
 import com.team766.lib.Messages.MotorCommand.Motor;
 import com.team766.lib.Messages.StartTrackingPeg;
 import com.team766.lib.Messages.Stop;
+import com.team766.lib.Messages.StopTrackingPeg;
 import com.team766.lib.Messages.VisionStatusUpdate;
 import com.team766.robot.Constants;
 import com.team766.robot.HardwareProvider;
@@ -111,7 +112,7 @@ public class Vision extends Actor{
 					done = false;
 					counter = UPDATE_RATE;
 				}
-				else if(currentMessage instanceof Stop){
+				else if(currentMessage instanceof Stop || currentMessage instanceof StopTrackingPeg){
 					//Stop
 					trackingEnabled = false;
 					done = true;
