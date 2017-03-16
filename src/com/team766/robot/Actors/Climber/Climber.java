@@ -50,16 +50,13 @@ public class Climber extends Actor {
 					if(climberMessage.getClimb() == true)
 						this.setClimberMotor(motorSpeed);
 					else
-						this.setClimberMotor(-motorSpeed);
+						this.setClimberMotor(0.0);
 				}
 				else if(currentMessage instanceof Stop)
 					stopCurrentCommand();
 				else if(currentMessage instanceof ClimbDeploy){
 					ClimbDeploy climberMessage = (ClimbDeploy)currentMessage;
-					if(climberMessage.getClimbDeploy() == true)
-						this.setClimberDeploy(true);
-					else
-						this.setClimberDeploy(false);
+					this.setClimberDeploy(!climberMessage.getClimbDeploy());
 				}
 			}
 			step();

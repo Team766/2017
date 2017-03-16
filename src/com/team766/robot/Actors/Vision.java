@@ -64,6 +64,13 @@ public class Vision extends Actor{
 	
 	CameraInterface camServer = HardwareProvider.getInstance().getCameraServer();
 	
+	Mat output, display, cardLines, rot_mat, hierarchy;
+	Point src_center;
+	ArrayList<MatOfPoint> contours;
+	MatOfPoint2f[] contours_poly;
+	Rect[] boundRect, imporRects;	
+	boolean pairFound;
+	
 	Message currentMessage;
 	
 	@Override
@@ -71,6 +78,7 @@ public class Vision extends Actor{
 		acceptableMessages = new Class[]{StartTrackingPeg.class, Stop.class, DriveIntoPeg.class};
 		
 		LogFactory.getInstance("General").print("Vision: INIT");
+		contours = new ArrayList<MatOfPoint>();
 		outputDist = 0;
 		outputAngle = 0;
 		counter = UPDATE_RATE;
@@ -81,6 +89,7 @@ public class Vision extends Actor{
 	@Override
 	public void run() {
 		Mat img = new Mat();
+		Mat out = new Mat();
 		while(true){
 			itsPerSec++;
 			sleep(RUN_TIME);
@@ -118,7 +127,7 @@ public class Vision extends Actor{
 				continue;
 			}
 			//Begin processing image below
-			Mat out = process(img);
+			out = process(img);
 			if(out == null){
 				LogFactory.getInstance("Vision").print("Vision: No/Not enough Countours found");
 				continue;
@@ -158,7 +167,7 @@ public class Vision extends Actor{
 	}
 	
 	private Mat process(Mat in){
-		Mat output = in.clone();
+		output = in.clone();
 		
 		Imgproc.cvtColor(output, output, Imgproc.COLOR_BGR2HSV);
 		
@@ -168,11 +177,11 @@ public class Vision extends Actor{
 		
 		Imgproc.Canny(output, output, 100d, 300d);
 		
-		Mat display = output.clone();
+		display = output.clone();
 		Imgproc.cvtColor(display, display, Imgproc.COLOR_GRAY2BGR);
 		
 		//Display Hough Lines
-		Mat cardLines = new Mat();
+		cardLines = new Mat();
 		Imgproc.HoughLinesP(output, cardLines, 1, Math.PI/90, 10, 5, 20);
 		
 		double[] angles = new double[cardLines.cols()];
@@ -206,8 +215,8 @@ public class Vision extends Actor{
 //		System.out.println("Angle: " + angle);
 						
 		//Rotate image x degrees
-		Point src_center = new Point(output.cols()/2.0F, output.rows()/2.0F);
-		Mat rot_mat = Imgproc.getRotationMatrix2D(src_center, angle, 1.0);
+		src_center = new Point(output.cols()/2.0F, output.rows()/2.0F);
+		rot_mat = Imgproc.getRotationMatrix2D(src_center, angle, 1.0);
 		Imgproc.warpAffine(output, output, rot_mat, output.size());
 		
 		//Rotate display image
@@ -223,19 +232,19 @@ public class Vision extends Actor{
 		}
 //		System.out.println(Arrays.toString(sums));
 		
-		ArrayList<MatOfPoint> contours = new ArrayList<MatOfPoint>();
-		Mat hierarchy = new Mat();
+		contours.clear();
+		hierarchy = new Mat();
 		Imgproc.findContours(output, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
 //		Imgproc.drawContours(display, contours, -1, new Scalar(0, 255, 0));
 		
 		if(contours.isEmpty())
 			return null;
 		
-		MatOfPoint2f[] contours_poly = new MatOfPoint2f[contours.size()];
+		contours_poly = new MatOfPoint2f[contours.size()];
 		for(int i = 0; i < contours_poly.length; i++){
 			contours_poly[i] = new MatOfPoint2f();
 		}
-		Rect[] boundRect = new Rect[contours.size()];
+		boundRect = new Rect[contours.size()];
 		for(int i = 0; i < boundRect.length; i++){
 			boundRect[i] = new Rect();
 		}
@@ -244,7 +253,7 @@ public class Vision extends Actor{
 			return null;
 		
 		//Important boundingRects
-		Rect[] imporRects = new Rect[3];
+		imporRects = new Rect[3];
 		int maxIndex = 0;
 		imporRects[maxIndex] = new Rect(0,0,0,0);
 		
@@ -267,7 +276,7 @@ public class Vision extends Actor{
 //		System.out.println("Bounded: " + Arrays.toString(boundRect));
 		//Check if it should have 3 rects or just 2
 		
-		boolean pairFound = false;
+		pairFound = false;
 		//Check to see if there are two rects with same width, and if multiple largest area prioritized
 		if(arraySize(boundRect) > 2){
 //			System.out.println("Checking: " + Arrays.toString(boundRect));

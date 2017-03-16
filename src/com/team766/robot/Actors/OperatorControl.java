@@ -130,26 +130,28 @@ public class OperatorControl extends Actor {
 			
 			
 			//button for store ball(prevPress[4])
-			if(!prevPress[4] && jBox.getRawButton(Buttons.store))
+			if(!prevPress[4] && jBox.getRawButton(Buttons.store)){
 				sendMessage(new SetHopperState(SetHopperState.State.Store));
+				sendMessage(new UpdateGearCollector(false, false));
+			}
 			prevPress[4] = jBox.getRawButton(Buttons.store);
 			
 			
 			//button for load gears(prevPress[5])
 			if(!prevPress[5] && jBox.getRawButton(Buttons.loadGears))
-				sendMessage(new UpdateGearCollector(false, true));
+				sendMessage(new UpdateGearCollector(true, false));
 			prevPress[5] = jBox.getRawButton(Buttons.loadGears);
 			
 			
 			//button for score gears(prevPress[6])
 			if(!prevPress[6] && jBox.getRawButton(Buttons.scoreGears))
-				sendMessage(new UpdateGearCollector(true, false));
+				sendMessage(new UpdateGearCollector(false, true));
 			prevPress[6] = jBox.getRawButton(Buttons.scoreGears);
 			
 			
 			//button for deploy climb(prevPress[7])
 			if(!prevPress[7] && jBox.getRawButton(Buttons.climbDeploy))
-				sendMessage(new ClimbDeploy(jBox.getRawButton(Buttons.climbDeploy)));
+				sendMessage(new ClimbDeploy(true));
 			prevPress[7] = jBox.getRawButton(Buttons.climbDeploy);
 			
 			
