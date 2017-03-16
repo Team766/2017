@@ -17,6 +17,7 @@ public class Climber extends Actor {
 	
 	private double motorSpeed = 1;
 	private double maxMotorSpeed = 10;
+	private boolean currentlyOut;
 	
 	SpeedController climberMotor = HardwareProvider.getInstance().getClimber();
 	EncoderReader climberEncoder = HardwareProvider.getInstance().getClimberEncoder();
@@ -29,6 +30,7 @@ public class Climber extends Actor {
 	@Override
 	public void init() {
 		acceptableMessages = new Class[]{UpdateClimber.class, ClimbDeploy.class, Stop.class};
+		currentlyOut = true;
 	}
 
 	@Override
@@ -47,7 +49,7 @@ public class Climber extends Actor {
 				if(currentMessage instanceof UpdateClimber){
 					UpdateClimber climberMessage = (UpdateClimber)currentMessage;
 					//this.setClimberMotor(climberMessage.getClimb());
-					if(climberMessage.getClimb() == true)
+					if(climberMessage.getClimb())
 						this.setClimberMotor(motorSpeed);
 					else
 						this.setClimberMotor(0.0);
@@ -56,7 +58,10 @@ public class Climber extends Actor {
 					stopCurrentCommand();
 				else if(currentMessage instanceof ClimbDeploy){
 					ClimbDeploy climberMessage = (ClimbDeploy)currentMessage;
-					this.setClimberDeploy(!climberMessage.getClimbDeploy());
+					if(climberMessage.isToggle())
+						toggleClimberDeploy();
+					else
+						this.setClimberDeploy(!climberMessage.getClimbDeploy());
 				}
 			}
 			step();
@@ -99,9 +104,14 @@ public class Climber extends Actor {
 		climberMotor.set(d);
 	}
 	
+	protected void toggleClimberDeploy(){
+		setClimberDeploy(!currentlyOut);
+	}
+	
 	protected void setClimberDeploy(boolean out){
 		climberSolenoidOut.set(out);
 		climberSolenoidIn.set(!out);
+		currentlyOut = out;
 	}
 	
 	

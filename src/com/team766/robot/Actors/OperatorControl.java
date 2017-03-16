@@ -36,6 +36,7 @@ public class OperatorControl extends Actor {
 	private double[] rightAxis = new double[4];
 	private boolean[] prevPress = new boolean[13];  //previous press array
 	private boolean toggleFieldCentric;
+	private boolean rollerRolling;
 		
 	public void init() {
 		acceptableMessages = new Class[]{};
@@ -43,7 +44,7 @@ public class OperatorControl extends Actor {
 		previousRight = 0;
 		previousHeading = 0;
 		toggleFieldCentric = false;
-		
+		rollerRolling = false;
 		
 		//Stop autonomous movements
 		sendMessage(new HDrive(0,0,0, false));
@@ -120,16 +121,15 @@ public class OperatorControl extends Actor {
 			
 			//button for roller forward(prevPress[2])
 			if(!prevPress[2] && jBox.getRawButton(Buttons.rollerForwards))
-				sendMessage(new HopperSetRoller(jBox.getRawButton(Buttons.rollerForwards)));
+				sendMessage(new HopperSetRoller(true));
 			prevPress[2] = jBox.getRawButton(Buttons.rollerForwards);
 			
 			
 			//button for roller backward(prevPress[3])
 			if(!prevPress[3] && jBox.getRawButton(Buttons.rollerBackwards))
-				sendMessage(new HopperSetRoller(jBox.getRawButton(Buttons.rollerForwards)));
+				sendMessage(new HopperSetRoller(false));
 			prevPress[3] = jBox.getRawButton(Buttons.rollerBackwards);
-			
-			
+						
 			//button for store ball(prevPress[4])
 			if(!prevPress[4] && jBox.getRawButton(Buttons.store)){
 				sendMessage(new SetHopperState(SetHopperState.State.Store));
@@ -152,7 +152,7 @@ public class OperatorControl extends Actor {
 			
 			//button for deploy climb(prevPress[7])
 			if(!prevPress[7] && jBox.getRawButton(Buttons.climbDeploy))
-				sendMessage(new ClimbDeploy(true));
+				sendMessage(new ClimbDeploy());
 			prevPress[7] = jBox.getRawButton(Buttons.climbDeploy);
 			
 			

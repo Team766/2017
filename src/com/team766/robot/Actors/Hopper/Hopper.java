@@ -29,7 +29,7 @@ public class Hopper extends Actor{
 	SolenoidController exhaustFlap = HardwareProvider.getInstance().getHopperCloser();
 	
 	public void init() {
-		acceptableMessages = new Class[]{SetHopperState.class};
+		acceptableMessages = new Class[]{SetHopperState.class, HopperSetRoller.class};
 	}
 	
 	public void run() {
