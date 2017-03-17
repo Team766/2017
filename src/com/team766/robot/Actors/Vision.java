@@ -21,6 +21,7 @@ import org.opencv.imgproc.Imgproc;
 
 import com.team766.lib.Messages.DriveDistance;
 import com.team766.lib.Messages.DriveIntoPeg;
+import com.team766.lib.Messages.DriveSideways;
 import com.team766.lib.Messages.MotorCommand;
 import com.team766.lib.Messages.MotorCommand.Motor;
 import com.team766.lib.Messages.StartTrackingPeg;
@@ -76,7 +77,7 @@ public class Vision extends Actor{
 	
 	@Override
 	public void init() {
-		acceptableMessages = new Class[]{StartTrackingPeg.class, Stop.class, DriveIntoPeg.class};
+		acceptableMessages = new Class[]{StartTrackingPeg.class, Stop.class, DriveIntoPeg.class, StopTrackingPeg.class};
 		
 		LogFactory.getInstance("General").print("Vision: INIT");
 		contours = new ArrayList<MatOfPoint>();
@@ -101,6 +102,7 @@ public class Vision extends Actor{
 					break;
 				
 				if(currentMessage instanceof StartTrackingPeg){
+					LogFactory.getInstance("Vision").print("STARTING TRACKING");
 					trackingEnabled = true;
 					done = false;
 					counter = UPDATE_RATE;
@@ -130,7 +132,7 @@ public class Vision extends Actor{
 			//Begin processing image below
 			out = process(img);
 			if(out == null){
-				LogFactory.getInstance("Vision").print("Vision: No/Not enough Countours found");
+//				LogFactory.getInstance("Vision").print("Vision: No/Not enough Countours found");
 				continue;
 			}
 			
@@ -138,9 +140,10 @@ public class Vision extends Actor{
 			
 			if(counter >= UPDATE_RATE){
 				if(trackingEnabled){
-					sendMessage(new MotorCommand(-getDist() * Math.sin(Math.toRadians(getAngle()) * ConstantsFileReader.getInstance().get("centerDriveP")), Motor.centerDrive));
-	//				sendMessage(new DriveSideways(-getDist() * Math.sin(Math.toRadians(getAngle()))));
+//					sendMessage(new MotorCommand(-getDist() * Math.sin(Math.toRadians(getAngle()) * ConstantsFileReader.getInstance().get("centerDriveP")), Motor.centerDrive));
+					sendMessage(new DriveSideways(-getDist() * Math.sin(Math.toRadians(getAngle()))));
 					done = Math.abs(getDist() * Math.sin(Math.toRadians(getAngle()))) < Constants.ALLIGNING_SIDEWAYS_DIST_THRESH;
+					LogFactory.getInstance("Vision").print("SENDING MOVE COMMANDS!\t" + -getDist() * Math.sin(Math.toRadians(getAngle()) * ConstantsFileReader.getInstance().get("centerDriveP")));
 				}
 				
 				if(drivingEnabled){

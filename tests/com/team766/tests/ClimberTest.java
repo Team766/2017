@@ -33,14 +33,14 @@ public class ClimberTest extends TestCase{
 		//true
 		Scheduler.getInstance().sendMessage(new ClimbDeploy(true));
 		//Check climberSolenoid is true
-		assertTrueTimed(() -> {return instance.getSolenoid(ConfigFile.getClimberDeploy()).get() == true;}, 2);
+		assertTrueTimed(() -> {return instance.getSolenoid(ConfigFile.getClimberDeployOut()).get() && !instance.getSolenoid(ConfigFile.getClimberDeployIn()).get();}, 2);
 	}
 	
 	public void testClimberSolenoid() throws Exception {
 		//false
 		Scheduler.getInstance().sendMessage(new ClimbDeploy(false));
 		//Check climberSolenoid is false
-		assertTrueTimed(() -> {return instance.getSolenoid(ConfigFile.getClimberDeploy()).get() == false;}, 2);	
+		assertTrueTimed(() -> {return  !instance.getSolenoid(ConfigFile.getClimberDeployOut()).get() && instance.getSolenoid(ConfigFile.getClimberDeployIn()).get();}, 2);	
 		
 	}
 

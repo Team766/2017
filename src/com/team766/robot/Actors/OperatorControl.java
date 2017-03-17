@@ -14,6 +14,7 @@ import com.team766.lib.Messages.HopperSetRoller;
 import com.team766.lib.Messages.MotorCommand;
 import com.team766.lib.Messages.ResetDriveAngle;
 import com.team766.lib.Messages.SetHopperState;
+import com.team766.lib.Messages.SnapToAngle;
 import com.team766.lib.Messages.StartTrackingPeg;
 import com.team766.lib.Messages.StopTrackingPeg;
 import com.team766.lib.Messages.TrackPeg;
@@ -34,7 +35,7 @@ public class OperatorControl extends Actor {
 	
 	private double[] leftAxis = new double[4];
 	private double[] rightAxis = new double[4];
-	private boolean[] prevPress = new boolean[13];  //previous press array
+	private boolean[] prevPress = new boolean[14];  //previous press array
 	private boolean toggleFieldCentric;
 	private boolean rollerRolling;
 		
@@ -172,7 +173,7 @@ public class OperatorControl extends Actor {
 				toggleFieldCentric = !toggleFieldCentric;
 			prevPress[10] = jLeft.getRawButton(Buttons.disableFieldCentric);
 			
-			if(!prevPress[10] && jRight.getRawButton(Buttons.resetAngle))
+			if(!prevPress[11] && jRight.getRawButton(Buttons.resetAngle))
 				sendMessage(new ResetDriveAngle(0.0));
 			prevPress[11] = jRight.getRawButton(Buttons.resetAngle);
 			
@@ -184,7 +185,10 @@ public class OperatorControl extends Actor {
 				sendMessage(new StopTrackingPeg());
 			prevPress[12] = jLeft.getRawButton(Buttons.trackPeg);
 			
-//			
+
+			if(!prevPress[13] && jRight.getRawButton(Buttons.snapToAngle))
+				sendMessage(new SnapToAngle());
+			prevPress[13] = jRight.getRawButton(Buttons.snapToAngle);
 			
 //			LogFactory.getInstance("General").printPeriodic("JoystickValues: " + jLeft.getRawAxis(1) + " R:" + jRight.getRawAxis(1), "Joysticks", 200);
 			

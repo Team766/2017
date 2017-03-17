@@ -57,15 +57,12 @@ public class DriveSidewaysCommand extends CommandBase{
 				if(Math.abs(velocity) >= kMaxVel){
 					state_ = State.MAX_VEL;
 				}
-				//System.out.println("ramp-up");
 				break;
 			case MAX_VEL:
 				velocity = kMaxVel * direction;
-				//System.out.println("max-vel");
 				break;
 			case RAMP_DOWN:
 				velocity -= direction * kMaxAccel * kDt;
-				//System.out.println("ramp-down");
 				if (Math.abs(Drive.avgDist()) + Constants.k_linearThresh >= Math.abs(goal)){
 					state_ = State.LOCK;
 				}
@@ -73,7 +70,6 @@ public class DriveSidewaysCommand extends CommandBase{
 			case LOCK:
 				velocity = 0;
 				done = true;
-				//System.out.println("lock");
 				break;
 		}
 		
