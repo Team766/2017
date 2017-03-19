@@ -35,7 +35,7 @@ public class DriveSidewaysCommand extends CommandBase{
 		this.command = (DriveSideways)command;
 		
 		state_ = State.RAMP_UP;
-		goal = this.command.getDistance();
+		goal = Drive.centerDist() + this.command.getDistance();
 		
 		direction = (goal < 0) ? -1 : 1;
 		velocity = 0;
@@ -85,9 +85,10 @@ public class DriveSidewaysCommand extends CommandBase{
 		System.out.println("direction: " + direction);
 		System.out.println("velocity:" + velocity);
 		Drive.linearVelocity.calculate(Drive.centerRate(), false);
-	
+		
 		System.out.println("linearVelocity:  " + Drive.linearVelocity.getOutput());
-		Drive.setCenter(Drive.linearVelocity.getOutput());
+		//Drive.setCenter(Drive.linearVelocity.getOutput());
+		Drive.setCenter((goal - Drive.centerDist()) * ConstantsFileReader.getInstance().get("centerDriveP"));
 		
 		Drive.setLeft((currentAngle - Drive.getAngle()) * AngleP);
 		Drive.setRight(-(currentAngle - Drive.getAngle()) * AngleP);

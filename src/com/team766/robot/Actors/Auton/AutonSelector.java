@@ -3,12 +3,15 @@ package com.team766.robot.Actors.Auton;
 import lib.Actor;
 import lib.LogFactory;
 
+import com.team766.lib.Messages.DriveDistance;
 import com.team766.lib.Messages.DriveIntoPeg;
+import com.team766.lib.Messages.DriveIntoPegStop;
 import com.team766.lib.Messages.DrivePath;
 import com.team766.lib.Messages.DriveStatusUpdate;
+import com.team766.lib.Messages.RequestDropPeg;
 import com.team766.lib.Messages.SnapToAngle;
 import com.team766.lib.Messages.StartTrackingPeg;
-import com.team766.lib.Messages.TrackPeg;
+import com.team766.lib.Messages.UpdateGearCollector;
 import com.team766.lib.Messages.VisionStatusUpdate;
 import com.team766.robot.Constants;
 
@@ -22,8 +25,7 @@ public class AutonSelector extends Actor{
 	
 	@Override
 	public void init() {
-		System.out.println("Init!");
-		acceptableMessages = new Class[]{DriveStatusUpdate.class};
+		acceptableMessages = new Class[]{DriveStatusUpdate.class, VisionStatusUpdate.class};
 	}
 
 	
@@ -33,6 +35,7 @@ public class AutonSelector extends Actor{
 			case "None":
 				System.out.println("Auton: None");
 				LogFactory.getInstance("General").print("Auton: None");
+//				waitForMessage(new DriveIntoPegStop(), DriveStatusUpdate.class);
 				break;
 			case "DriveToPeg":
 				System.out.println("Auton: DriveToPeg");
@@ -55,7 +58,10 @@ public class AutonSelector extends Actor{
 			case "StraightToPegPath":
 				System.out.println("Auton: StraightToPegPath");
 				LogFactory.getInstance("General").print("Auton: StraightToPegPath");
-				sendMessage(new DrivePath("StraightToPegPath", false));
+//				sendMessage(new DrivePath("StraightToPegPath", false));
+//				waitForMessage(new DrivePath("StraightToPegPath", false), DriveStatusUpdate.class);
+				waitForMessage(new DriveDistance(-10.0, 0), DriveStatusUpdate.class);
+				sendMessage(new UpdateGearCollector(false, true));
 				break;
 			case "FlipDriveToPegPath":
 				System.out.println("Auton: FlipDriveToPegPath");

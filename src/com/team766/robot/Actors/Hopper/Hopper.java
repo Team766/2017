@@ -50,10 +50,15 @@ public class Hopper extends Actor{
 					stopCurrentCommand();
 				else if(currentMessage instanceof HopperSetRoller){
 					HopperSetRoller HopperMessage = (HopperSetRoller)currentMessage;
-					if(HopperMessage.getForward() == true)
-						this.setHopperMotor(1.0);
-					else
-						this.setHopperMotor(-1.0);
+					
+					if(!HopperMessage.getOff()){
+						if(HopperMessage.getForward())
+							this.setHopperMotor(1.0);
+						else
+							this.setHopperMotor(-1.0);
+					}else{
+						setHopperMotor(0.0);
+					}
 				}
 			}
 			step();

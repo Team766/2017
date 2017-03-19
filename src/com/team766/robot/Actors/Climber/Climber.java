@@ -5,17 +5,19 @@ import com.team766.lib.Messages.ClimbDeploy;
 import com.team766.lib.Messages.UpdateClimber;
 import com.team766.lib.Messages.UpdateGearCollector;
 import com.team766.robot.HardwareProvider;
+
 import interfaces.EncoderReader;
 import interfaces.SolenoidController;
 import interfaces.SpeedController;
 import interfaces.SubActor;
 import lib.Actor;
+import lib.ConstantsFileReader;
 import lib.Message;
 
 public class Climber extends Actor {
 	private boolean commandFinished;
 	
-	private double motorSpeed = 1;
+	private double motorSpeed = 1.0;
 	private double maxMotorSpeed = 10;
 	private boolean currentlyOut;
 	
@@ -50,7 +52,7 @@ public class Climber extends Actor {
 					UpdateClimber climberMessage = (UpdateClimber)currentMessage;
 					//this.setClimberMotor(climberMessage.getClimb());
 					if(climberMessage.getClimb())
-						this.setClimberMotor(motorSpeed);
+						this.setClimberMotor(ConstantsFileReader.getInstance().get("climberSpeed"));
 					else
 						this.setClimberMotor(0.0);
 				}

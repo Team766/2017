@@ -44,6 +44,8 @@ public class DriveProfilerCommand extends CommandBase{
 		kMaxVel =  ConstantsFileReader.getInstance().get("maxVel");
 		kMaxAccel = ConstantsFileReader.getInstance().get("maxAccel");
 		
+		LogFactory.getInstance("Vision").print("DRIVE PROFILER!");
+		
 		done = false;
 		offset = Drive.avgDist();
 	}
@@ -79,11 +81,12 @@ public class DriveProfilerCommand extends CommandBase{
 		if((Math.abs(goal) - STOP_THRESH <= Math.abs(getDist()) + distToStop(Drive.avgLinearRate())) && (state_ != State.LOCK)){
 			state_ = State.RAMP_DOWN;
 		}
-	
+		LogFactory.getInstance("Vision").print("goal: " + goal + " distToStop: " + distToStop(Drive.avgLinearRate()) + " position: " + Drive.avgDist() + " - " + offset + " state_: " + state_ + " vel: " + velocity + " realVel: " + Drive.avgLinearRate() + "\n");
 //		System.out.println("Vel: " + values[0] + " pos: " + values[3]);
 		if(count > 25){
 			System.out.println("goal: " + goal + " distToStop: " + distToStop(Drive.avgLinearRate()) + " position: " + Drive.avgDist() + " - " + offset + " state_: " + state_ + " vel: " + velocity + " realVel: " + Drive.avgLinearRate());
 			System.out.println("Output: " + Drive.linearVelocity.getOutput());
+//			LogFactory.getInstance("Vision").print("goal: " + goal + " distToStop: " + distToStop(Drive.avgLinearRate()) + " position: " + Drive.avgDist() + " - " + offset + " state_: " + state_ + " vel: " + velocity + " realVel: " + Drive.avgLinearRate() + "\n");
 			count = 0;
 		}
 		count++;

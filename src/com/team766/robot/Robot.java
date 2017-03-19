@@ -65,12 +65,15 @@ public class Robot implements MyRobot {
     public void autonomousInit() {
     	LogFactory.getInstance("General").print("Auton Init");
     	setState(GameState.Auton);
+    	Scheduler.getInstance().remove(OperatorControl.class);
     	emptyInboxes();
-    	Scheduler.getInstance().add(new AutonSelector(Constants.getAutonMode()));
     	
     	try{
     		Scheduler.getInstance().sendMessage(new Stop());
     	}catch(Exception e){}
+    	
+    	LogFactory.getInstance("Vision").print("Starting AutonSelector");
+    	Scheduler.getInstance().add(new AutonSelector(Constants.getAutonMode()));
     	
     	autonDone = true;
     }
@@ -86,9 +89,13 @@ public class Robot implements MyRobot {
     public void teleopInit() {
     	LogFactory.getInstance("General").print("Teleop Init");
     	setState(GameState.Teleop);
-    	emptyInboxes();
     	
     	Scheduler.getInstance().remove(AutonSelector.class);
+    	emptyInboxes();
+    	
+    	try{
+    		Scheduler.getInstance().sendMessage(new Stop());
+    	}catch(Exception e){}
     	
 		Scheduler.getInstance().add(new OperatorControl());
 		teleopDone = true;

@@ -6,13 +6,25 @@ public class HopperSetRoller implements Message{
 	
 	//true is forward, false is backward
 	private boolean forward;
+	private boolean off;
+	
+	public HopperSetRoller(){
+		off = true;
+	}
 	
 	public HopperSetRoller(boolean forward){
 		this.forward = forward;
+		off = false;
 	}
 	
 	public boolean getForward(){
-		return forward;
+		if(!off)
+			return forward;
+		return false;
+	}
+	
+	public boolean getOff(){
+		return off;
 	}
 	
 	

@@ -35,7 +35,7 @@ public class OperatorControl extends Actor {
 	
 	private double[] leftAxis = new double[4];
 	private double[] rightAxis = new double[4];
-	private boolean[] prevPress = new boolean[14];  //previous press array
+	private boolean[] prevPress = new boolean[15];  //previous press array
 	private boolean toggleFieldCentric;
 	private boolean rollerRolling;
 		
@@ -130,7 +130,12 @@ public class OperatorControl extends Actor {
 			if(!prevPress[3] && jBox.getRawButton(Buttons.rollerBackwards))
 				sendMessage(new HopperSetRoller(false));
 			prevPress[3] = jBox.getRawButton(Buttons.rollerBackwards);
-						
+			
+			
+			if(!prevPress[14] && (!jBox.getRawButton(Buttons.rollerBackwards) || !jBox.getRawButton(Buttons.rollerForwards)))
+				sendMessage(new HopperSetRoller());
+			prevPress[14] = (!jBox.getRawButton(Buttons.rollerBackwards) || !jBox.getRawButton(Buttons.rollerForwards));
+			
 			//button for store ball(prevPress[4])
 			if(!prevPress[4] && jBox.getRawButton(Buttons.store)){
 				sendMessage(new SetHopperState(SetHopperState.State.Store));
@@ -169,26 +174,27 @@ public class OperatorControl extends Actor {
 			prevPress[9] = jBox.getRawButton(Buttons.climbDown);
 			
 			//button for disable field centric(prevPress[10])
-			if(!prevPress[10] && jLeft.getRawButton(Buttons.disableFieldCentric))
-				toggleFieldCentric = !toggleFieldCentric;
-			prevPress[10] = jLeft.getRawButton(Buttons.disableFieldCentric);
+//
+//		if(!prevPress[10] && jLeft.getRawButton(Buttons.disableFieldCentric))
+//				toggleFieldCentric = !toggleFieldCentric;
+//			prevPress[10] = jLeft.getRawButton(Buttons.disableFieldCentric);
 			
-			if(!prevPress[11] && jRight.getRawButton(Buttons.resetAngle))
-				sendMessage(new ResetDriveAngle(0.0));
-			prevPress[11] = jRight.getRawButton(Buttons.resetAngle);
-			
+//			if(!prevPress[11] && jRight.getRawButton(Buttons.resetAngle))
+//				sendMessage(new ResetDriveAngle(0.0));
+//			prevPress[11] = jRight.getRawButton(Buttons.resetAngle);
+//			
 			
 			//button for track peg
-			if(!prevPress[12] && jLeft.getRawButton(Buttons.trackPeg))
-				sendMessage(new StartTrackingPeg());	
-			if(prevPress[12] && !jLeft.getRawButton(Buttons.trackPeg))
-				sendMessage(new StopTrackingPeg());
-			prevPress[12] = jLeft.getRawButton(Buttons.trackPeg);
+//			if(!prevPress[12] && jLeft.getRawButton(Buttons.trackPeg))
+//				sendMessage(new StartTrackingPeg());	
+//			if(prevPress[12] && !jLeft.getRawButton(Buttons.trackPeg))
+//				sendMessage(new StopTrackingPeg());
+//			prevPress[12] = jLeft.getRawButton(Buttons.trackPeg);
 			
 
-			if(!prevPress[13] && jRight.getRawButton(Buttons.snapToAngle))
-				sendMessage(new SnapToAngle());
-			prevPress[13] = jRight.getRawButton(Buttons.snapToAngle);
+//			if(!prevPress[13] && jRight.getRawButton(Buttons.snapToAngle))
+//				sendMessage(new SnapToAngle());
+//			prevPress[13] = jRight.getRawButton(Buttons.snapToAngle);
 			
 //			LogFactory.getInstance("General").printPeriodic("JoystickValues: " + jLeft.getRawAxis(1) + " R:" + jRight.getRawAxis(1), "Joysticks", 200);
 			

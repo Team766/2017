@@ -10,13 +10,16 @@ import lib.LogFactory;
 import lib.Message;
 import lib.PIDController;
 
+import com.team766.lib.CommandBase;
 import com.team766.lib.Messages.CheesyDrive;
 import com.team766.lib.Messages.DriveDistance;
+import com.team766.lib.Messages.DriveIntoPegStop;
 import com.team766.lib.Messages.DrivePath;
 import com.team766.lib.Messages.DriveSideways;
 import com.team766.lib.Messages.DriveStatusUpdate;
 import com.team766.lib.Messages.HDrive;
 import com.team766.lib.Messages.MotorCommand;
+import com.team766.lib.Messages.RequestDropPeg;
 import com.team766.lib.Messages.ResetDriveAngle;
 import com.team766.lib.Messages.SnapToAngle;
 import com.team766.lib.Messages.Stop;
@@ -79,7 +82,7 @@ public class Drive extends Actor{
 	SubActor currentCommand;
 	
 	public void init() {
-		acceptableMessages = new Class[]{MotorCommand.class, CheesyDrive.class, HDrive.class, DrivePath.class, DriveDistance.class, ResetDriveAngle.class, SnapToAngle.class, Stop.class, DriveSideways.class};
+		acceptableMessages = new Class[]{MotorCommand.class, CheesyDrive.class, HDrive.class, DrivePath.class, DriveDistance.class, ResetDriveAngle.class, SnapToAngle.class, Stop.class, DriveSideways.class, DriveIntoPegStop.class};
 		commandFinished = false;
 		
 		lastPosTime = System.currentTimeMillis() / 1000.0;
@@ -120,6 +123,8 @@ public class Drive extends Actor{
 				currentMessage = readMessage();
 				if(currentMessage == null)
 					break;
+				
+				LogFactory.getInstance("Vision").print("New Message: " + currentMessage);
 								
 				if(currentMessage instanceof SnapToAngle){
 					System.out.println("rawAngle: " + getRawAngle());
@@ -156,13 +161,34 @@ public class Drive extends Actor{
 					currentCommand = new DriveProfilerCommand(currentMessage);
 //					currentCommand = new DriveDistanceCommand(currentMessage);
 				}
+				else if(currentMessage instanceof DriveIntoPegStop){
+					currentCommand = new SubActor(){
+						@Override
+						public void update() {
+							LogFactory.getInstance("Vison").print("Updatting Power!");
+							setDrive(ConstantsFileReader.getInstance().get("DriveIntoPegPower"));
+						}
+						
+						@Override
+						public void stop() {
+							LogFactory.getInstance("Vison").print("Done Driving into peg stop");
+							setDrive(0.0);
+							sendMessage(new RequestDropPeg());
+						}
+						
+						@Override
+						public boolean isDone() {
+							return CommandBase.GearPlacer.isPegPresent();
+						}
+					};
+				}
 				//Reset Control loops
 				resetControlLoops();
 			}
 						
 			//LogFactory.getInstance("General").printPeriodic("Gyro: " + getAngle(), "Gyro", 200);
 			
-//			LogFactory.getInstance("Vision").printPeriodic("Left: " + leftDist() + " Right: " + rightDist() + " Center: " + centerDist(), "Encoders", 200);
+			LogFactory.getInstance("Vision").printPeriodic("Left: " + leftDist() + " Right: " + rightDist() + " Center: " + centerDist() + " Gyro: " + getAngle(), "Encoders", 200);
 			step();
 			
 			//Send Status Update	#StayUpToDate	#Current	#inTheKnow

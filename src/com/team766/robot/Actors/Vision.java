@@ -119,7 +119,7 @@ public class Vision extends Actor{
 					trackingEnabled = false;
 					done = true;
 					counter = UPDATE_RATE;
-					sendMessage(new MotorCommand(0, Motor.centerDrive));
+//					sendMessage(new MotorCommand(0, Motor.centerDrive));
 				}
 					
 			}
@@ -144,10 +144,10 @@ public class Vision extends Actor{
 					sendMessage(new DriveSideways(-getDist() * Math.sin(Math.toRadians(getAngle()))));
 					done = Math.abs(getDist() * Math.sin(Math.toRadians(getAngle()))) < Constants.ALLIGNING_SIDEWAYS_DIST_THRESH;
 					LogFactory.getInstance("Vision").print("SENDING MOVE COMMANDS!\t" + -getDist() * Math.sin(Math.toRadians(getAngle()) * ConstantsFileReader.getInstance().get("centerDriveP")));
-				}
+				};
 				
 				if(drivingEnabled){
-					sendMessage(new DriveDistance(getDist(), 0.0));
+					sendMessage(new DriveDistance(-getDist(), 0.0));
 					done = getDist() < Constants.DRIVE_INTO_PEG_THRESH;
 				}
 				
