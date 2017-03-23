@@ -199,7 +199,7 @@ public class Drive extends Actor{
 			updateLocation();
 			updateAccelerations();
 			
-			itsPerSec++;
+//			itsPerSec++;
 			sleep();
 		}
 	}

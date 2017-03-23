@@ -63,6 +63,11 @@ public class AutonSelector extends Actor{
 				waitForMessage(new DriveDistance(-10.0, 0), DriveStatusUpdate.class);
 				sendMessage(new UpdateGearCollector(false, true));
 				break;
+			case "CrossLine":
+				System.out.println("Auton: CrossLine");
+				LogFactory.getInstance("General").print("Auton: CrossLine");
+				waitForMessage(new DriveDistance(-10.0, 0), DriveStatusUpdate.class);
+				break;
 			case "FlipDriveToPegPath":
 				System.out.println("Auton: FlipDriveToPegPath");
 				LogFactory.getInstance("General").print("auton: FlipDriveToPegPath");
