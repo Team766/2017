@@ -93,7 +93,7 @@ public class Vision extends Actor{
 		Mat img = new Mat();
 		Mat out = new Mat();
 		while(true){
-			itsPerSec++;
+//			itsPerSec++;
 			sleep(RUN_TIME);
 			
 			if(newMessage()){
