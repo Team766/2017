@@ -60,7 +60,7 @@ public class AutonSelector extends Actor{
 				LogFactory.getInstance("General").print("Auton: StraightToPegPath");
 //				sendMessage(new DrivePath("StraightToPegPath", false));
 //				waitForMessage(new DrivePath("StraightToPegPath", false), DriveStatusUpdate.class);
-				waitForMessage(new DriveDistance(-10.0, 0), DriveStatusUpdate.class);
+				waitForMessage(new DriveDistance(10.0, 0), DriveStatusUpdate.class);
 				sendMessage(new UpdateGearCollector(false, true));
 				break;
 			case "FlipDriveToPegPath":
