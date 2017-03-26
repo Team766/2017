@@ -1,9 +1,12 @@
 package com.team766.tests;
 
 import lib.Scheduler;
+
 import org.junit.Test;
 
 import tests.DigitalInput;
+import tests.Encoder;
+import tests.Gyro;
 import tests.RobotTestCase;
 
 import com.team766.lib.ConfigFile;
@@ -14,6 +17,7 @@ public class HopperTest extends RobotTestCase{
 
 	@Test
 	public void testHopperMotor() throws Exception{
+		
 		//intaking ball
 		Scheduler.getInstance().sendMessage(new SetHopperState(SetHopperState.State.Intake));
 		
@@ -36,9 +40,6 @@ public class HopperTest extends RobotTestCase{
 		assertTrueTimed(() -> {return instance.getSolenoid(ConfigFile.getGearPlacerOpener()).get() == false;}, 2);
 		assertTrueTimed(() -> {return instance.getSolenoid(ConfigFile.getHopperOpener()).get() == false;}, 2);
 		assertTrueTimed(() -> {return instance.getSolenoid(ConfigFile.getHopperCloser()).get() == false;}, 2);//
-		
-		
-		
 		
 	}
 }

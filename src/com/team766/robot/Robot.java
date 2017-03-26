@@ -63,6 +63,13 @@ public class Robot implements MyRobot {
     }
     
     public void autonomousInit() {
+    	
+    	try {
+			Scheduler.getInstance().sendMessage(new Stop());
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+    	
     	LogFactory.getInstance("General").print("Auton Init");
     	setState(GameState.Auton);
     	emptyInboxes();

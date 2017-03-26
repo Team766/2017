@@ -5,6 +5,7 @@ import lib.Scheduler;
 
 import org.junit.Test;
 
+import tests.Encoder;
 import tests.Gyro;
 import tests.RobotTestCase;
 
@@ -16,8 +17,10 @@ public class AutonTest extends RobotTestCase{
 	@Test
 	public void testNoAuton() throws Exception {
 		
-		RobotValues.AutonMode = 0;
+		reset();
 		
+		RobotValues.AutonMode = 0;
+				
 		autonInit();
 		
 		//Robot Doesn't move
@@ -25,9 +28,13 @@ public class AutonTest extends RobotTestCase{
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getRightMotor()[0]).get() == 0;}, 2);
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getCenterMotor()).get() == 0;}, 2);
 		
-		//Heading 90
-		((Gyro)(instance.getGyro(ConfigFile.getGyro()))).setAngle(90.0);
+	}
+	
+	private void reset(){
+		((Gyro)(instance.getGyro(ConfigFile.getGyro()))).setAngle(0.0);
 		
-		Scheduler.getInstance().sendMessage(new HDrive(0, 1, 0, true));
+		((Encoder)instance.getEncoder(ConfigFile.getRightEncoder()[0], ConfigFile.getRightEncoder()[1])).set(0);
+		((Encoder)instance.getEncoder(ConfigFile.getLeftEncoder()[0], ConfigFile.getLeftEncoder()[1])).set(0);
+		((Encoder)instance.getEncoder(ConfigFile.getLeftEncoder()[0], ConfigFile.getCenterEncoder()[1])).set(0);
 	}
 }
