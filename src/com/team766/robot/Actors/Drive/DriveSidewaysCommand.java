@@ -5,6 +5,7 @@ import lib.Message;
 
 import com.team766.lib.CommandBase;
 import com.team766.lib.Messages.DriveSideways;
+import com.team766.robot.Constants;
 
 public class DriveSidewaysCommand extends CommandBase{
 
@@ -34,7 +35,7 @@ public class DriveSidewaysCommand extends CommandBase{
 		this.command = (DriveSideways)command;
 		
 		state_ = State.RAMP_UP;
-		goal = this.command.getDistance();
+		goal = Drive.centerDist() + this.command.getDistance();
 		
 		direction = (goal < 0) ? -1 : 1;
 		velocity = 0;
@@ -56,23 +57,19 @@ public class DriveSidewaysCommand extends CommandBase{
 				if(Math.abs(velocity) >= kMaxVel){
 					state_ = State.MAX_VEL;
 				}
-				//System.out.println("ramp-up");
 				break;
 			case MAX_VEL:
 				velocity = kMaxVel * direction;
-				//System.out.println("max-vel");
 				break;
 			case RAMP_DOWN:
 				velocity -= direction * kMaxAccel * kDt;
-				//System.out.println("ramp-down");
-				if (Math.abs(position) >= Math.abs(goal)){
+				if (Math.abs(Drive.avgDist()) + Constants.k_linearThresh >= Math.abs(goal)){
 					state_ = State.LOCK;
 				}
 				break;
 			case LOCK:
 				velocity = 0;
 				done = true;
-				//System.out.println("lock");
 				break;
 		}
 		
@@ -89,8 +86,10 @@ public class DriveSidewaysCommand extends CommandBase{
 //		System.out.println("velocity:" + velocity);
 		Drive.linearVelocity.calculate(Drive.centerRate(), false);
 	
-//		System.out.println("linearVelocity:  " + Drive.linearVelocity.getOutput());
-		Drive.setCenter(Drive.linearVelocity.getOutput());
+		System.out.println("linearVelocity:  " + Drive.linearVelocity.getOutput());
+		//Drive.setCenter(Drive.linearVelocity.getOutput());
+		//Temporary P-controller
+		Drive.setCenter((goal - Drive.centerDist()) * ConstantsFileReader.getInstance().get("centerDriveP"));
 		
 		Drive.setLeft((currentAngle - Drive.getAngle()) * AngleP);
 		Drive.setRight(-(currentAngle - Drive.getAngle()) * AngleP);

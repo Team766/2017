@@ -8,13 +8,19 @@ import com.team766.lib.AutoPaths;
 public class DrivePath implements Message{
 	
 	private Path path;
+	private boolean flip;
 	
-	public DrivePath(String pathName){
+	public DrivePath(String pathName, boolean flip){
 		path = AutoPaths.get(pathName);
+		this.flip = flip;
 	}
 	
 	public Path getPath(){
 		return path;
+	}
+	
+	public boolean getFlip(){
+		return flip;
 	}
 	
 	public String toString() {

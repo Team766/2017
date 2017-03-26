@@ -1,6 +1,7 @@
 package com.team766.robot.Actors.Drive;
 
 import lib.ConstantsFileReader;
+import lib.LogFactory;
 import lib.Message;
 
 import com.team766.lib.CommandBase;
@@ -14,16 +15,19 @@ public class DriveProfilerCommand extends CommandBase{
 	double kMaxVel = 30; //ft/sec
 	double kMaxAccel = 20; //ft/sec^2
 	final double kDt = 0.010;
-	final double STOP_THRESH = 0.2;
+	final double STOP_THRESH = 0.1;
+	final double AngleP = 0.05;
 
 	double velocity;
 	double goal = 0;
 	double position = 0;
 	double idealPosition = 0;
 	double direction;
+	double offset;
+	double currentAngle;
 	
 	boolean done;
-	
+	int count = 0;
 	//States
 	enum State{
 		RAMP_UP, MAX_VEL, RAMP_DOWN, LOCK
@@ -38,11 +42,15 @@ public class DriveProfilerCommand extends CommandBase{
 		
 		direction = (goal < 0) ? -1 : 1;
 		velocity = 0;
+		currentAngle = Drive.getAngle();
 		
 		kMaxVel =  ConstantsFileReader.getInstance().get("maxVel");
 		kMaxAccel = ConstantsFileReader.getInstance().get("maxAccel");
 		
+		LogFactory.getInstance("Vision").print("DRIVE PROFILER!");
+		
 		done = false;
+		offset = Drive.avgDist();
 	}
 	
 	//Values: {avgLinearRate(), leftRate(), rightRate(), avgDist(), leftDist(), rightDist()}
@@ -54,7 +62,7 @@ public class DriveProfilerCommand extends CommandBase{
 			case RAMP_UP:
 				velocity += direction * kMaxAccel * kDt;
 				
-				if(Math.abs(velocity) >= kMaxVel){
+				if(Math.abs(Drive.avgLinearRate()) >= kMaxVel){
 					state_ = State.MAX_VEL;
 				}
 				break;
@@ -63,28 +71,34 @@ public class DriveProfilerCommand extends CommandBase{
 				break;
 			case RAMP_DOWN:
 				velocity -= direction * kMaxAccel * kDt;
-				if (Math.abs(Drive.avgDist()) + Constants.k_linearThresh >= Math.abs(goal)){
+				if (Math.abs(getDist()) + STOP_THRESH >= Math.abs(goal)){
 					state_ = State.LOCK;
 				}
 				break;
 			case LOCK:
-				velocity = 0;
+				velocity = 0.0;
 				done = true;
 				break;
 		}
 		
-		if((Math.abs(goal) - STOP_THRESH <= Math.abs(Drive.avgDist()) + distToStop(Drive.avgLinearRate())) && (state_ != State.LOCK)){
+		if((Math.abs(goal) - STOP_THRESH <= Math.abs(getDist()) + distToStop(Drive.avgLinearRate())) && (state_ != State.LOCK)){
 			state_ = State.RAMP_DOWN;
 		}
-	
+		LogFactory.getInstance("Vision").print("goal: " + goal + " distToStop: " + distToStop(Drive.avgLinearRate()) + " position: " + Drive.avgDist() + " - " + offset + " state_: " + state_ + " vel: " + velocity + " realVel: " + Drive.avgLinearRate() + "\n");
 //		System.out.println("Vel: " + values[0] + " pos: " + values[3]);
-		System.out.println("distToStop: " + distToStop(Drive.avgLinearRate()) + " position: " + Drive.avgDist() + " state_: " + state_ + " vel: " + velocity);
-	
+		if(count > 25){
+			System.out.println("goal: " + goal + " distToStop: " + distToStop(Drive.avgLinearRate()) + " position: " + Drive.avgDist() + " - " + offset + " state_: " + state_ + " vel: " + velocity + " realVel: " + Drive.avgLinearRate());
+			System.out.println("Output: " + Drive.linearVelocity.getOutput());
+//			LogFactory.getInstance("Vision").print("goal: " + goal + " distToStop: " + distToStop(Drive.avgLinearRate()) + " position: " + Drive.avgDist() + " - " + offset + " state_: " + state_ + " vel: " + velocity + " realVel: " + Drive.avgLinearRate() + "\n");
+			count = 0;
+		}
+		count++;
 		idealPosition += velocity * kDt;
 	
 		Drive.linearVelocity.setSetpoint(velocity);
 		Drive.linearVelocity.calculate(Drive.avgLinearRate(), false);
-		Drive.setDrive(Drive.linearVelocity.getOutput());
+		Drive.setLeft(Drive.linearVelocity.getOutput() + (currentAngle - Drive.getAngle()) * AngleP);
+		Drive.setRight(Drive.linearVelocity.getOutput() - (currentAngle - Drive.getAngle()) * AngleP);
 	}
 	
 	@Override
@@ -103,6 +117,10 @@ public class DriveProfilerCommand extends CommandBase{
 	@Override
 	public boolean isDone() {
 		return done;
+	}
+	
+	private double getDist(){
+		return Drive.avgDist() - offset;
 	}
 
 }

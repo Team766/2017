@@ -11,32 +11,36 @@ import com.team766.robot.Constants;
 
 import tests.RobotTestCase;
 
-public class ClimberTest extends RobotTestCase{
+public class ClimberTest extends TestCase{
 	
-	public void testClimberMotor() throws Exception{
-		
+	public void testUpdateClimber() throws Exception{
 		//Test updateClimber
 		//true
 		Scheduler.getInstance().sendMessage(new UpdateClimber(true));
 		//Check climber motor positive
-		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getClimberMotor()).get() > 0;}, 2);
-		
+		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getClimberMotor()).get() > 0;}, 2);	
+	}
+	
+	public void testClimberFalse() throws Exception {
 		//false
 		Scheduler.getInstance().sendMessage(new UpdateClimber(false));
 		//Check climber motor negative
 		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getClimberMotor()).get() < 0;}, 2);
-		
-		
+	}
+	
+	public void testClimberDeploy() throws Exception {
 		//Test climberDeploy
 		//true
 		Scheduler.getInstance().sendMessage(new ClimbDeploy(true));
 		//Check climberSolenoid is true
-		assertTrueTimed(() -> {return instance.getSolenoid(ConfigFile.getClimberDeploy()).get() == true;}, 2);
-		
+		assertTrueTimed(() -> {return instance.getSolenoid(ConfigFile.getClimberDeployOut()).get() && !instance.getSolenoid(ConfigFile.getClimberDeployIn()).get();}, 2);
+	}
+	
+	public void testClimberSolenoid() throws Exception {
 		//false
 		Scheduler.getInstance().sendMessage(new ClimbDeploy(false));
 		//Check climberSolenoid is false
-		assertTrueTimed(() -> {return instance.getSolenoid(ConfigFile.getClimberDeploy()).get() == false;}, 2);	
+		assertTrueTimed(() -> {return  !instance.getSolenoid(ConfigFile.getClimberDeployOut()).get() && instance.getSolenoid(ConfigFile.getClimberDeployIn()).get();}, 2);	
 		
 	}
 

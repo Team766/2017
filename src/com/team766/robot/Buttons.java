@@ -10,6 +10,7 @@ public class Buttons {
 	
 	//default position
 	public static final int store = 3;
+	public static final int snapToAngle = 2;
 	
 	//gears
 	public static final int loadGears = 2;

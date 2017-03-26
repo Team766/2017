@@ -12,7 +12,7 @@ public abstract class Constants extends RobotValues{
 		AutonMode = autonMode;
 	}
 	
-	public static final String[] AUTONS = new String[]{"None", "DriveToPeg", "BoilerPath", "StraightToPeg", "StraightToPegPath", "DriveDistance"};
+	public static final String[] AUTONS = new String[]{"None", "DriveToPeg", "BoilerPath", "StraightToPeg", "StraightToPegPath", "FlipDriveToPegPath","CrossLine"};
 	
 	public static final int ACTOR_COUNT = 1;
 	
@@ -25,9 +25,11 @@ public abstract class Constants extends RobotValues{
 	public static final double ALLIGNING_SIDEWAYS_DIST_THRESH = 3.5 / 12.0;
 	public static final double DRIVE_INTO_PEG_THRESH = 10.0 / 12.0;
 	
-
+	//Analog Sensors
+	public static final double PHOTOGATE_STEP_VOLTAGE = 2.5;
+	
 	public static final double follower_wheel_circumference = 0.27083 * Math.PI; //3.25 in
-	public static final double center_counts_per_rev = 1000.0;
+	public static final double center_counts_per_rev = 360.0;
 	
 	
 	public static final double maxAngularVelocity = 50;
@@ -62,6 +64,8 @@ public abstract class Constants extends RobotValues{
 	public static final double k_linearI = 0.00;
 	public static final double k_linearD = 0.00;
 	public static final double k_linearThresh = 0.01;
+	
+	public static final double HopperRunTime = 2.0; //seconds
 	
 	public static final double STARTING_HEADING = 0;
 }

@@ -1,5 +1,6 @@
 package com.team766.robot;
 
+import interfaces.AnalogInputReader;
 import interfaces.CameraInterface;
 import interfaces.EncoderReader;
 import interfaces.GyroReader;
@@ -60,8 +61,12 @@ public class HardwareProvider {
 		return RobotProvider.instance.getEncoder(ConfigFile.getClimberEncoder()[0], ConfigFile.getClimberEncoder()[1]);
 	}
 	
-	public DigitalInputReader getHopperSensor(){
-		return RobotProvider.instance.getDigitalInput(ConfigFile.getHopperSensor());
+	public AnalogInputReader getHopperSensor(){
+		return RobotProvider.instance.getAnalogInput(ConfigFile.getHopperSensor());
+	}
+	
+	public DigitalInputReader getGearSensor(){
+		return RobotProvider.instance.getDigitalInput(ConfigFile.getGearSensor());
 	}
 		
 	public CameraInterface getCameraServer(){
@@ -84,8 +89,12 @@ public class HardwareProvider {
 		return RobotProvider.instance.getSolenoid(ConfigFile.getGearPlacer());
 	}
 	
-	public SolenoidController getClimberDeploy(){
-		return RobotProvider.instance.getSolenoid(ConfigFile.getClimberDeploy());
+	public SolenoidController getClimberDeployOut(){
+		return RobotProvider.instance.getSolenoid(ConfigFile.getClimberDeployOut());
+	}
+	
+	public SolenoidController getClimberDeployIn(){
+		return RobotProvider.instance.getSolenoid(ConfigFile.getClimberDeployIn());
 	}
 	
 	public SolenoidController getHopperOpener(){

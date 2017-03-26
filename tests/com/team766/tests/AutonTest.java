@@ -12,7 +12,7 @@ import tests.RobotTestCase;
 import com.team766.lib.ConfigFile;
 import com.team766.lib.Messages.HDrive;
 
-public class AutonTest extends RobotTestCase{
+public class AutonTest extends TestCase {
 
 	@Test
 	public void testNoAuton() throws Exception {

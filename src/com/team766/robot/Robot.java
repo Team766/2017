@@ -63,16 +63,16 @@ public class Robot implements MyRobot {
     }
     
     public void autonomousInit() {
-    	
-    	try {
-			Scheduler.getInstance().sendMessage(new Stop());
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-    	
     	LogFactory.getInstance("General").print("Auton Init");
     	setState(GameState.Auton);
+    	Scheduler.getInstance().remove(OperatorControl.class);
     	emptyInboxes();
+    	
+    	try{
+    		Scheduler.getInstance().sendMessage(new Stop());
+    	}catch(Exception e){}
+    	
+    	LogFactory.getInstance("Vision").print("Starting AutonSelector");
     	Scheduler.getInstance().add(new AutonSelector(Constants.getAutonMode()));
     	
     	autonDone = true;
@@ -89,9 +89,13 @@ public class Robot implements MyRobot {
     public void teleopInit() {
     	LogFactory.getInstance("General").print("Teleop Init");
     	setState(GameState.Teleop);
-    	emptyInboxes();
     	
     	Scheduler.getInstance().remove(AutonSelector.class);
+    	emptyInboxes();
+    	
+    	try{
+    		Scheduler.getInstance().sendMessage(new Stop());
+    	}catch(Exception e){}
     	
 		Scheduler.getInstance().add(new OperatorControl());
 		teleopDone = true;
@@ -143,7 +147,7 @@ public class Robot implements MyRobot {
 			//System.out.println("Curr: " + System.currentTimeMillis() + "\tLast: " + lastSleepTime);
 			Thread.sleep(RUN_TIME - (System.currentTimeMillis() - lastSleepTime));
 		} catch (Exception e) {
-			System.out.println(toString() + "\tNo time to sleep, running behind schedule!! rut roh :/");
+			System.out.println(toString() + "\tNo time to sleep, running behind schedule!! rut roh :/  Robert the robot drank 2 much coffee...can't sleep");
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException e1) {}

@@ -14,6 +14,9 @@ import com.team766.lib.Messages.HopperSetRoller;
 import com.team766.lib.Messages.MotorCommand;
 import com.team766.lib.Messages.ResetDriveAngle;
 import com.team766.lib.Messages.SetHopperState;
+import com.team766.lib.Messages.SnapToAngle;
+import com.team766.lib.Messages.StartTrackingPeg;
+import com.team766.lib.Messages.StopTrackingPeg;
 import com.team766.lib.Messages.TrackPeg;
 import com.team766.lib.Messages.UpdateClimber;
 import com.team766.lib.Messages.UpdateGearCollector;
@@ -32,8 +35,9 @@ public class OperatorControl extends Actor {
 	
 	private double[] leftAxis = new double[4];
 	private double[] rightAxis = new double[4];
-	private boolean[] prevPress = new boolean[13];  //previous press array
+	private boolean[] prevPress = new boolean[15];  //previous press array
 	private boolean toggleFieldCentric;
+	private boolean rollerRolling;
 		
 	public void init() {
 		acceptableMessages = new Class[]{};
@@ -41,7 +45,7 @@ public class OperatorControl extends Actor {
 		previousRight = 0;
 		previousHeading = 0;
 		toggleFieldCentric = false;
-		
+		rollerRolling = false;
 		
 		//Stop autonomous movements
 		sendMessage(new HDrive(0,0,0, false));
@@ -118,37 +122,43 @@ public class OperatorControl extends Actor {
 			
 			//button for roller forward(prevPress[2])
 			if(!prevPress[2] && jBox.getRawButton(Buttons.rollerForwards))
-				sendMessage(new HopperSetRoller(jBox.getRawButton(Buttons.rollerForwards)));
+				sendMessage(new HopperSetRoller(true));
 			prevPress[2] = jBox.getRawButton(Buttons.rollerForwards);
 			
 			
 			//button for roller backward(prevPress[3])
 			if(!prevPress[3] && jBox.getRawButton(Buttons.rollerBackwards))
-				sendMessage(new HopperSetRoller(jBox.getRawButton(Buttons.rollerForwards)));
+				sendMessage(new HopperSetRoller(false));
 			prevPress[3] = jBox.getRawButton(Buttons.rollerBackwards);
 			
 			
+			if(!prevPress[14] && (!jBox.getRawButton(Buttons.rollerBackwards) || !jBox.getRawButton(Buttons.rollerForwards)))
+				sendMessage(new HopperSetRoller());
+			prevPress[14] = (!jBox.getRawButton(Buttons.rollerBackwards) || !jBox.getRawButton(Buttons.rollerForwards));
+			
 			//button for store ball(prevPress[4])
-			if(!prevPress[4] && jBox.getRawButton(Buttons.store))
+			if(!prevPress[4] && jBox.getRawButton(Buttons.store)){
 				sendMessage(new SetHopperState(SetHopperState.State.Store));
+				sendMessage(new UpdateGearCollector(false, false));
+			}
 			prevPress[4] = jBox.getRawButton(Buttons.store);
 			
 			
 			//button for load gears(prevPress[5])
 			if(!prevPress[5] && jBox.getRawButton(Buttons.loadGears))
-				sendMessage(new UpdateGearCollector(false, true));
+				sendMessage(new UpdateGearCollector(true, false));
 			prevPress[5] = jBox.getRawButton(Buttons.loadGears);
 			
 			
 			//button for score gears(prevPress[6])
 			if(!prevPress[6] && jBox.getRawButton(Buttons.scoreGears))
-				sendMessage(new UpdateGearCollector(true, false));
+				sendMessage(new UpdateGearCollector(false, true));
 			prevPress[6] = jBox.getRawButton(Buttons.scoreGears);
 			
 			
 			//button for deploy climb(prevPress[7])
 			if(!prevPress[7] && jBox.getRawButton(Buttons.climbDeploy))
-				sendMessage(new ClimbDeploy(jBox.getRawButton(Buttons.climbDeploy)));
+				sendMessage(new ClimbDeploy());
 			prevPress[7] = jBox.getRawButton(Buttons.climbDeploy);
 			
 			
@@ -164,25 +174,31 @@ public class OperatorControl extends Actor {
 			prevPress[9] = jBox.getRawButton(Buttons.climbDown);
 			
 			//button for disable field centric(prevPress[10])
-			if(!prevPress[10] && jLeft.getRawButton(Buttons.disableFieldCentric))
-				toggleFieldCentric = !toggleFieldCentric;
-			prevPress[10] = jLeft.getRawButton(Buttons.disableFieldCentric);
+//
+//		if(!prevPress[10] && jLeft.getRawButton(Buttons.disableFieldCentric))
+//				toggleFieldCentric = !toggleFieldCentric;
+//			prevPress[10] = jLeft.getRawButton(Buttons.disableFieldCentric);
 			
-			if(!prevPress[10] && jRight.getRawButton(Buttons.resetAngle))
-				sendMessage(new ResetDriveAngle(0.0));
-			prevPress[11] = jRight.getRawButton(Buttons.resetAngle);
-			
+//			if(!prevPress[11] && jRight.getRawButton(Buttons.resetAngle))
+//				sendMessage(new ResetDriveAngle(0.0));
+//			prevPress[11] = jRight.getRawButton(Buttons.resetAngle);
+//			
 			
 			//button for track peg
-			if(!prevPress[12] && jLeft.getRawButton(Buttons.trackPeg))
-				sendMessage(new TrackPeg());	
-			prevPress[12] = jLeft.getRawButton(Buttons.trackPeg);
+//			if(!prevPress[12] && jLeft.getRawButton(Buttons.trackPeg))
+//				sendMessage(new StartTrackingPeg());	
+//			if(prevPress[12] && !jLeft.getRawButton(Buttons.trackPeg))
+//				sendMessage(new StopTrackingPeg());
+//			prevPress[12] = jLeft.getRawButton(Buttons.trackPeg);
 			
-//			
+
+//			if(!prevPress[13] && jRight.getRawButton(Buttons.snapToAngle))
+//				sendMessage(new SnapToAngle());
+//			prevPress[13] = jRight.getRawButton(Buttons.snapToAngle);
 			
 //			LogFactory.getInstance("General").printPeriodic("JoystickValues: " + jLeft.getRawAxis(1) + " R:" + jRight.getRawAxis(1), "Joysticks", 200);
 			
-			itsPerSec++;
+//			itsPerSec++;
 			sleep();
 		}
 		Scheduler.getInstance().remove(this);
