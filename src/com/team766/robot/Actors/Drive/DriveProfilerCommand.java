@@ -23,6 +23,7 @@ public class DriveProfilerCommand extends CommandBase{
 	double idealPosition = 0;
 	double direction;
 	double offset;
+	double startingAngle;
 	
 	boolean done;
 	int count = 0;
@@ -46,6 +47,8 @@ public class DriveProfilerCommand extends CommandBase{
 		
 		LogFactory.getInstance("Vision").print("DRIVE PROFILER!");
 		
+		startingAngle = Drive.getAngle();
+		
 		done = false;
 		offset = Drive.avgDist();
 	}
@@ -68,7 +71,7 @@ public class DriveProfilerCommand extends CommandBase{
 				break;
 			case RAMP_DOWN:
 				velocity -= direction * kMaxAccel * kDt;
-				if (Math.abs(getDist()) + STOP_THRESH >= Math.abs(goal)){
+				if(Math.abs(getDist()) + STOP_THRESH >= Math.abs(goal)){
 					state_ = State.LOCK;
 				}
 				break;
@@ -94,7 +97,9 @@ public class DriveProfilerCommand extends CommandBase{
 	
 		Drive.linearVelocity.setSetpoint(velocity);
 		Drive.linearVelocity.calculate(Drive.avgLinearRate(), false);
-		Drive.setDrive(Drive.linearVelocity.getOutput());
+//		Drive.setDrive(Drive.linearVelocity.getOutput());
+		Drive.setLeft(Drive.linearVelocity.getOutput() + (startingAngle - Drive.getAngle()) * ConstantsFileReader.getInstance().get("AngleP"));
+		Drive.setRight(Drive.linearVelocity.getOutput() - (startingAngle - Drive.getAngle()) * ConstantsFileReader.getInstance().get("AngleP"));
 	}
 	
 	@Override

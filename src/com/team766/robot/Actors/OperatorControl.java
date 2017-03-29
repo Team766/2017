@@ -174,27 +174,27 @@ public class OperatorControl extends Actor {
 			prevPress[9] = jBox.getRawButton(Buttons.climbDown);
 			
 			//button for disable field centric(prevPress[10])
-//
-//		if(!prevPress[10] && jLeft.getRawButton(Buttons.disableFieldCentric))
-//				toggleFieldCentric = !toggleFieldCentric;
-//			prevPress[10] = jLeft.getRawButton(Buttons.disableFieldCentric);
+
+		if(!prevPress[10] && jLeft.getRawButton(Buttons.disableFieldCentric))
+				toggleFieldCentric = !toggleFieldCentric;
+			prevPress[10] = jLeft.getRawButton(Buttons.disableFieldCentric);
 			
-//			if(!prevPress[11] && jRight.getRawButton(Buttons.resetAngle))
-//				sendMessage(new ResetDriveAngle(0.0));
-//			prevPress[11] = jRight.getRawButton(Buttons.resetAngle);
-//			
+			if(!prevPress[11] && jRight.getRawButton(Buttons.resetAngle))
+				sendMessage(new ResetDriveAngle(0.0));
+			prevPress[11] = jRight.getRawButton(Buttons.resetAngle);
+			
 			
 			//button for track peg
-//			if(!prevPress[12] && jLeft.getRawButton(Buttons.trackPeg))
-//				sendMessage(new StartTrackingPeg());	
-//			if(prevPress[12] && !jLeft.getRawButton(Buttons.trackPeg))
-//				sendMessage(new StopTrackingPeg());
-//			prevPress[12] = jLeft.getRawButton(Buttons.trackPeg);
+			if(!prevPress[12] && jLeft.getRawButton(Buttons.trackPeg))
+				sendMessage(new StartTrackingPeg());	
+			if(prevPress[12] && !jLeft.getRawButton(Buttons.trackPeg))
+				sendMessage(new StopTrackingPeg());
+			prevPress[12] = jLeft.getRawButton(Buttons.trackPeg);
 			
 
-//			if(!prevPress[13] && jRight.getRawButton(Buttons.snapToAngle))
-//				sendMessage(new SnapToAngle());
-//			prevPress[13] = jRight.getRawButton(Buttons.snapToAngle);
+			if(!prevPress[13] && jRight.getRawButton(Buttons.snapToAngle))
+				sendMessage(new SnapToAngle());
+			prevPress[13] = jRight.getRawButton(Buttons.snapToAngle);
 			
 //			LogFactory.getInstance("General").printPeriodic("JoystickValues: " + jLeft.getRawAxis(1) + " R:" + jRight.getRawAxis(1), "Joysticks", 200);
 			

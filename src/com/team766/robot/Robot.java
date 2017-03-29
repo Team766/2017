@@ -52,7 +52,7 @@ public class Robot implements MyRobot {
 		Scheduler.getInstance().add(CommandBase.GearPlacer);
 		Scheduler.getInstance().add(CommandBase.Hopper);
 		Scheduler.getInstance().add(CommandBase.Climber);
-		Scheduler.getInstance().add(CommandBase.Vision);
+//		Scheduler.getInstance().add(CommandBase.Vision);
 		
 		AutoPaths.loadPaths();
 		System.out.println("IM ALIVE lmao!!");
@@ -66,6 +66,7 @@ public class Robot implements MyRobot {
     	LogFactory.getInstance("General").print("Auton Init");
     	setState(GameState.Auton);
     	Scheduler.getInstance().remove(OperatorControl.class);
+    	Scheduler.getInstance().remove(AutonSelector.class);
     	emptyInboxes();
     	
     	try{

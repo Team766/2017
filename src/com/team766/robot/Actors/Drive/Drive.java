@@ -23,6 +23,7 @@ import com.team766.lib.Messages.RequestDropPeg;
 import com.team766.lib.Messages.ResetDriveAngle;
 import com.team766.lib.Messages.SnapToAngle;
 import com.team766.lib.Messages.Stop;
+import com.team766.lib.Messages.TurnAngle;
 import com.team766.robot.Constants;
 import com.team766.robot.HardwareProvider;
 
@@ -82,7 +83,7 @@ public class Drive extends Actor{
 	SubActor currentCommand;
 	
 	public void init() {
-		acceptableMessages = new Class[]{MotorCommand.class, CheesyDrive.class, HDrive.class, DrivePath.class, DriveDistance.class, ResetDriveAngle.class, SnapToAngle.class, Stop.class, DriveSideways.class, DriveIntoPegStop.class};
+		acceptableMessages = new Class[]{MotorCommand.class, CheesyDrive.class, HDrive.class, DrivePath.class, DriveDistance.class, ResetDriveAngle.class, SnapToAngle.class, Stop.class, DriveSideways.class, DriveIntoPegStop.class, TurnAngle.class};
 		commandFinished = false;
 		
 		lastPosTime = System.currentTimeMillis() / 1000.0;
@@ -160,6 +161,9 @@ public class Drive extends Actor{
 				else if(currentMessage instanceof DriveDistance){
 					currentCommand = new DriveProfilerCommand(currentMessage);
 //					currentCommand = new DriveDistanceCommand(currentMessage);
+				}
+				else if(currentMessage instanceof TurnAngle){
+					currentCommand = new DriveDistanceCommand(0,((TurnAngle)currentMessage).getAngle());
 				}
 				else if(currentMessage instanceof DriveIntoPegStop){
 					currentCommand = new SubActor(){

@@ -93,8 +93,8 @@ public class DrivePathCommand extends CommandBase {
 			
 			double turn = kTurn * angleDiff;
 			
-			Drive.setLeft(speedLeft + turn);
-			Drive.setRight(speedRight - turn);
+			Drive.setLeft(-speedLeft + turn);
+			Drive.setRight(-speedRight - turn);
 		}
 	}
 
