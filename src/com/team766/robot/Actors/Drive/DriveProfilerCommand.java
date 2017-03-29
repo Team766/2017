@@ -16,6 +16,7 @@ public class DriveProfilerCommand extends CommandBase{
 	double kMaxAccel = 20; //ft/sec^2
 	final double kDt = 0.010;
 	final double STOP_THRESH = 0.1;
+	final double AngleP = 0.05;
 
 	double velocity;
 	double goal = 0;
@@ -97,6 +98,7 @@ public class DriveProfilerCommand extends CommandBase{
 	
 		Drive.linearVelocity.setSetpoint(velocity);
 		Drive.linearVelocity.calculate(Drive.avgLinearRate(), false);
+
 //		Drive.setDrive(Drive.linearVelocity.getOutput());
 		Drive.setLeft(Drive.linearVelocity.getOutput() + (startingAngle - Drive.getAngle()) * ConstantsFileReader.getInstance().get("AngleP"));
 		Drive.setRight(Drive.linearVelocity.getOutput() - (startingAngle - Drive.getAngle()) * ConstantsFileReader.getInstance().get("AngleP"));

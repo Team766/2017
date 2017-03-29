@@ -148,16 +148,17 @@ public class Drive extends Actor{
 				else if(currentMessage instanceof DrivePath)
 					currentCommand = new DrivePathCommand(currentMessage);
 				else if(currentMessage instanceof Stop){
+					stopCurrentCommand();
 					setDrive(0.0);
 					setCenter(0.0);
-					stopCurrentCommand();
 				}
 				else if(currentMessage instanceof ResetDriveAngle){
 					ResetDriveAngle angleMessage = (ResetDriveAngle)currentMessage;
 					setGyroAngle(angleMessage.getAngle());
 				}
-				else if(currentMessage instanceof DriveSideways)
+				else if(currentMessage instanceof DriveSideways){
 					currentCommand = new DriveSidewaysCommand(currentMessage);
+				}
 				else if(currentMessage instanceof DriveDistance){
 					currentCommand = new DriveProfilerCommand(currentMessage);
 //					currentCommand = new DriveDistanceCommand(currentMessage);
@@ -222,6 +223,7 @@ public class Drive extends Actor{
 		if(currentCommand != null){
 			currentCommand.stop();
 		}
+		commandFinished = true;
 		currentCommand = null;
 		commandFinished = true;
 	}

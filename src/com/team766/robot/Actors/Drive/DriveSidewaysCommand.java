@@ -82,12 +82,13 @@ public class DriveSidewaysCommand extends CommandBase{
 	
 		Drive.linearVelocity.setSetpoint(velocity);
 		
-		System.out.println("direction: " + direction);
-		System.out.println("velocity:" + velocity);
+//		System.out.println("direction: " + direction);
+//		System.out.println("velocity:" + velocity);
 		Drive.linearVelocity.calculate(Drive.centerRate(), false);
-		
+	
 		System.out.println("linearVelocity:  " + Drive.linearVelocity.getOutput());
 		//Drive.setCenter(Drive.linearVelocity.getOutput());
+		//Temporary P-controller
 		Drive.setCenter((goal - Drive.centerDist()) * ConstantsFileReader.getInstance().get("centerDriveP"));
 		
 		Drive.setLeft((currentAngle - Drive.getAngle()) * AngleP);
@@ -111,6 +112,7 @@ public class DriveSidewaysCommand extends CommandBase{
 	
 	public void stop() {
 		Drive.setDrive(0.0);
+		Drive.setCenter(0.0);
 	}
 	
 	private double distToStop(double vel){

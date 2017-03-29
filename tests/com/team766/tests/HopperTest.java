@@ -1,8 +1,12 @@
 package com.team766.tests;
 
 import lib.Scheduler;
+
 import org.junit.Test;
 
+import tests.DigitalInput;
+import tests.Encoder;
+import tests.Gyro;
 import tests.AnalogInput;
 import tests.RobotTestCase;
 
