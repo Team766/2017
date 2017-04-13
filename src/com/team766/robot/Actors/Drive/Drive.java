@@ -112,16 +112,14 @@ public class Drive extends Actor{
 	}
 	
 	public void run() {
-		while(true){			
+		while(true){	
 			//Check for new messages
-
+			
 			if(newMessage()){
-				if(currentCommand != null)
-					currentCommand.stop();
-				
-				commandFinished = false;
+				stopCurrentCommand();
 				
 				currentMessage = readMessage();
+				
 				if(currentMessage == null)
 					break;
 				
@@ -222,8 +220,8 @@ public class Drive extends Actor{
 	private void stopCurrentCommand(){
 		if(currentCommand != null){
 			currentCommand.stop();
+			sendMessage(new DriveStatusUpdate(true, currentMessage, xPos, yPos, avgLinearRate()));
 		}
-		commandFinished = true;
 		currentCommand = null;
 		commandFinished = true;
 	}
