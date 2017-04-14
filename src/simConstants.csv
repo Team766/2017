@@ -13,3 +13,4 @@ DriveCorrectionP, 1
 maxVel, 1
 maxAccel, 1
 centerDriveP, 0.05
+climberSpeed,1

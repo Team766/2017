@@ -33,42 +33,51 @@ public class Climber extends Actor {
 	public void init() {
 		acceptableMessages = new Class[]{UpdateClimber.class, ClimbDeploy.class, Stop.class};
 		currentlyOut = true;
+		setClimberDeploy(currentlyOut);
 	}
 
 	@Override
-	public void run() {
-		while(true){
-			if(newMessage()){
-				if(currentCommand != null)
-					currentCommand.stop();
-				
-				commandFinished = false;
-				
-				currentMessage = readMessage();
-				if(currentMessage == null)
-					break;
-				
-				if(currentMessage instanceof UpdateClimber){
-					UpdateClimber climberMessage = (UpdateClimber)currentMessage;
-					//this.setClimberMotor(climberMessage.getClimb());
-					if(climberMessage.getClimb())
-						this.setClimberMotor(ConstantsFileReader.getInstance().get("climberSpeed"));
-					else
-						this.setClimberMotor(0.0);
-				}
-				else if(currentMessage instanceof Stop)
-					stopCurrentCommand();
-				else if(currentMessage instanceof ClimbDeploy){
-					ClimbDeploy climberMessage = (ClimbDeploy)currentMessage;
-					if(climberMessage.isToggle())
-						toggleClimberDeploy();
-					else
-						this.setClimberDeploy(!climberMessage.getClimbDeploy());
-				}
+	public void iterate(){
+		if(newMessage()){
+			if(currentCommand != null)
+				currentCommand.stop();
+			
+			commandFinished = false;
+			
+			currentMessage = readMessage();
+			if(currentMessage == null)
+				return;
+			
+			if(currentMessage instanceof UpdateClimber){
+				UpdateClimber climberMessage = (UpdateClimber)currentMessage;
+				//this.setClimberMotor(climberMessage.getClimb());
+				if(climberMessage.getClimb())
+					this.setClimberMotor(ConstantsFileReader.getInstance().get("climberSpeed"));
+				else
+					this.setClimberMotor(0.0);
 			}
-			step();
+			else if(currentMessage instanceof Stop)
+				stopCurrentCommand();
+			else if(currentMessage instanceof ClimbDeploy){
+				ClimbDeploy climberMessage = (ClimbDeploy)currentMessage;
+				if(climberMessage.isToggle())
+					toggleClimberDeploy();
+				else
+					this.setClimberDeploy(!climberMessage.getClimbDeploy());
+			}
+		}
+		step();
+	}
+	
+	@Override
+	public void run() {
+		while(enabled){
+			iterate();
 			sleep();
 		}
+		
+		//Kill processes
+		stopCurrentCommand();
 	}
 
 	@Override
@@ -115,7 +124,4 @@ public class Climber extends Actor {
 		climberSolenoidIn.set(!out);
 		currentlyOut = out;
 	}
-	
-	
-
 }

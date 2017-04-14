@@ -110,101 +110,109 @@ public class Drive extends Actor{
 		lastAngVelTime = System.currentTimeMillis() / 1000.0;
 		
 	}
+
+	public void iterate(){
+		
+		//Check for new messages
+		if(newMessage()){
+			stopCurrentCommand();
+			commandFinished = false;
+			
+			currentMessage = readMessage();
+			
+			if(currentMessage == null)
+				return;
+			
+			LogFactory.getInstance("Vision").print("New Message: " + currentMessage);
+							
+			if(currentMessage instanceof SnapToAngle){
+				System.out.println("rawAngle: " + getRawAngle());
+				if(Math.abs(getRawAngle()) < 30)
+					currentCommand = new DriveDistanceCommand(0, -gyroOffset);
+				else if(getRawAngle() >= 30)
+					currentCommand = new DriveDistanceCommand(0, 60 - gyroOffset);
+				else if(getRawAngle() <= -30)
+					currentCommand = new DriveDistanceCommand(0, -60 - gyroOffset);
+				System.out.println("snapToAngle: " + this.getAngle());
+				
+				
+			}
+			else if(currentMessage instanceof MotorCommand)
+				currentCommand = new MotorSubCommand(currentMessage);
+			else if(currentMessage instanceof CheesyDrive)
+				currentCommand = new CheesyDriveCommand(currentMessage);
+			else if(currentMessage instanceof HDrive)
+				currentCommand = new HDriveCommand(currentMessage);
+			else if(currentMessage instanceof DrivePath)
+				currentCommand = new DrivePathCommand(currentMessage);
+			else if(currentMessage instanceof Stop){
+				stopCurrentCommand();
+				setDrive(0.0);
+				setCenter(0.0);
+			}
+			else if(currentMessage instanceof ResetDriveAngle){
+				ResetDriveAngle angleMessage = (ResetDriveAngle)currentMessage;
+				setGyroAngle(angleMessage.getAngle());
+			}
+			else if(currentMessage instanceof DriveSideways){
+				currentCommand = new DriveSidewaysCommand(currentMessage);
+			}
+			else if(currentMessage instanceof DriveDistance){
+				currentCommand = new DriveProfilerCommand(currentMessage);
+//				currentCommand = new DriveDistanceCommand(currentMessage);
+			}
+			else if(currentMessage instanceof TurnAngle){
+				currentCommand = new DriveDistanceCommand(0,((TurnAngle)currentMessage).getAngle());
+			}
+			else if(currentMessage instanceof DriveIntoPegStop){
+				currentCommand = new SubActor(){
+					@Override
+					public void update() {
+						LogFactory.getInstance("Vison").print("Updatting Power!");
+						setDrive(ConstantsFileReader.getInstance().get("DriveIntoPegPower"));
+					}
+					
+					@Override
+					public void stop() {
+						LogFactory.getInstance("Vison").print("Done Driving into peg stop");
+						setDrive(0.0);
+						sendMessage(new RequestDropPeg());
+					}
+					
+					@Override
+					public boolean isDone() {
+						return CommandBase.GearPlacer.isPegPresent();
+					}
+				};
+			}
+			//Reset Control loops
+			resetControlLoops();
+		}
+					
+		//LogFactory.getInstance("General").printPeriodic("Gyro: " + getAngle(), "Gyro", 200);
+		
+		LogFactory.getInstance("Vision").printPeriodic("Left: " + leftDist() + " Right: " + rightDist() + " Center: " + centerDist() + " Gyro: " + getAngle(), "Encoders", 200);
+		step();
+		
+		//Send Status Update	#StayUpToDate	#Current	#inTheKnow
+		sendMessage(new DriveStatusUpdate(commandFinished, currentMessage, xPos, yPos, avgLinearRate()));
+
+		updateVelocities();
+		updateAngularRate();
+		updateLocation();
+		updateAccelerations();
+		
+//		itsPerSec++;
+	}
 	
 	public void run() {
-		while(true){	
-			//Check for new messages
-			
-			if(newMessage()){
-				stopCurrentCommand();
-				
-				currentMessage = readMessage();
-				
-				if(currentMessage == null)
-					break;
-				
-				LogFactory.getInstance("Vision").print("New Message: " + currentMessage);
-								
-				if(currentMessage instanceof SnapToAngle){
-					System.out.println("rawAngle: " + getRawAngle());
-					if(Math.abs(getRawAngle()) < 30)
-						currentCommand = new DriveDistanceCommand(0, -gyroOffset);
-					else if(getRawAngle() >= 30)
-						currentCommand = new DriveDistanceCommand(0, 60 - gyroOffset);
-					else if(getRawAngle() <= -30)
-						currentCommand = new DriveDistanceCommand(0, -60 - gyroOffset);
-					System.out.println("snapToAngle: " + this.getAngle());
-					
-					
-				}
-				else if(currentMessage instanceof MotorCommand)
-					currentCommand = new MotorSubCommand(currentMessage);
-				else if(currentMessage instanceof CheesyDrive)
-					currentCommand = new CheesyDriveCommand(currentMessage);
-				else if(currentMessage instanceof HDrive)
-					currentCommand = new HDriveCommand(currentMessage);
-				else if(currentMessage instanceof DrivePath)
-					currentCommand = new DrivePathCommand(currentMessage);
-				else if(currentMessage instanceof Stop){
-					stopCurrentCommand();
-					setDrive(0.0);
-					setCenter(0.0);
-				}
-				else if(currentMessage instanceof ResetDriveAngle){
-					ResetDriveAngle angleMessage = (ResetDriveAngle)currentMessage;
-					setGyroAngle(angleMessage.getAngle());
-				}
-				else if(currentMessage instanceof DriveSideways){
-					currentCommand = new DriveSidewaysCommand(currentMessage);
-				}
-				else if(currentMessage instanceof DriveDistance){
-					currentCommand = new DriveProfilerCommand(currentMessage);
-//					currentCommand = new DriveDistanceCommand(currentMessage);
-				}
-				else if(currentMessage instanceof TurnAngle){
-					currentCommand = new DriveDistanceCommand(0,((TurnAngle)currentMessage).getAngle());
-				}
-				else if(currentMessage instanceof DriveIntoPegStop){
-					currentCommand = new SubActor(){
-						@Override
-						public void update() {
-							LogFactory.getInstance("Vison").print("Updatting Power!");
-							setDrive(ConstantsFileReader.getInstance().get("DriveIntoPegPower"));
-						}
-						
-						@Override
-						public void stop() {
-							LogFactory.getInstance("Vison").print("Done Driving into peg stop");
-							setDrive(0.0);
-							sendMessage(new RequestDropPeg());
-						}
-						
-						@Override
-						public boolean isDone() {
-							return CommandBase.GearPlacer.isPegPresent();
-						}
-					};
-				}
-				//Reset Control loops
-				resetControlLoops();
-			}
-						
-			//LogFactory.getInstance("General").printPeriodic("Gyro: " + getAngle(), "Gyro", 200);
-			
-			LogFactory.getInstance("Vision").printPeriodic("Left: " + leftDist() + " Right: " + rightDist() + " Center: " + centerDist() + " Gyro: " + getAngle(), "Encoders", 200);
-			step();
-			
-			//Send Status Update	#StayUpToDate	#Current	#inTheKnow
-			sendMessage(new DriveStatusUpdate(commandFinished, currentMessage, xPos, yPos, avgLinearRate()));
-
-			updateVelocities();
-			updateAngularRate();
-			updateLocation();
-			updateAccelerations();
-			
-//			itsPerSec++;
+		while(enabled){	
+			iterate();
 			sleep();
 		}
+		
+		//Stop all processes
+		stopCurrentCommand();
 	}
 	
 	public void step(){

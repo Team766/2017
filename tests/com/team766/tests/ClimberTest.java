@@ -1,15 +1,10 @@
 package com.team766.tests;
 
-import lib.Message;
 import lib.Scheduler;
 
 import com.team766.lib.ConfigFile;
-import com.team766.lib.Messages.Stop;
-import com.team766.lib.Messages.UpdateClimber;
 import com.team766.lib.Messages.ClimbDeploy;
-import com.team766.robot.Constants;
-
-import tests.RobotTestCase;
+import com.team766.lib.Messages.UpdateClimber;
 
 public class ClimberTest extends TestCase{
 	
@@ -25,7 +20,7 @@ public class ClimberTest extends TestCase{
 		//false
 		Scheduler.getInstance().sendMessage(new UpdateClimber(false));
 		//Check climber motor negative
-		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getClimberMotor()).get() < 0;}, 2);
+		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getClimberMotor()).get() == 0;}, 2);
 	}
 	
 	public void testClimberDeploy() throws Exception {
@@ -33,14 +28,23 @@ public class ClimberTest extends TestCase{
 		//true
 		Scheduler.getInstance().sendMessage(new ClimbDeploy(true));
 		//Check climberSolenoid is true
-		assertTrueTimed(() -> {return instance.getSolenoid(ConfigFile.getClimberDeployOut()).get() && !instance.getSolenoid(ConfigFile.getClimberDeployIn()).get();}, 2);
+		assertTrueTimed(() -> {return !instance.getSolenoid(ConfigFile.getClimberDeployOut()).get() && instance.getSolenoid(ConfigFile.getClimberDeployIn()).get();}, 2);
 	}
 	
 	public void testClimberSolenoid() throws Exception {
 		//false
 		Scheduler.getInstance().sendMessage(new ClimbDeploy(false));
 		//Check climberSolenoid is false
-		assertTrueTimed(() -> {return  !instance.getSolenoid(ConfigFile.getClimberDeployOut()).get() && instance.getSolenoid(ConfigFile.getClimberDeployIn()).get();}, 2);	
+		assertTrueTimed(() -> {return  instance.getSolenoid(ConfigFile.getClimberDeployOut()).get() && !instance.getSolenoid(ConfigFile.getClimberDeployIn()).get();}, 2);	
+	}
+	
+	public void testClimberToggle() throws Exception {		
+		boolean previousState = instance.getSolenoid(ConfigFile.getClimberDeployOut()).get();
+		
+		Scheduler.getInstance().sendMessage(new ClimbDeploy());
+		//Check climberSolenoid is false
+		System.out.println("Solenoid: " + instance.getSolenoid(ConfigFile.getClimberDeployOut()).get() + "\tpre: " + previousState);
+		assertTrueTimed(() -> {return instance.getSolenoid(ConfigFile.getClimberDeployOut()).get() != previousState;}, 2);	
 		
 	}
 

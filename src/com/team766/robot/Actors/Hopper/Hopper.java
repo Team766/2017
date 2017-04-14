@@ -28,43 +28,50 @@ public class Hopper extends Actor{
 	SolenoidController intakeFlap = HardwareProvider.getInstance().getHopperOpener();
 	SolenoidController exhaustFlap = HardwareProvider.getInstance().getHopperCloser();
 	
-	public void init() {
+	public void init() { 
 		acceptableMessages = new Class[]{SetHopperState.class, HopperSetRoller.class};
 	}
 	
-	public void run() {
-		while(true){
-			if(newMessage()){
-				if(currentCommand != null)
-					currentCommand.stop();
+	public void iterate(){
+		if(newMessage()){
+			if(currentCommand != null)
+				currentCommand.stop();
+			
+			commandFinished = false;
+			
+			currentMessage = readMessage();
+			if(currentMessage == null)
+				return;
+			
+			if(currentMessage instanceof SetHopperState){
+				currentCommand = new SetHopperStateCommand(currentMessage);
+			}else if(currentMessage instanceof Stop){
+				stopCurrentCommand();
+			}else if(currentMessage instanceof HopperSetRoller){
+				HopperSetRoller HopperMessage = (HopperSetRoller)currentMessage;
 				
-				commandFinished = false;
-				
-				currentMessage = readMessage();
-				if(currentMessage == null)
-					break;
-				
-				if(currentMessage instanceof SetHopperState)
-					currentCommand = new SetHopperStateCommand(currentMessage);
-				else if(currentMessage instanceof Stop)
-					stopCurrentCommand();
-				else if(currentMessage instanceof HopperSetRoller){
-					HopperSetRoller HopperMessage = (HopperSetRoller)currentMessage;
-					
-					if(!HopperMessage.getOff()){
-						if(HopperMessage.getForward())
-							this.setHopperMotor(1.0);
-						else
-							this.setHopperMotor(-1.0);
-					}else{
-						setHopperMotor(0.0);
-					}
+				if(!HopperMessage.getOff()){
+					if(HopperMessage.getForward())
+						this.setHopperMotor(1.0);
+					else
+						this.setHopperMotor(-1.0);
+				}else{
+					setHopperMotor(0.0);
 				}
 			}
-			step();
-			
+		}
+		
+		step();
+	}
+	
+	public void run() {
+		while(enabled){
+			iterate();
 			sleep();
 		}
+		
+		//No longer enabled, kill all
+		stopCurrentCommand();
 	}
 
 	public String toString() {
