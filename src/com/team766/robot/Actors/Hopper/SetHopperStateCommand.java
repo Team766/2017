@@ -9,37 +9,47 @@ import com.team766.robot.Constants;
 
 public class SetHopperStateCommand extends CommandBase{
 
-	public SetHopperState command;
+	private SetHopperState command;
+	State state_;
 	private boolean done;
 	private double startTime;
+	private boolean initilized;
 	
-	public SetHopperStateCommand(Message command){
-		this.command = (SetHopperState)command;
+	public SetHopperStateCommand(Message message){
+		command = (SetHopperState)message;
 		done = false;
-		startTime = 0.0;
+		initilized = false;
+		state_ = command.getHopperState();
 	}
 	
 	@Override
 	public void update() {
-		switch(command.getHopperState()){
+		switch(state_){
 			case Store:
+				System.out.println("Storing!");
 				GearPlacer.setTopOpener(false);
 				Hopper.setIntakeFlap(false);
 				Hopper.setExhaustFlap(false);
 				Hopper.setHopperMotor(0.0);
 				done = true;
 				break;
+				
 			case Intake:
+				if(!initilized){
+					startTime = System.currentTimeMillis();
+					initilized = true;
+				}
 				GearPlacer.setTopOpener(true);
 				Hopper.setIntakeFlap(true);
 				Hopper.setExhaustFlap(false);
-				if(System.currentTimeMillis() - startTime < Constants.HopperRunTime * 1000.0){
+				if((System.currentTimeMillis() - startTime) < (Constants.HopperRunTime * 1000.0)){
 					Hopper.setHopperMotor(1.0);
 				}else{
 					done = true;
 					Hopper.setHopperMotor(0.0);
 				}
 				break;
+				
 			case Exhaust:
 				GearPlacer.setTopOpener(false);
 				Hopper.setIntakeFlap(false);

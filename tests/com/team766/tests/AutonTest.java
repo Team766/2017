@@ -30,6 +30,38 @@ public class AutonTest extends TestCase {
 		
 	}
 	
+	@Test
+	public void testRepeatAuton() throws Exception {
+		reset();
+		
+		//Crossline
+		RobotValues.AutonMode = 6;
+		
+		autonInit();
+		
+		//Robot moves backwards
+		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getLeftMotor()[0]).get() < 0;}, 2);
+		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getRightMotor()[0]).get() < 0;}, 2);
+		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getCenterMotor()).get() == 0;}, 2);
+		
+		//Disable Robot
+		disableInit();
+		
+		//Robot doesn't move
+		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getLeftMotor()[0]).get() == 0;}, 2);
+		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getRightMotor()[0]).get() == 0;}, 2);
+		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getCenterMotor()).get() == 0;}, 2);
+		
+		//Try running auton again
+		autonInit();
+		
+		//Robot moves backwards
+		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getLeftMotor()[0]).get() < 0;}, 2);
+		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getRightMotor()[0]).get() < 0;}, 2);
+		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getCenterMotor()).get() == 0;}, 2);
+		
+	}
+	
 	private void reset(){
 		((Gyro)(instance.getGyro(ConfigFile.getGyro()))).setAngle(0.0);
 		

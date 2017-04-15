@@ -73,6 +73,9 @@ public class Vision extends Actor{
 	Rect[] boundRect, imporRects;	
 	boolean pairFound;
 	
+	Mat img = new Mat();
+	Mat out = new Mat();
+	
 	Message currentMessage;
 	
 	@Override
@@ -89,73 +92,76 @@ public class Vision extends Actor{
 	}
 	
 	@Override
+	public void iterate(){
+		itsPerSec++;
+		sleep(RUN_TIME);
+		
+		if(newMessage()){
+			currentMessage = readMessage();
+			if(currentMessage == null)
+				return;
+			
+			if(currentMessage instanceof StartTrackingPeg){
+				LogFactory.getInstance("Vision").print("STARTING TRACKING");
+				trackingEnabled = true;
+				done = false;
+				counter = UPDATE_RATE;
+				//Needs to send message when tracking
+//				sendMessage(new DriveSideways(-getDist() * Math.sin(Math.toRadians(getAngle()))));
+			}
+			else if(currentMessage instanceof DriveIntoPeg){
+				drivingEnabled = true;
+				done = false;
+				counter = UPDATE_RATE;
+			}
+			else if(currentMessage instanceof Stop || currentMessage instanceof StopTrackingPeg){
+				//Stop
+				trackingEnabled = false;
+				done = true;
+				counter = UPDATE_RATE;
+//				sendMessage(new MotorCommand(0, Motor.centerDrive));
+			}
+				
+		}
+		
+		camServer.getFrame(img);
+		if(img == null || img.empty()){
+			LogFactory.getInstance("Vision").print("Vision: No Input Image");
+			return;
+		}
+		//Begin processing image below
+		out = process(img);
+		if(out == null){
+//			LogFactory.getInstance("Vision").print("Vision: No/Not enough Countours found");
+			return;
+		}
+		
+		camServer.putFrame(out);
+		
+		if(counter >= UPDATE_RATE){
+			if(trackingEnabled){
+//				sendMessage(new MotorCommand(-getDist() * Math.sin(Math.toRadians(getAngle()) * ConstantsFileReader.getInstance().get("centerDriveP")), Motor.centerDrive));
+				sendMessage(new DriveSideways(-getDist() * Math.sin(Math.toRadians(getAngle()))));
+				done = Math.abs(getDist() * Math.sin(Math.toRadians(getAngle()))) < Constants.ALLIGNING_SIDEWAYS_DIST_THRESH;
+				LogFactory.getInstance("Vision").print("SENDING MOVE COMMANDS!\t" + -getDist() * Math.sin(Math.toRadians(getAngle()) * ConstantsFileReader.getInstance().get("centerDriveP")));
+			};
+			
+			if(drivingEnabled){
+				sendMessage(new DriveDistance(-getDist(), 0.0));
+				done = getDist() < Constants.DRIVE_INTO_PEG_THRESH;
+			}
+			
+			counter = 0;
+		}
+		counter++;
+		
+		sendMessage(new VisionStatusUpdate(done, currentMessage, getAngle(), getDist()));
+	}
+	
+	@Override
 	public void run() {
-		Mat img = new Mat();
-		Mat out = new Mat();
-		while(true){
-//			itsPerSec++;
-			sleep(RUN_TIME);
-			
-			if(newMessage()){
-				currentMessage = readMessage();
-				if(currentMessage == null)
-					break;
-				
-				if(currentMessage instanceof StartTrackingPeg){
-					LogFactory.getInstance("Vision").print("STARTING TRACKING");
-					trackingEnabled = true;
-					done = false;
-					counter = UPDATE_RATE;
-					//Needs to send message when tracking
-//					sendMessage(new DriveSideways(-getDist() * Math.sin(Math.toRadians(getAngle()))));
-				}
-				else if(currentMessage instanceof DriveIntoPeg){
-					drivingEnabled = true;
-					done = false;
-					counter = UPDATE_RATE;
-				}
-				else if(currentMessage instanceof Stop || currentMessage instanceof StopTrackingPeg){
-					//Stop
-					trackingEnabled = false;
-					done = true;
-					counter = UPDATE_RATE;
-//					sendMessage(new MotorCommand(0, Motor.centerDrive));
-				}
-					
-			}
-			
-			camServer.getFrame(img);
-			if(img == null || img.empty()){
-				LogFactory.getInstance("Vision").print("Vision: No Input Image");
-				continue;
-			}
-			//Begin processing image below
-			out = process(img);
-			if(out == null){
-//				LogFactory.getInstance("Vision").print("Vision: No/Not enough Countours found");
-				continue;
-			}
-			
-			camServer.putFrame(out);
-			
-			if(counter >= UPDATE_RATE){
-				if(trackingEnabled){
-//					sendMessage(new MotorCommand(-getDist() * Math.sin(Math.toRadians(getAngle()) * ConstantsFileReader.getInstance().get("centerDriveP")), Motor.centerDrive));
-					sendMessage(new DriveSideways(-getDist() * Math.sin(Math.toRadians(getAngle()))));
-					done = Math.abs(getDist() * Math.sin(Math.toRadians(getAngle()))) < Constants.ALLIGNING_SIDEWAYS_DIST_THRESH;
-					LogFactory.getInstance("Vision").print("SENDING MOVE COMMANDS!\t" + -getDist() * Math.sin(Math.toRadians(getAngle()) * ConstantsFileReader.getInstance().get("centerDriveP")));
-				};
-				
-				if(drivingEnabled){
-					sendMessage(new DriveDistance(-getDist(), 0.0));
-					done = getDist() < Constants.DRIVE_INTO_PEG_THRESH;
-				}
-				
-				counter = 0;
-			}
-			counter++;
-			
-			sendMessage(new VisionStatusUpdate(done, currentMessage, getAngle(), getDist()));
+		while(enabled){
+			iterate();
 		}
 	}
 	

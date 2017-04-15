@@ -31,7 +31,7 @@ public class HopperTest extends RobotTestCase{
 		
 		((AnalogInput)(instance.getAnalogInput(ConfigFile.getHopperSensor()))).set(0.0);
 		
-		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getHopperMotor()).get() == 0;}, 2);
+		assertTrueTimed(() -> {return instance.getMotor(ConfigFile.getHopperMotor()).get() == 0;}, 2.5);
 	}
 	
 	public void testHopperExhausting() throws Exception{
@@ -49,7 +49,7 @@ public class HopperTest extends RobotTestCase{
 		
 		assertTrueTimed(() -> {return instance.getSolenoid(ConfigFile.getGearPlacerOpener()).get() == false;}, 2);
 		assertTrueTimed(() -> {return instance.getSolenoid(ConfigFile.getHopperOpener()).get() == false;}, 2);
-		assertTrueTimed(() -> {return instance.getSolenoid(ConfigFile.getHopperCloser()).get() == false;}, 2);//
+		assertTrueTimed(() -> {return instance.getSolenoid(ConfigFile.getHopperCloser()).get() == false;}, 2);
 		
 	}
 }

@@ -1,4 +1,4 @@
-kTest, 1
+kTest, 1.0
 AutonMode, 1
 DriveScheme, 0
 LeftMotorDirection, 1
@@ -13,3 +13,4 @@ DriveCorrectionP, 1
 maxVel, 1
 maxAccel, 1
 centerDriveP, 0.05
+climberSpeed,1

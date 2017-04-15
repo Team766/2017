@@ -27,58 +27,65 @@ public class GearPlacer extends Actor{
 		acceptableMessages = new Class[]{UpdateGearCollector.class, Stop.class, RequestDropPeg.class};
 	}
 	
-	public void run() {
-		while(true){
-			if(newMessage()){
-				if(currentCommand != null)
-					currentCommand.stop();
-				
-				commandFinished = false;
-				
-				currentMessage = readMessage();
-				if(currentMessage == null)
-					break;
-				
-				if(currentMessage instanceof UpdateGearCollector){
-					currentCommand = null;
-					UpdateGearCollector gearMessage = (UpdateGearCollector)currentMessage;
-					setTopOpener(gearMessage.getTop());
-					setPlacer(gearMessage.getBottom());
-					commandFinished = true;
-				}
-				else if(currentMessage instanceof RequestDropPeg){
-					currentCommand = new SubActor(){
-						private boolean seenPeg = false;
-						@Override
-						public void update() {
-							//Wait for peg to latch
-							if(isPegPresent()){
-								setTopOpener(false);
-								setPlacer(true);
-								seenPeg = true;
-							}
-						}
-
-						@Override
-						public void stop() {
-						}
-
-						@Override
-						public boolean isDone() {
-							return seenPeg && !isPegPresent();
-						}
-					};
-				}
-				else if(currentMessage instanceof Stop)
-					stopCurrentCommand();
-					
+	public void iterate(){
+		if(newMessage()){
+			if(currentCommand != null)
+				currentCommand.stop();
+			
+			commandFinished = false;
+			
+			currentMessage = readMessage();
+			if(currentMessage == null)
+				return;
+			
+			if(currentMessage instanceof UpdateGearCollector){
+				currentCommand = null;
+				UpdateGearCollector gearMessage = (UpdateGearCollector)currentMessage;
+				setTopOpener(gearMessage.getTop());
+				setPlacer(gearMessage.getBottom());
+				commandFinished = true;
 			}
-			step();
-			
-			sendMessage(new GearCollectorUpdate(commandFinished, currentMessage));
-			
+			else if(currentMessage instanceof RequestDropPeg){
+				currentCommand = new SubActor(){
+					private boolean seenPeg = false;
+					@Override
+					public void update() {
+						//Wait for peg to latch
+						if(isPegPresent()){
+							setTopOpener(false);
+							setPlacer(true);
+							seenPeg = true;
+						}
+					}
+
+					@Override
+					public void stop() {
+					}
+
+					@Override
+					public boolean isDone() {
+						return seenPeg && !isPegPresent();
+					}
+				};
+			}
+			else if(currentMessage instanceof Stop)
+				stopCurrentCommand();
+				
+		}
+		
+		step();
+		
+		sendMessage(new GearCollectorUpdate(commandFinished, currentMessage));
+	}
+	
+	public void run() {
+		while(enabled){
+			iterate();
 			sleep();
 		}
+		
+		//Kill all processes
+		stopCurrentCommand();
 
 	}
 
