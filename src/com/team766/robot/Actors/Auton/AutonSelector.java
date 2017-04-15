@@ -8,6 +8,7 @@ import com.team766.lib.Messages.DriveDistance;
 import com.team766.lib.Messages.DriveIntoPeg;
 import com.team766.lib.Messages.DrivePath;
 import com.team766.lib.Messages.DriveStatusUpdate;
+import com.team766.lib.Messages.GearCollectorUpdate;
 import com.team766.lib.Messages.SnapToAngle;
 import com.team766.lib.Messages.StartTrackingPeg;
 import com.team766.lib.Messages.TurnAngle;
@@ -25,7 +26,7 @@ public class AutonSelector extends Actor{
 	
 	@Override
 	public void init() {
-		acceptableMessages = new Class[]{DriveStatusUpdate.class, VisionStatusUpdate.class};
+		acceptableMessages = new Class[]{DriveStatusUpdate.class, VisionStatusUpdate.class, GearCollectorUpdate.class};
 	}
 
 	
@@ -45,7 +46,7 @@ public class AutonSelector extends Actor{
 				//Drop gear
 				sendMessage(new UpdateGearCollector(false, true));
 				//Drive back
-				sendMessage(new DriveDistance(1.0,0));
+				waitForMessage(new DriveDistance(1.0,0), DriveStatusUpdate.class);
 				break;	
 			case "BoilerPath":
 				System.out.println("Auton: BoilerPath");
@@ -75,7 +76,7 @@ public class AutonSelector extends Actor{
 				//Drop Peg
 				sendMessage(new UpdateGearCollector(false, true));
 				//Drive back
-				sendMessage(new DriveDistance(2.0,0));
+				waitForMessage(new DriveDistance(2.0,0), DriveStatusUpdate.class);
 				break;
 			case "CrossLine":
 				System.out.println("Auton: CrossLine");
@@ -85,9 +86,33 @@ public class AutonSelector extends Actor{
 			case "FlipDriveToPegPath":
 				System.out.println("Auton: FlipDriveToPegPath");
 				LogFactory.getInstance("General").print("auton: FlipDriveToPegPath");
-				waitForMessage(new DrivePath("ToPegPath", true), DriveStatusUpdate.class);
-				waitForMessage(new SnapToAngle(), DriveStatusUpdate.class);
+//				waitForMessage(new DrivePath("ToPegPath", true), DriveStatusUpdate.class);
+//				waitForMessage(new SnapToAngle(), DriveStatusUpdate.class);
+				
+				waitForMessage(new DriveDistance(ConstantsFileReader.getInstance().get("SideForwardDist"), 0), DriveStatusUpdate.class);
+				waitForMessage(new TurnAngle(-ConstantsFileReader.getInstance().get("TurnToPeg")), DriveStatusUpdate.class);
+				waitForMessage(new DriveDistance(ConstantsFileReader.getInstance().get("StraightToScoreDist"), 0), DriveStatusUpdate.class);
+				//waitForMessage(new DrivePath("ToPegPath", false), DriveStatusUpdate.class);
+				
+				//Wait
+//				try {
+//					Thread.sleep(400);
+//				} catch (InterruptedException e) {
+//				}
+				
+				//Drop Gear
+				sendMessage(new UpdateGearCollector(false, true));
+				
+				//Wait
+				try {
+					Thread.sleep(400);
+				} catch (InterruptedException e) {
+				}
+				
+				//Drive back
+				waitForMessage(new DriveDistance(2.0,0), DriveStatusUpdate.class);
 				break;
+				
 			case "DriveToPegPath":
 				System.out.println("Auton: DriveToPegPath");
 				LogFactory.getInstance("General").print("Auton: DriveToPegPath");
@@ -97,15 +122,22 @@ public class AutonSelector extends Actor{
 				//waitForMessage(new DrivePath("ToPegPath", false), DriveStatusUpdate.class);
 				
 				//Wait
+//				try {
+//					Thread.sleep(400);
+//				} catch (InterruptedException e) {
+//				}
+				
+				//Drop Gear
+				sendMessage(new UpdateGearCollector(false, true));
+				
+				//Wait
 				try {
 					Thread.sleep(400);
 				} catch (InterruptedException e) {
 				}
 				
-				//Drop Peg
-				sendMessage(new UpdateGearCollector(false, true));
 				//Drive back
-				sendMessage(new DriveDistance(2.0,0));
+				waitForMessage(new DriveDistance(2.0,0), DriveStatusUpdate.class);
 				
 				break;
 			default:

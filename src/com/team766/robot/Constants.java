@@ -42,7 +42,7 @@ public abstract class Constants extends RobotValues{
 	public static final double driveCenterDeadband = 0;
 	
 	public static final double leftAxisDeadband = 0;	//0.1
-	public static final double rightAxisDeadband = 0;
+	public static final double rightAxisDeadband = 0.01;
 	
 	//Axis
 	public static final int steerAxis = 0;
@@ -51,7 +51,7 @@ public abstract class Constants extends RobotValues{
 	//Drive PID
 	public static final double MAX_STOPPING_VEL = 1.64;	//	UNITS:	ft/s
 	
-	public static final double k_angularP =	0.02;//1/maxAngularVelocity;	//.012
+	public static final double k_angularP =	0.035;//1/maxAngularVelocity;	//.012
 	public static final double k_angularI = 0.0000;
 	public static final double k_angularD = 0.3;
 	public static final double k_angularThresh = 1;

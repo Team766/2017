@@ -1,17 +1,16 @@
 package com.team766.robot.Actors.GearPlacer;
 
-import com.team766.lib.Messages.DriveStatusUpdate;
-import com.team766.lib.Messages.RequestDropPeg;
-import com.team766.lib.Messages.Stop;
-import com.team766.lib.Messages.UpdateGearCollector;
-import com.team766.robot.Constants;
-import com.team766.robot.HardwareProvider;
-
 import interfaces.DigitalInputReader;
 import interfaces.SolenoidController;
 import interfaces.SubActor;
 import lib.Actor;
 import lib.Message;
+
+import com.team766.lib.Messages.GearCollectorUpdate;
+import com.team766.lib.Messages.RequestDropPeg;
+import com.team766.lib.Messages.Stop;
+import com.team766.lib.Messages.UpdateGearCollector;
+import com.team766.robot.HardwareProvider;
 
 public class GearPlacer extends Actor{
 	
@@ -25,7 +24,7 @@ public class GearPlacer extends Actor{
 	SubActor currentCommand;
 	
 	public void init() {
-		acceptableMessages = new Class[]{UpdateGearCollector.class, DriveStatusUpdate.class, RequestDropPeg.class};
+		acceptableMessages = new Class[]{UpdateGearCollector.class, Stop.class, RequestDropPeg.class};
 	}
 	
 	public void run() {
@@ -41,9 +40,11 @@ public class GearPlacer extends Actor{
 					break;
 				
 				if(currentMessage instanceof UpdateGearCollector){
+					currentCommand = null;
 					UpdateGearCollector gearMessage = (UpdateGearCollector)currentMessage;
-					this.setTopOpener(gearMessage.getTop());
-					this.setPlacer(gearMessage.getBottom());
+					setTopOpener(gearMessage.getTop());
+					setPlacer(gearMessage.getBottom());
+					commandFinished = true;
 				}
 				else if(currentMessage instanceof RequestDropPeg){
 					currentCommand = new SubActor(){
@@ -73,6 +74,9 @@ public class GearPlacer extends Actor{
 					
 			}
 			step();
+			
+			sendMessage(new GearCollectorUpdate(commandFinished, currentMessage));
+			
 			sleep();
 		}
 
