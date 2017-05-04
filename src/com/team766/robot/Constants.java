@@ -16,6 +16,8 @@ public abstract class Constants extends RobotValues{
 	
 	public static final int ACTOR_COUNT = 1;
 	
+	public static final String LOG_FILE = "/home/lvuser/testLog.txt";
+	
 	public static final boolean TANK_DRIVE = false;
 	
 	public static final double wheel_circumference = 1.0/3.0 * Math.PI; //feet

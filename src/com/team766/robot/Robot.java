@@ -4,6 +4,7 @@ import interfaces.MyRobot;
 import lib.ConstantsFileReader;
 import lib.HTTPServer;
 import lib.LogFactory;
+import lib.LogHandler;
 import lib.Scheduler;
 
 import com.team766.lib.AutoPaths;
@@ -52,10 +53,11 @@ public class Robot implements MyRobot {
 		Scheduler.getInstance().add(CommandBase.GearPlacer);
 		Scheduler.getInstance().add(CommandBase.Hopper);
 		Scheduler.getInstance().add(CommandBase.Climber);
+		Scheduler.getInstance().add(new LogHandler(Constants.LOG_FILE));
 //		Scheduler.getInstance().add(CommandBase.Vision);
 		
 		AutoPaths.loadPaths();
-		System.out.println("IM ALIVE lmao!!");
+		System.out.println("IM ALIVE!");
 		
 		new Thread(new HTTPServer(Constants.AUTONS)).start();
 		
