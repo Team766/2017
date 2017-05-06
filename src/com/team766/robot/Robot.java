@@ -5,6 +5,8 @@ import lib.ConstantsFileReader;
 import lib.HTTPServer;
 import lib.LogFactory;
 import lib.LogHandler;
+import lib.LogMessage;
+import lib.LogMessage.Level;
 import lib.Scheduler;
 
 import com.team766.lib.AutoPaths;
@@ -58,6 +60,7 @@ public class Robot implements MyRobot {
 		
 		AutoPaths.loadPaths();
 		System.out.println("IM ALIVE!");
+		Log(Level.INFO, "Robot Starting");
 		
 		new Thread(new HTTPServer(Constants.AUTONS)).start();
 		
@@ -66,14 +69,13 @@ public class Robot implements MyRobot {
     
     public void autonomousInit() {
     	LogFactory.getInstance("General").print("Auton Init");
+    	Log(Level.INFO, "Auton Init / Match Starting");
     	setState(GameState.Auton);
     	Scheduler.getInstance().remove(OperatorControl.class);
     	Scheduler.getInstance().remove(AutonSelector.class);
     	emptyInboxes();
     	
-    	try{
-    		Scheduler.getInstance().sendMessage(new Stop());
-    	}catch(Exception e){}
+    	sendStopMessage();
     	
     	LogFactory.getInstance("Vision").print("Starting AutonSelector");
     	Scheduler.getInstance().add(new AutonSelector(Constants.getAutonMode()));
@@ -96,9 +98,7 @@ public class Robot implements MyRobot {
     	Scheduler.getInstance().remove(AutonSelector.class);
     	emptyInboxes();
     	
-    	try{
-    		Scheduler.getInstance().sendMessage(new Stop());
-    	}catch(Exception e){}
+    	sendStopMessage();
     	
 		Scheduler.getInstance().add(new OperatorControl());
 		teleopDone = true;
@@ -113,11 +113,7 @@ public class Robot implements MyRobot {
     	
     	Scheduler.getInstance().remove(OperatorControl.class);
     	
-    	try {
-			Scheduler.getInstance().sendMessage(new Stop());
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+    	sendStopMessage();
     	
     	//Update Constants
     	ConstantsFileReader.getInstance().loadConstants();
@@ -161,5 +157,29 @@ public class Robot implements MyRobot {
 	
 	public String toString(){
 		return "2017 Robot";
+	}
+	
+	private void sendStopMessage(){
+		try {
+			Scheduler.getInstance().sendMessage(new Stop());
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			Log(Level.ERROR, "Failed to send Stop message");
+		}
+	}
+	
+	private void Log(Level lvl, String message){
+		try {
+			Scheduler.getInstance().sendMessage(new LogMessage(lvl, getSourceClass() + ": " + message));
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			//Now would be a great time to log an error, unfortunately we can't because
+			//this is in charge of sending log messages
+		}
+	}
+	
+	private String getSourceClass(){
+		Object[] out = Thread.currentThread().getStackTrace();
+		return out[out.length - 2].toString();
 	}
 }
