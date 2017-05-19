@@ -1,5 +1,7 @@
 package com.team766.robot;
 
+import interfaces.ConfigFileReader;
+import lib.ConstantsFileReader;
 import lib.RobotValues;
 
 public abstract class Constants extends RobotValues{
@@ -16,7 +18,7 @@ public abstract class Constants extends RobotValues{
 	
 	public static final int ACTOR_COUNT = 1;
 	
-	public static final String LOG_FILE = "/home/lvuser/testLog.txt";
+	public static final String LOG_FILE = ConstantsFileReader.getInstance().getStr("LOG_FILE");
 	
 	public static final boolean TANK_DRIVE = false;
 	
