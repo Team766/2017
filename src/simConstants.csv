@@ -14,3 +14,4 @@ maxVel, 1
 maxAccel, 1
 centerDriveP, 0.05
 climberSpeed,1
+LOG_FILE,logTest.txt
