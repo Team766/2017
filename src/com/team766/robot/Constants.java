@@ -2,7 +2,6 @@ package com.team766.robot;
 
 import lib.ConstantsFileReader;
 import lib.RobotValues;
-
 public abstract class Constants extends RobotValues{
 	
 	public static int getAutonMode(){
