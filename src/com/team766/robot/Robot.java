@@ -7,10 +7,12 @@ import lib.LogFactory;
 import lib.LogHandler;
 import lib.LogMessage;
 import lib.LogMessage.Level;
+import lib.MessageServer;
 import lib.Scheduler;
 
 import com.team766.lib.AutoPaths;
 import com.team766.lib.CommandBase;
+import com.team766.lib.ServerParser;
 import com.team766.lib.Messages.Stop;
 import com.team766.robot.Actors.OperatorControl;
 import com.team766.robot.Actors.Auton.AutonSelector;
@@ -51,11 +53,13 @@ public class Robot implements MyRobot {
 		LogFactory.createInstance("Vision");
 		LogFactory.createInstance("Errors");
 		
-		Scheduler.getInstance().add(CommandBase.Drive);
-		Scheduler.getInstance().add(CommandBase.GearPlacer);
-		Scheduler.getInstance().add(CommandBase.Hopper);
-		Scheduler.getInstance().add(CommandBase.Climber);
-		Scheduler.getInstance().add(new LogHandler(Constants.LOG_FILE));
+		Scheduler.getInstance().add(CommandBase.Drive, 100);
+		Scheduler.getInstance().add(CommandBase.GearPlacer, 100);
+		Scheduler.getInstance().add(CommandBase.Hopper, 100);
+		Scheduler.getInstance().add(CommandBase.Climber, 100);
+		Scheduler.getInstance().add(new ServerParser(), 100);
+		Scheduler.getInstance().add(new MessageServer(), 100);
+		Scheduler.getInstance().add(new LogHandler(Constants.LOG_FILE), 20);
 //		Scheduler.getInstance().add(CommandBase.Vision);
 		
 		AutoPaths.loadPaths();
