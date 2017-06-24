@@ -1,47 +1,58 @@
 package com.team766.lib;
 
-import lib.Actor;
+import java.util.Arrays;
+
+import lib.LogMessage.Level;
+import lib.MessageServer;
 import lib.ServerMessage;
 
 import com.team766.lib.Messages.MotorCommand;
 import com.team766.lib.Messages.MotorCommand.Motor;
 import com.team766.lib.Messages.TurnAngle;
 
-public class ServerParser extends Actor {
-
+public class ServerParser extends MessageServer {
+	
 	private ServerMessage currentMessage;
 	
-	public ServerParser(){
-		
+	public ServerParser(int port){
+		super(port);
 	}
 	
 	@Override
 	public void init() { 
-		acceptableMessages = new Class[]{ServerMessage.class};
+		acceptableMessages = new Class[]{};
 	}
 
 	@Override
 	public void iterate(){
-		if(newMessage()){
+		currentMessage = grabData();
+		
+		if(currentMessage != null){
 
-			currentMessage = (ServerMessage)readMessage();
-			if(currentMessage == null)
-				return;
-			
-			System.out.println("Parsing: " + currentMessage.getMessageName() + "\t" + currentMessage.getValues());
-			log("Parsing: " + currentMessage.getMessageName() + "\t" + currentMessage.getValues());
+			//System.out.println("Parsing: " + currentMessage.getMessageName() + "\t" + Arrays.toString(currentMessage.getValues()));
+			log("Parsing: " + currentMessage.getMessageName() + "\t" + Arrays.toString(currentMessage.getValues()));
 			
 			switch(currentMessage.getMessageName()){
 				case "TurnAngle":
+					System.out.println("Turning to angle: " + currentMessage.getValues()[0]);
 					sendMessage(new TurnAngle(Double.parseDouble(currentMessage.getValues()[0])));
 					break;
 				case "MotorCommand":
-					if(currentMessage.getValues()[1].equals("leftDrive"))
-						sendMessage(new MotorCommand(Double.parseDouble(currentMessage.getValues()[0]),Motor.leftDrive));
-					else if(currentMessage.getValues()[1].equals("rightDrive"))
-						sendMessage(new MotorCommand(Double.parseDouble(currentMessage.getValues()[0]),Motor.rightDrive));
-					else if(currentMessage.getValues()[1].equals("centerDrive"))
-						sendMessage(new MotorCommand(Double.parseDouble(currentMessage.getValues()[0]),Motor.centerDrive));
+					switch(currentMessage.getValues()[1]){
+						case "leftDrive":
+							sendMessage(new MotorCommand(Double.parseDouble(currentMessage.getValues()[0]), Motor.leftDrive));
+							break;
+						case "rightDrive":
+							sendMessage(new MotorCommand(Double.parseDouble(currentMessage.getValues()[0]), Motor.rightDrive));
+							break;
+						case "centerDrive":
+							sendMessage(new MotorCommand(Double.parseDouble(currentMessage.getValues()[0]), Motor.centerDrive));
+							break;
+					}
+													
+					break;
+				default:
+					log(Level.ERROR, "Message name not found: " + currentMessage.getMessageName());
 					break;
 			}
 			
@@ -51,10 +62,14 @@ public class ServerParser extends Actor {
 	}
 	
 	public void run() {
+		connect();
+		
 		while(enabled){
 			iterate();
 			sleep();
 		}
+		
+		closeSockets();
 	}
 
 	public String toString() {
@@ -63,8 +78,6 @@ public class ServerParser extends Actor {
 
 	@Override
 	public void step() {
-		// TODO Auto-generated method stub
-		
 	}
 	
 }

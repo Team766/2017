@@ -57,8 +57,7 @@ public class Robot implements MyRobot {
 		Scheduler.getInstance().add(CommandBase.GearPlacer, 100);
 		Scheduler.getInstance().add(CommandBase.Hopper, 100);
 		Scheduler.getInstance().add(CommandBase.Climber, 100);
-		Scheduler.getInstance().add(new ServerParser(), 100);
-		Scheduler.getInstance().add(new MessageServer(), 100);
+		Scheduler.getInstance().add(new ServerParser(Constants.MESSAGE_PORT), 100);
 		Scheduler.getInstance().add(new LogHandler(Constants.LOG_FILE), 20);
 //		Scheduler.getInstance().add(CommandBase.Vision);
 		

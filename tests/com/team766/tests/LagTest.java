@@ -48,6 +48,17 @@ public class LagTest extends TestCase {
 		}
 	}
 	
+	@Test
+	public void testServer() throws Exception {
+		double angle = 0;
+		while(true){
+			angle = instance.getGyro(ConfigFile.getGyro()).getAngle();
+			angle = (angle + 10) % 360;
+			((Gyro)(instance.getGyro(ConfigFile.getGyro()))).setAngle(angle);
+			Thread.sleep(SLEEP_TIME);
+		}
+	}
+	
 	private double joystickCorrections(double in){
 		return -in * Math.abs(in);
 	}

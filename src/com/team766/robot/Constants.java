@@ -70,4 +70,7 @@ public abstract class Constants extends RobotValues{
 	public static final double HopperRunTime = 2.0; //seconds
 	
 	public static final double STARTING_HEADING = 0;
+	
+	//Ports
+	public static final int MESSAGE_PORT = 5801;
 }
