@@ -72,10 +72,6 @@ public class ServerParser extends MessageServer {
 		closeSockets();
 	}
 
-	public String toString() {
-		return "Actor: \tServerParser";
-	}
-
 	@Override
 	public void step() {
 	}

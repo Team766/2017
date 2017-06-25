@@ -74,10 +74,6 @@ public class Hopper extends Actor{
 		stopCurrentCommand();
 	}
 
-	public String toString() {
-		return "Actor: \tHopper";
-	}
-
 	public void step() {
 		if(currentCommand != null){
 			if(currentCommand.isDone()){

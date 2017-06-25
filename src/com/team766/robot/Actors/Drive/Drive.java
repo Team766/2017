@@ -378,10 +378,6 @@ public class Drive extends Actor{
 		centerEncoder.reset();
 	}
 	
-	public String toString(){
-		return "Actor:\tDrive";
-	}
-	
 	private void resetControlLoops(){
 		angularVelocity.reset();
 		linearVelocity.reset();

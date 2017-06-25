@@ -81,11 +81,6 @@ public class Climber extends Actor {
 	}
 
 	@Override
-	public String toString() {
-		return "Actor: \tClimber";
-	}
-
-	@Override
 	public void step() {
 		if(currentCommand != null){
 			if(currentCommand.isDone()){

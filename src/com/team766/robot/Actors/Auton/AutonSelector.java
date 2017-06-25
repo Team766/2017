@@ -173,9 +173,5 @@ public class AutonSelector extends Actor{
 		//Drive back
 		waitForMessage(new DriveDistance(2.0,0), DriveStatusUpdate.class);
 	}
-
-	@Override
-	public String toString() {
-		return "Actor:\tAutonSelector";
-	}
+	
 }

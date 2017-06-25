@@ -216,10 +216,6 @@ public class OperatorControl extends Actor {
 	public void step(){
 	}
 	
-	public String toString(){
-		return "Actor:\tOperator Control";
-	}
-	
 	private double dotProduct(double x1, double y1, double x2, double y2){
 		return (x1 * x2) + (y1 * y2);
 	}

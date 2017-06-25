@@ -89,10 +89,6 @@ public class GearPlacer extends Actor{
 
 	}
 
-	public String toString() {
-		return "Actor:\tGearPlacer";
-	}
-
 	public void step() {
 		if(currentCommand != null){
 			if(currentCommand.isDone()){

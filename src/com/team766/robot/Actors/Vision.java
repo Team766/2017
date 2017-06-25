@@ -416,11 +416,6 @@ public class Vision extends Actor{
 		}
 		return maxIndex;
 	}
-
-	@Override
-	public String toString(){
-		return "Actor:\tVision";
-	}
 	
 	private boolean contains(double[] array, double value){
 		for(double x : array){
