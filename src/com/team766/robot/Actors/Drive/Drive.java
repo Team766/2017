@@ -4,11 +4,7 @@ import interfaces.EncoderReader;
 import interfaces.GyroReader;
 import interfaces.SpeedController;
 import interfaces.SubActor;
-import lib.Actor;
-import lib.ConstantsFileReader;
-import lib.LogFactory;
-import lib.Message;
-import lib.PIDController;
+import lib.*;
 
 import com.team766.lib.CommandBase;
 import com.team766.lib.Messages.CheesyDrive;
@@ -192,6 +188,10 @@ public class Drive extends Actor{
 		//LogFactory.getInstance("General").printPeriodic("Gyro: " + getAngle(), "Gyro", 200);
 		
 		log("Left: " + leftDist() + " Right: " + rightDist() + " Center: " + centerDist() + " Gyro: " + getAngle());
+		Dashboard.plotData("Left", leftDist());
+		Dashboard.plotData("Right", rightDist());
+		Dashboard.plotData("Center", centerDist());
+		Dashboard.plotData("Gyro", getAngle());
 //		LogFactory.getInstance("Vision").printPeriodic("Left: " + leftDist() + " Right: " + rightDist() + " Center: " + centerDist() + " Gyro: " + getAngle(), "Encoders", 200);
 		step();
 		
