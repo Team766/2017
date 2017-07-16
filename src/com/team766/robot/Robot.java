@@ -1,14 +1,9 @@
 package com.team766.robot;
 
+import com.team766.robot.Actors.DashboardDrive;
 import interfaces.MyRobot;
-import lib.ConstantsFileReader;
-import lib.HTTPServer;
-import lib.LogFactory;
-import lib.LogHandler;
-import lib.LogMessage;
+import lib.*;
 import lib.LogMessage.Level;
-import lib.MessageServer;
-import lib.Scheduler;
 
 import com.team766.lib.AutoPaths;
 import com.team766.lib.CommandBase;
@@ -53,12 +48,14 @@ public class Robot implements MyRobot {
 		LogFactory.createInstance("Vision");
 		LogFactory.createInstance("Errors");
 		
+		Scheduler.getInstance().add(new LogHandler(Constants.LOG_FILE), 200);
 		Scheduler.getInstance().add(CommandBase.Drive, 100);
 		Scheduler.getInstance().add(CommandBase.GearPlacer, 100);
 		Scheduler.getInstance().add(CommandBase.Hopper, 100);
 		Scheduler.getInstance().add(CommandBase.Climber, 100);
-		Scheduler.getInstance().add(new ServerParser(Constants.MESSAGE_PORT), 100);
-		Scheduler.getInstance().add(new LogHandler(Constants.LOG_FILE), 20);
+//		Scheduler.getInstance().add(new ServerParser(Constants.MESSAGE_PORT), 100);
+		Scheduler.getInstance().add(Dashboard.getInstance());
+		Scheduler.getInstance().add(new DashboardDrive());
 //		Scheduler.getInstance().add(CommandBase.Vision);
 		
 		AutoPaths.loadPaths();

@@ -187,7 +187,7 @@ public class Drive extends Actor{
 					
 		//LogFactory.getInstance("General").printPeriodic("Gyro: " + getAngle(), "Gyro", 200);
 		
-		log("Left: " + leftDist() + " Right: " + rightDist() + " Center: " + centerDist() + " Gyro: " + getAngle());
+//		log("Left: " + leftDist() + " Right: " + rightDist() + " Center: " + centerDist() + " Gyro: " + getAngle());
 		Dashboard.plotData("Left", leftDist());
 		Dashboard.plotData("Right", rightDist());
 		Dashboard.plotData("Center", centerDist());
