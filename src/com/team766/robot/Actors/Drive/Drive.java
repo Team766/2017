@@ -40,7 +40,7 @@ public class Drive extends Actor{
 	PIDController angularVelocity = new PIDController(Constants.k_angularP, Constants.k_angularI, Constants.k_angularD, Constants.k_angularThresh);
 	PIDController linearVelocity = new PIDController(Constants.k_linearP, Constants.k_linearI, Constants.k_linearD, Constants.k_linearThresh);
 	
-	PIDController anglePID = new PIDController(Constants.k_angularP, Constants.k_angularI, Constants.k_angularD, Constants.k_angularThresh);
+	public volatile PIDController anglePID = new PIDController(Constants.k_angularP, Constants.k_angularI, Constants.k_angularD, Constants.k_angularThresh);
 	PIDController distancePID = new PIDController(Constants.k_linearP, Constants.k_linearI, Constants.k_linearD, Constants.k_linearThresh);
 	
 	//Position
@@ -188,9 +188,9 @@ public class Drive extends Actor{
 		//LogFactory.getInstance("General").printPeriodic("Gyro: " + getAngle(), "Gyro", 200);
 		
 //		log("Left: " + leftDist() + " Right: " + rightDist() + " Center: " + centerDist() + " Gyro: " + getAngle());
-		Dashboard.plotData("Left", leftDist());
-		Dashboard.plotData("Right", rightDist());
-		Dashboard.plotData("Center", centerDist());
+//		Dashboard.plotData("Left", leftDist());
+//		Dashboard.plotData("Right", rightDist());
+//		Dashboard.plotData("Center", centerDist());
 		Dashboard.plotData("Gyro", getAngle());
 //		LogFactory.getInstance("Vision").printPeriodic("Left: " + leftDist() + " Right: " + rightDist() + " Center: " + centerDist() + " Gyro: " + getAngle(), "Encoders", 200);
 		step();

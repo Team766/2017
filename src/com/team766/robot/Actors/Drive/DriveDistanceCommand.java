@@ -36,6 +36,7 @@ public class DriveDistanceCommand extends CommandBase{
 	public void update() {
 		Drive.distancePID.calculate(Drive.avgDist(), false);
 		Drive.anglePID.calculate(Drive.getAngle(),false);
+		Drive.anglePID.plot = true;
 		
 		System.out.println("Dist: " + Drive.avgDist());
 		System.out.println("Error: " + Drive.distancePID.getCurrentError());
