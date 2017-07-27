@@ -22,6 +22,7 @@ import com.team766.lib.Messages.Stop;
 import com.team766.lib.Messages.TurnAngle;
 import com.team766.robot.Constants;
 import com.team766.robot.HardwareProvider;
+import lib.control.CalibrationController;
 import lib.control.Controller;
 import lib.control.TargetController;
 
@@ -81,7 +82,7 @@ public class Drive extends Actor{
 	SubActor currentCommand;
 	
 	public void init() {
-		acceptableMessages = new Class[]{MotorCommand.class, CheesyDrive.class, HDrive.class, DrivePath.class, DriveDistance.class, ResetDriveAngle.class, SnapToAngle.class, Stop.class, DriveSideways.class, DriveIntoPegStop.class, TurnAngle.class};
+		acceptableMessages = new Class[]{MotorCommand.class, CheesyDrive.class, HDrive.class, DrivePath.class, DriveDistance.class, ResetDriveAngle.class, SnapToAngle.class, Stop.class, DriveSideways.class, DriveIntoPegStop.class, TurnAngle.class, DashboardMessage.class};
 		commandFinished = false;
 		
 		lastPosTime = System.currentTimeMillis() / 1000.0;
@@ -190,6 +191,16 @@ public class Drive extends Actor{
 						return CommandBase.GearPlacer.isPegPresent();
 					}
 				};
+			}
+			else if (currentMessage instanceof DashboardMessage) {
+				DashboardMessage dmsg = (DashboardMessage) currentMessage;
+				if (dmsg.getType().equals("CalibrateTurn")) {
+					Controller controller = new CalibrationController();
+					currentCommand = new ControlledCommand(controller, this::getAngle, power -> {
+						setLeft(power);
+						setRight(-power);
+					}, () -> setDrive(0.0));
+				}
 			}
 			//Reset Control loops
 			resetControlLoops();
