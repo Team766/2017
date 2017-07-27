@@ -22,6 +22,8 @@ import com.team766.lib.Messages.Stop;
 import com.team766.lib.Messages.TurnAngle;
 import com.team766.robot.Constants;
 import com.team766.robot.HardwareProvider;
+import lib.control.Controller;
+import lib.control.TargetController;
 
 public class Drive extends Actor{
 
@@ -158,7 +160,15 @@ public class Drive extends Actor{
 //				currentCommand = new DriveDistanceCommand(currentMessage);
 			}
 			else if(currentMessage instanceof TurnAngle){
-				currentCommand = new DriveDistanceCommand(0,((TurnAngle)currentMessage).getAngle());
+//				currentCommand = new DriveDistanceCommand(0,((TurnAngle)currentMessage).getAngle());
+				Controller controller = new TargetController(
+						getAngle()+((TurnAngle)currentMessage).getAngle(),
+						0.0000, 0.0000, 0.0000
+				);
+				currentCommand = new ControlledCommand(controller, this::getAngle, power -> {
+					setLeft(power);
+					setRight(-power);
+				}, () -> setDrive(0.0));
 			}
 			else if(currentMessage instanceof DriveIntoPegStop){
 				currentCommand = new SubActor(){
