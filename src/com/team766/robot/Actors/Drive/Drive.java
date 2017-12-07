@@ -164,7 +164,7 @@ public class Drive extends Actor{
 //				currentCommand = new DriveDistanceCommand(0,((TurnAngle)currentMessage).getAngle());
 				Controller controller = new TargetController(
 						getAngle()+((TurnAngle)currentMessage).getAngle(),
-						0.0000, 0.0000, 0.0000
+						0.0125, 0.0048, -12.39
 				);
 				currentCommand = new ControlledCommand(controller, this::getAngle, power -> {
 					setLeft(power);
@@ -196,7 +196,12 @@ public class Drive extends Actor{
 				DashboardMessage dmsg = (DashboardMessage) currentMessage;
 				if (dmsg.getType().equals("CalibrateTurn")) {
 					Controller controller = new CalibrationController();
-					currentCommand = new ControlledCommand(controller, this::getAngle, power -> {
+					currentCommand = new ControlledCommand(controller, () -> {
+						double dist = (leftDist() - rightDist()) / 2;
+						double circumference = Math.PI * 27./12.;
+						double angle = dist / circumference;
+						return Math.toDegrees(angle);
+					}, power -> {
 						setLeft(power);
 						setRight(-power);
 					}, () -> setDrive(0.0));
@@ -209,10 +214,10 @@ public class Drive extends Actor{
 		//LogFactory.getInstance("General").printPeriodic("Gyro: " + getAngle(), "Gyro", 200);
 		
 //		log("Left: " + leftDist() + " Right: " + rightDist() + " Center: " + centerDist() + " Gyro: " + getAngle());
-		Dashboard.plotData("Left", leftDist());
-		Dashboard.plotData("Right", rightDist());
-		Dashboard.plotData("Center", centerDist());
-		Dashboard.plotData("Gyro", getAngle());
+//		Dashboard.plotData("Left", leftDist());
+//		Dashboard.plotData("Right", rightDist());
+//		Dashboard.plotData("Center", centerDist());
+//		Dashboard.plotData("Gyro", getAngle());
 //		LogFactory.getInstance("Vision").printPeriodic("Left: " + leftDist() + " Right: " + rightDist() + " Center: " + centerDist() + " Gyro: " + getAngle(), "Encoders", 200);
 		step();
 		
