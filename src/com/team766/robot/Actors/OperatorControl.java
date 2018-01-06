@@ -25,6 +25,10 @@ import com.team766.robot.Constants;
 import com.team766.robot.HardwareProvider;
 import com.team766.robot.Robot;
 
+/**
+ * Class to link robot actions to operator devices
+ */
+
 public class OperatorControl extends Actor {
 	
 	JoystickReader jLeft = HardwareProvider.getInstance().getLeftJoystick();

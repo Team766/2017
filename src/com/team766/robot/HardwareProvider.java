@@ -38,15 +38,14 @@ public class HardwareProvider {
 	public SpeedController getCenterDrive(){
 		return RobotProvider.instance.getMotor(ConfigFile.getCenterMotor());
 	}
-	
 	public SpeedController getClimber(){
 		return RobotProvider.instance.getMotor(ConfigFile.getClimberMotor());
 	}
-	
 	public SpeedController getHopper(){
 		return RobotProvider.instance.getMotor(ConfigFile.getHopperMotor());
 	}
 
+	//Encoders
 	public EncoderReader getLeftEncoder(){
 		return RobotProvider.instance.getEncoder(ConfigFile.getLeftEncoder()[0], ConfigFile.getLeftEncoder()[1]);
 	}
@@ -61,6 +60,7 @@ public class HardwareProvider {
 		return RobotProvider.instance.getEncoder(ConfigFile.getClimberEncoder()[0], ConfigFile.getClimberEncoder()[1]);
 	}
 	
+	//Sensors
 	public AnalogInputReader getHopperSensor(){
 		return RobotProvider.instance.getAnalogInput(ConfigFile.getHopperSensor());
 	}
@@ -73,14 +73,11 @@ public class HardwareProvider {
 		return RobotProvider.instance.getCamServer();
 	}
 	
-	
-	
-	
-
 	public GyroReader getGyro(){
 		return RobotProvider.instance.getGyro(ConfigFile.getGyro());
 	}
 	
+	//Solenoids
 	public SolenoidController getGearPlacerOpener(){
 		return RobotProvider.instance.getSolenoid(ConfigFile.getGearPlacerOpener());
 	}

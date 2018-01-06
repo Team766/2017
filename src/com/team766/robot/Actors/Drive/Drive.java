@@ -124,7 +124,9 @@ public class Drive extends Actor{
 				return;
 			
 			LogFactory.getInstance("Vision").print("New Message: " + currentMessage);
-							
+			
+			//assigns new message to appropriate command
+			
 			if(currentMessage instanceof SnapToAngle){
 				System.out.println("rawAngle: " + getRawAngle());
 				if(Math.abs(getRawAngle()) < 30)
@@ -133,9 +135,7 @@ public class Drive extends Actor{
 					currentCommand = new DriveDistanceCommand(0, 60 - gyroOffset);
 				else if(getRawAngle() <= -30)
 					currentCommand = new DriveDistanceCommand(0, -60 - gyroOffset);
-				System.out.println("snapToAngle: " + this.getAngle());
-				
-				
+				System.out.println("snapToAngle: " + this.getAngle());	
 			}
 			else if(currentMessage instanceof MotorCommand)
 				currentCommand = new MotorSubCommand(currentMessage);

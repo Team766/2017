@@ -35,11 +35,11 @@ public class AutonSelector extends Actor{
 				System.out.println("Auton: None");
 				LogFactory.getInstance("General").print("Auton: None");
 				break;
-			case "DriveToPeg":
-				System.out.println("Auton: DriveToPeg");
-				LogFactory.getInstance("General").print("Auton: DriveToPeg");
+			case "RightPegPath":
+				System.out.println("Auton: RightPegPath");
+				LogFactory.getInstance("General").print("Auton: RightPegPath");
 				
-				driveToPeg();
+				rightPegPath();
 				break;	
 			case "BoilerPath":
 				System.out.println("Auton: BoilerPath");
@@ -47,37 +47,37 @@ public class AutonSelector extends Actor{
 				
 				sendMessage(new DrivePath("BoilerPath", false));
 				break;	
-			case "StraightToPeg":
+			case "StraightToPegVision":
 				System.out.println("Auton: Using Vision to Drive straight to peg");
-				LogFactory.getInstance("General").print("Auton: StraightToPeg");
+				LogFactory.getInstance("General").print("Auton: StraightToPegVision");
 				
 				waitForMessage(new StartTrackingPeg(), VisionStatusUpdate.class);
 				System.out.println("Done alligning with Peg!");
 				sendMessage(new DriveIntoPeg());
 				break;
-			case "StraightToPegPath":
-				System.out.println("Auton: StraightToPegPath");
-				LogFactory.getInstance("General").print("Auton: StraightToPegPath");
+			case "StraightToPegDrive":
+				System.out.println("Auton: StraightToPegDrive");
+				LogFactory.getInstance("General").print("Auton: StraightToPegDrive");
 				
-				straightToPegPath();
+				straightToPegDrive();
 				break;
-			case "CrossLine":
-				System.out.println("Auton: CrossLine");
-				LogFactory.getInstance("General").print("Auton: CrossLine");
+			case "CrossLineDrive":
+				System.out.println("Auton: CrossLineDrive");
+				LogFactory.getInstance("General").print("Auton: CrossLineDrive");
 				
 				waitForMessage(new DriveDistance(-7.0, 0), DriveStatusUpdate.class);
 				break;
-			case "FlipDriveToPegPath":
-				System.out.println("Auton: FlipDriveToPegPath");
-				LogFactory.getInstance("General").print("auton: FlipDriveToPegPath");
+			case "LeftPegDrive":
+				System.out.println("Auton: LeftPegDrive");
+				LogFactory.getInstance("General").print("auton: LeftPegDrive");
 				
-				flipDriveToPegPath();
+				leftPegDrive();
 				break;
-			case "DriveToPegPath":
-				System.out.println("Auton: DriveToPegPath");
-				LogFactory.getInstance("General").print("Auton: DriveToPegPath");
+			case "RightPegDrive":
+				System.out.println("Auton: RightPegDrive");
+				LogFactory.getInstance("General").print("Auton: RightPegDrive");
 				
-				driveToPegPath();
+				rightPegDrive();
 				break;
 			default:
 				System.out.println("Auton: Failed to select auton");
@@ -94,7 +94,7 @@ public class AutonSelector extends Actor{
 	public void step(){
 	}
 	
-	private void driveToPeg(){
+	private void rightPegPath(){
 		waitForMessage(new DrivePath("ToPegPath", false), DriveStatusUpdate.class);
 		waitForMessage(new SnapToAngle(), DriveStatusUpdate.class);
 		//Drop gear
@@ -103,7 +103,7 @@ public class AutonSelector extends Actor{
 		waitForMessage(new DriveDistance(1.0,0), DriveStatusUpdate.class);
 	}
 	
-	private void straightToPegPath(){
+	private void straightToPegDrive(){
 		//sendMessage(new DrivePath("StraightToPegPath", false));
 		//waitForMessage(new DrivePath("StraightToPegPath", false), DriveStatusUpdate.class);
 					
@@ -121,7 +121,7 @@ public class AutonSelector extends Actor{
 		sendMessage(new DriveDistance(2.0,0));
 	}
 	
-	private void flipDriveToPegPath(){
+	private void leftPegDrive(){
 //		waitForMessage(new DrivePath("ToPegPath", true), DriveStatusUpdate.class);
 //		waitForMessage(new SnapToAngle(), DriveStatusUpdate.class);
 		
@@ -149,7 +149,7 @@ public class AutonSelector extends Actor{
 		waitForMessage(new DriveDistance(2.0,0), DriveStatusUpdate.class);
 	}
 	
-	private void driveToPegPath(){
+	private void rightPegDrive(){
 		waitForMessage(new DriveDistance(ConstantsFileReader.getInstance().get("SideForwardDist"), 0), DriveStatusUpdate.class);
 		waitForMessage(new TurnAngle(ConstantsFileReader.getInstance().get("TurnToPeg")), DriveStatusUpdate.class);
 		waitForMessage(new DriveDistance(ConstantsFileReader.getInstance().get("StraightToScoreDist"), 0), DriveStatusUpdate.class);

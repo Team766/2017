@@ -5,12 +5,13 @@ import interfaces.ConfigFileReader;
 /**
  * Class for accessing the port or index for each hardware device
  * 
- * @author bret Levonsen
+ * @author Brett Levenson
  *
  */
 
 public class ConfigFile {
 	
+	//Drive
 	public static int[] getLeftMotor(){
 		return ConfigFileReader.getInstance().getPorts("leftMotor");
 	}
@@ -35,15 +36,11 @@ public class ConfigFile {
 		return ConfigFileReader.getInstance().getPorts("centerEncoder");
 	}
 	
-	public static int[] getClimberEncoder(){
-		return ConfigFileReader.getInstance().getPorts("climberEncoder");
-	}
-	
-	
 	public static int getGyro(){
 		return ConfigFileReader.getInstance().getPort("gyro");
 	}
 	
+	//Joysticks
 	public static int getLeftJoystick(){
 		return ConfigFileReader.getInstance().getPort("leftJoystick");
 	}
@@ -56,10 +53,7 @@ public class ConfigFile {
 		return ConfigFileReader.getInstance().getPort("boxJoystick");
 	}
 	
-	public static int getClimberMotor(){
-		return ConfigFileReader.getInstance().getPort("climberMotor");
-	}
-	
+	//Hopper
 	public static int getHopperMotor(){
 		return ConfigFileReader.getInstance().getPort("hopperMotor");
 	}
@@ -76,6 +70,7 @@ public class ConfigFile {
 		return ConfigFileReader.getInstance().getPort("hopperSensor");
 	}
 	
+	//Gear Placer
 	public static int getGearSensor(){
 		return ConfigFileReader.getInstance().getPort("gearSensor");
 	}
@@ -87,7 +82,16 @@ public class ConfigFile {
 	public static int getGearPlacer(){
 		return ConfigFileReader.getInstance().getPort("gearPlacer");
 	}
-
+	
+    //Climber
+	public static int getClimberMotor(){
+		return ConfigFileReader.getInstance().getPort("climberMotor");
+	}
+	
+	public static int[] getClimberEncoder(){
+		return ConfigFileReader.getInstance().getPorts("climberEncoder");
+	} 
+	
 	public static int getClimberDeployOut() {
 		return ConfigFileReader.getInstance().getPort("climberDeployOut");
 	}

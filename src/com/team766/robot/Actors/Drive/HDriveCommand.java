@@ -6,6 +6,10 @@ import interfaces.SubActor;
 
 import com.team766.lib.CommandBase;
 import com.team766.lib.Messages.HDrive;
+/**
+ * Class for controlling drive with a center wheel
+ */
+
 
 public class HDriveCommand extends CommandBase{
 	HDrive command;
